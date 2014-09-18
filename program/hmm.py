@@ -10,6 +10,8 @@ class HMM:
         self.emissionMatrix = [[0]*numSymbols for x in range(numStates)]
         # [a] = probability of state a being the first state
         self.initialMatrix = [0]*numStates
+        # [a] = probability of stopping when entering state a, without emitting a symbol
+        self.stopMatrix = [0]*numStates
         
         if randomize: # Initialize all parameters at random
             # Initialize random parameters
@@ -33,4 +35,6 @@ class HMM:
             sumVal = sum(self.initialMatrix)
             for x in range(0, numStates):
                 self.initialMatrix[x] /= sumVal
+            # Stop matrix should not be normalized!
+
 
