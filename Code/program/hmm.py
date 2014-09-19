@@ -8,7 +8,7 @@ class HMM(Model):
         self.num_symbols = num_symbols
         # [a, b] = probability of a transition to state b being in state a
         self.transition_matrix = [[0]*num_states for x in range(num_states)]
-        # [a, b] = probability of state a emmitting symbol b (the last symbol is the stop symbol)
+        # [a, b] = probability of state a emitting symbol b (the last symbol is the stop symbol)
         self.emission_matrix = [[0]*num_symbols for x in range(num_states)]
         # [a] = probability of state a being the first state
         self.initial_matrix = [0]*num_states
@@ -52,7 +52,7 @@ class HMM(Model):
         #sum over all possibilities of being in any state after generating the specified sequence
         summarize = 0
         for i in range(0, self.num_states):
-            summarize += dynamic_array[s][len(symbol_sequence)]
+            summarize += dynamic_array[len(symbol_sequence)][i]
         return summarize
             
                     
