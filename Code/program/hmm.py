@@ -58,7 +58,7 @@ class HMM(Model):
         #sum over all possibilities of being in any state after generating the specified sequence
         summarize = 0
         for i in range(0, self.num_states):
-            summarize += dynamic_array[s][len(symbol_sequence)]
+            summarize += dynamic_array[len(symbol_sequence)][i]
         return summarize
             
                     

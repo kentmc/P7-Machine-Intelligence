@@ -3,7 +3,6 @@ from hmm import HMM
 
 class TestHMM(unittest.TestCase):
     def test_hmm_3_2_1(self):
-        #A HMM with all parameters set to zero
         hmm = HMM(3, 2, False)
         hmm.emission_matrix = [[0.5, 0.3, 0.2], [0, 1, 0], [0.1, 0.1, 0.8]]
         hmm.initial_matrix = [0.1, 0.2, 0.7]
