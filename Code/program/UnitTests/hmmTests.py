@@ -10,8 +10,11 @@ class TestHMM(unittest.TestCase):
         self.assertAlmostEqual(hmm.calc_probability([0]), 0.0322, 7)
 
     def test_hmm_2States_3Sym_1Char(self):
-    	hmm = HMM(2, 3, False)
-    	hmm.emission_matrix = [[0.1, 0.5, 0.2, 0.2], [0, 0, 0.5, 0.5]]
-    	hmm.initial_matrix = [0.2, 0.8]
-    	hmm.transition_matrix = [[0.8, 0.2], [0.8, 0.2]]
-    	self.assertAlmostEqual(hmm.calc_probability([0]), 0.0052, 7)
+        hmm = HMM(2, 3, False)
+        hmm.emission_matrix = [[0.1, 0.5, 0.2, 0.2], [0, 0, 0.5, 0.5]]
+        hmm.initial_matrix = [0.2, 0.8]
+        hmm.transition_matrix = [[0.8, 0.2], [0.8, 0.2]]
+        self.assertAlmostEqual(hmm.calc_probability([0]), 0.0052, 7)
+        self.assertAlmostEqual(hmm.calc_probability([1]), 0.026, 7)
+        self.assertAlmostEqual(hmm.calc_probability([2]), 0.1144, 7)
+        self.assertAlmostEqual(hmm.calc_probability([3]), 0.44, 7)
