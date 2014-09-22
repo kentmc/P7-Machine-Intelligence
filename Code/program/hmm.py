@@ -3,13 +3,15 @@ from model import Model
 
 class HMM(Model):
     def __init__(self, num_states, num_symbols, randomize):
-        # Constructs an HMM model
+        """
+        An extra symbol is added implicitly as a terminating symbol
+        """
         self.num_states = num_states
         self.num_symbols = num_symbols
         # [a, b] = probability of a transition to state b being in state a
-        self.transition_matrix = [[0]*num_states for x in range(num_states)]
-        # [a, b] = probability of state a emmitting symbol b (the last symbol is the stop symbol)
-        self.emission_matrix = [[0]*num_symbols for x in range(num_states)]
+        self.transition_matrix = [[0]*(num_states) for x in range(num_states)]
+        # [a, b] = probability of state a emmitting symbol b (the additional symbol is the stop symbol)
+        self.emission_matrix = [[0]*(num_symbols + 1) for x in range(num_states)]
         # [a] = probability of state a being the first state
         self.initial_matrix = [0]*num_states
         
@@ -19,7 +21,7 @@ class HMM(Model):
                 self.initial_matrix[x] = random.uniform(0, 1.0)
                 for y in range(0, num_states):
                     self.transition_matrix[x][y] = random.uniform(0, 1.0)
-                for s in range(0, num_symbols):
+                for s in range(0, num_symbols + 1):
                     self.emission_matrix[x][s] = random.uniform(0, 1.0)
             # Normalize transition matrix
             for x in range(0, num_states):
@@ -29,14 +31,18 @@ class HMM(Model):
             # Normalize emission matrix
             for x in range(0, num_states):
                 sumVal = sum(self.emission_matrix[x])
-                for y in range(0, num_symbols):
+                for y in range(0, num_symbols + 1):
                     self.emission_matrix[x][y] /= sumVal
             # Normalize initial matrix
             sumVal = sum(self.initialMatrix)
             for x in range(0, num_states):
                 self.initial_matrix[x] /= sumVal
             # Stop matrix should not be normalized!    
-    def generating_probability(self, symbol_sequence):
+    def calc_probability(self, symbol_sequence):
+        """
+        Calculates the probability of generating the specified symbol sequence
+        """
+        
         #[x, y] = probability of being in state x after generating the first y symbols of symbolSequence
         dynamic_array = [[0]*self.num_states for x in range(len(symbol_sequence)+1)]
         #construct base case
