@@ -17,4 +17,4 @@ class TestHMM(unittest.TestCase):
         self.assertAlmostEqual(hmm.calc_probability([0]), 0.0052, 7)
         self.assertAlmostEqual(hmm.calc_probability([1]), 0.026, 7)
         self.assertAlmostEqual(hmm.calc_probability([2]), 0.1144, 7)
-        self.assertAlmostEqual(hmm.calc_probability([3]), 0.44, 7)
+        self.assertAlmostEqual(hmm.calc_probability([]), 0.44, 7)

@@ -2,7 +2,7 @@ import random
 from model import Model
 
 class HMM(Model):
-    def __init__(self, num_states, num_symbols, randomize):
+    def __init__(self, num_states, num_symbols):
         """
         An extra symbol is added implicitly as a terminating symbol
         """
@@ -10,35 +10,38 @@ class HMM(Model):
         self.num_symbols = num_symbols
         # [a, b] = probability of a transition to state b being in state a
         self.transition_matrix = [[0]*(num_states) for x in range(num_states)]
-        # [a, b] = probability of state a emmitting symbol b (the additional symbol is the stop symbol)
+        # [a, b] = probability of state a emitting symbol b (the additional symbol is the stop symbol)
         self.emission_matrix = [[0]*(num_symbols + 1) for x in range(num_states)]
         # [a] = probability of state a being the first state
-        self.initial_matrix = [0]*num_states
+        self.initial_matrix = [0]*num_states 
+    
+    def randomize(self):
+        """
+        Randomizes all parameters of the hmm
+        """
+        # Initialize random parameters
+        for x in range(0, self.num_states):
+            self.initial_matrix[x] = random.uniform(0, 1.0)
+            for y in range(0, self.num_states):
+                self.transition_matrix[x][y] = random.uniform(0, 1.0)
+            for s in range(0, self.num_symbols + 1):
+                self.emission_matrix[x][s] = random.uniform(0, 1.0)
+        # Normalize transition matrix
+        for x in range(0, self.num_states):
+            sumVal = sum(self.transition_matrix[x])
+            for y in range(0, self.num_states):
+                self.transition_matrix[x][y] /= sumVal
+        # Normalize emission matrix
+        for x in range(0, self.num_states):
+            sumVal = sum(self.emission_matrix[x])
+            for y in range(0, self.num_symbols + 1):
+                self.emission_matrix[x][y] /= sumVal
+        # Normalize initial matrix
+        sumVal = sum(self.initial_matrix)
+        for x in range(0, self.num_states):
+            self.initial_matrix[x] /= sumVal 
         
-        if randomize: # Initialize all parameters at random
-            # Initialize random parameters
-            for x in range(0, num_states):
-                self.initial_matrix[x] = random.uniform(0, 1.0)
-                for y in range(0, num_states):
-                    self.transition_matrix[x][y] = random.uniform(0, 1.0)
-                for s in range(0, num_symbols + 1):
-                    self.emission_matrix[x][s] = random.uniform(0, 1.0)
-            # Normalize transition matrix
-            for x in range(0, num_states):
-                sumVal = sum(self.transition_matrix[x])
-                for y in range(0, num_states):
-                    self.transition_matrix[x][y] /= sumVal
-            # Normalize emission matrix
-            for x in range(0, num_states):
-                sumVal = sum(self.emission_matrix[x])
-                for y in range(0, num_symbols + 1):
-                    self.emission_matrix[x][y] /= sumVal
-            # Normalize initial matrix
-            sumVal = sum(self.initialMatrix)
-            for x in range(0, num_states):
-                self.initial_matrix[x] /= sumVal
-            # Stop matrix should not be normalized!    
-    def calc_probability(self, symbol_sequence):
+    def calc_sequence_probability(self, symbol_sequence):
         """
         Calculates the probability of generating the specified symbol sequence
         """
