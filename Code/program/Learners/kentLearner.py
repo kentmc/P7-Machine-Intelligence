@@ -1,11 +1,10 @@
 from learner import Learner
-import random
-
+from Models.hmm import HMM
 
 class RandomLearner(Learner):
 
     def learn(self, train_data):
-        pass
+        self.hmm = HMM()
 
     def calc_sequence_probability(self, symbol_sequence):
-        return random.uniform(0.0, 1.0)
+        
