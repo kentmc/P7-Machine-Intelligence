@@ -45,19 +45,19 @@ class HMM(Model):
         """
         Calculates the probability of generating the specified symbol sequence
         """
-        #[x, y] = probability of being in state x after generating the first y symbols of symbolSequence
+        # [x, y] = probability of being in state x after generating the first y symbols of symbolSequence
         dynamic_array = [[0]*self.num_states for x in range(len(symbol_sequence)+1)]
-        #construct base case
+        # construct base case
         for s in range(0, self.num_states):
             dynamic_array[0][s] = self.initial_matrix[s]
-        #using dynamic programming
+        # using dynamic programming
         for i in range(1, len(symbol_sequence)+1):
             for s in range(0, self.num_states):
                 prob = 0
                 for t in range(0, self.num_states):
                     prob += dynamic_array[i-1][t] * self.emission_matrix[t][symbol_sequence[i-1]] * self.transition_matrix[t][s]
                 dynamic_array[i][s] = prob
-        #sum over all possibilities of emitting the terminal symbol from all states after having generated the specified sequence
+        # sum over all possibilities of emitting the terminal symbol from all states after having generated the specified sequence
         summarize = 0
         for i in range(0, self.num_states):
             summarize += dynamic_array[len(symbol_sequence)][i] * self.emission_matrix[i][self.num_symbols]
