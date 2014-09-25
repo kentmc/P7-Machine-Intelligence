@@ -2,6 +2,10 @@ from dataLoader import DataLoader
 from Learners.randomLearner import RandomLearner
 from Learners.baseline3gramLearner import BaseLine3GramLearner
 
+"""
+Tests different learners on a dataset
+"""
+
 data_loader = DataLoader()
 train_data = data_loader.load_test_file("pautomac_1.train", "int")
 test_data = data_loader.load_test_file("pautomac_1.test", "int")
