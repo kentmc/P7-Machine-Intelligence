@@ -19,30 +19,21 @@ class DataLoader:
             probabilities[i-1] = float(lines[i])
         return probabilities
     
-    def load_test_file(self, file_name, data_type):
+    def load_test_file(self, file_name):
         """
-        Loads a test data file and returns all symbol sequences in the following manner
-        [[3, 2, 5, 3], [], [2, 9, 4], ...]
+        Loads a test data file and returns the sequences as a list
         """
         f = open(self.directory+file_name)
 
         data = f.readline()
-        if data_type == 'int':
-            length, states = map(int, data.split(' '))
-        elif data_type == 'float':
-            length, states = map(float, data.split(' '))
-
-        data = []
+        length = map(int, data.split(' '))[0]
+        sequences = []
 
         for num in xrange(0, length):
             temp_line = f.readline()
-            if data_type == 'int':
-                temp_line = map(int, temp_line.split(' '))
-            elif data_type == 'float':
-                temp_line = map(float, temp_line.split(' '))
+            temp_line = map(int, temp_line.split(' '))
             temp_line.pop(0)
-            data.append(temp_line)
-
+            sequences.append(temp_line)
         f.close()
 
-        return data
+        return sequences

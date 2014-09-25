@@ -2,7 +2,6 @@ from learner import Learner
 from decimal import *
 from sys import *
 
-
 class BaseLine3GramLearner(Learner):
 
     def learn(self, train_data):
@@ -13,8 +12,7 @@ class BaseLine3GramLearner(Learner):
         ngramseq = [-1, -1] + symbol_sequence + [-2]
         for start in range(len(ngramseq) - 2):
             end = start + 2
-            prob = prob * (self.number(self.threegramprobs[tuple(ngramseq[start:end])][
-                           ngramseq[end]]) / self.number(self.threegramprobs[tuple(ngramseq[start:end])][-1]))
+            prob = prob * (self.number(self.threegramprobs[tuple(ngramseq[start:end])][ngramseq[end]]) / self.number(self.threegramprobs[tuple(ngramseq[start:end])][-1]))
         return prob
 
     def number(self, arg):

@@ -28,5 +28,6 @@ class Learner:
         for i in range(0, len(test_data)):
             real_pr = solution_data[i]
             guessed_pr = guessed_probabilities[i]
-            score += math.pow(2, real_pr * math.log(guessed_pr, 2))
+            if guessed_pr != 0:
+                score += math.pow(2, real_pr * math.log(guessed_pr, 2))
         return score
