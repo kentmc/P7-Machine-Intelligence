@@ -10,8 +10,10 @@ from utilities import count_unique_symbols
 # to fit our interface
 class BaumWelchLearner(Learner):
     
-    def __init__(self, num_states):
+    def __init__(self, num_states, train_data, test_data, solution_data):
+        Learner.__init__(self, train_data, test_data, solution_data)
         self.num_states = num_states
+        self.learn(self.train_data)
         
     def learn(self, train_data):
         self.num_symbols = count_unique_symbols(train_data)
@@ -207,6 +209,7 @@ class BaumWelchLearner(Learner):
         backward = dict()
         probs = []
         a = 0
+        print "Baum welch score: {}".format(self.evaluate())
         for sequence in sett:
             a+=1
             if a % 1000 == 0:

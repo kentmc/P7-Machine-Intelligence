@@ -4,7 +4,8 @@ from sys import *
 
 class BaseLine3GramLearner(Learner):
 
-    def learn(self, train_data):
+    def __init__(self, train_data, test_data, solution_data):
+        Learner.__init__(self, train_data, test_data, solution_data)
         self.threegramprobs = self.threegramdict(train_data)
 
     def calc_sequence_probability(self, symbol_sequence):

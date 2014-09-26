@@ -14,18 +14,14 @@ test_data = data_loader.load_test_file("pautomac_1.test")
 solution_data = data_loader.load_solution_file("pautomac_1.solution")
 
 #Test different learners
-#learner1 = RandomLearner()
- # No need to learn anything because it makes a random guess anyway
-#print "RandomLearner score: {}".format(learner1.evaluate(test_data, solution_data))
+#learner1 = RandomLearner(train_data, test_data, solution_data)
+#print "RandomLearner score: {}".format(learner1.evaluate())
 
-#learner2 = BaseLine3GramLearner()
-#learner2.learn(train_data)
-#print "BaseLine3GramLearner score: {}".format(learner2.evaluate(test_data, solution_data))
+#learner2 = BaseLine3GramLearner(train_data, test_data, solution_data)
+#print "BaseLine3GramLearner score: {}".format(learner2.evaluate())
 
-#learner3 = BaumWelchLearner(20)
-#learner3.learn(train_data)
-#print "BaumWelchLearner score: {}".format(learner3.evaluate(test_data, solution_data))
+#learner3 = BaumWelchLearner(20, train_data, test_data, solution_data)
+#print "BaumWelchLearner score: {}".format(learner3.evaluate())
 
-learner4 = KentLearner(20, test_data, solution_data)
-learner4.learn(train_data)
-#print "BaumWelchLearner score: {}".format(learner3.evaluate(test_data, solution_data))
+learner4 = KentLearner(20, train_data, test_data, solution_data)
+print "KentLearner score: {}".format(learner4.evaluate())
