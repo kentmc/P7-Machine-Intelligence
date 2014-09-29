@@ -1,0 +1,7 @@
+# LaTeX ignores
+*.aux
+*.lof
+*.log
+*.out
+*.toc
+*.bib
