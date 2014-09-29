@@ -23,30 +23,14 @@
 \documentclass[12pt,a4paper]{report}
 \usepackage[pdftex]{graphicx} %for embedding images
 \usepackage{url} %for proper url entries
+\usepackage{amsmath}
 \usepackage[bookmarks, colorlinks=false, pdfborder={0 0 0}, pdftitle={<pdf title here>}, pdfauthor={<author's name here>}, pdfsubject={<subject here>}, pdfkeywords={<keywords here>}]{hyperref} %for creating links in the pdf version and other additional pdf attributes, no effect on the printed document
 %\usepackage[final]{pdfpages} %for embedding another pdf, remove if not required
 
 \begin{document}
 \renewcommand\bibname{References} %Renames "Bibliography" to "References" on ref page
 
+\input{content/content.tex}
+
 %include other pages
-\input{./content/title.tex}
-\input{./content/certificate.tex}
-\input{./content/abstract.tex}
-
-\pagenumbering{roman} %numbering before main content starts
-\tableofcontents
-\listoffigures
-
-\newpage
-\pagenumbering{arabic} %reset numbering to normal for the main content
-
-\input{./content/prob-definition.tex} %objective changed to problem definition
-\input{./content/introduction.tex} %literature survey included in this
-\input{./content/work-done.tex}
-\input{./content/future-work.tex}
-\input{./content/conclusion.tex}
-\input{./content/acknow.tex}
-\input{./content/ref.tex}
-
 \end{document}
