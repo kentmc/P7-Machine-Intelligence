@@ -1,3 +1,6 @@
 /Code/program/Learners/*.pyc
 *.pyc
 *.ini
+*.gz
+*.db
+*.pdf
