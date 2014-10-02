@@ -1,0 +1,28 @@
+\subsection{Underflow}
+    Arithmetic underflow is a condition that can happen in computers, underflow is caused when a number is smaller than the minimum non-negative number a computer can store, and will therefore cause rounding errors bigger than usual. This can be seen by looking at how a computer stores numbers in binary, by looking at a 2 byte binary number with one byte before the decimal point and one byta after we get:\\
+
+\begin{table}[!h]
+    \begin{tabular}{|l|l|l|}
+        \hline
+        Bit number & Value    & Decimal \\ \hline
+        3          & $2^3$    & 8       \\ 
+        2          & $2^2$    & 4       \\ 
+        1          & $2^1$    & 2       \\ 
+        0          & $2^0$    & 1       \\ 
+        -1         & $2^{-1}$ & 0.500   \\ 
+        -2         & $2^{-2}$ & 0.250   \\ 
+        -3         & $2^{-3}$ & 0.125   \\ 
+        -4         & $2^{-4}$ & 0.0625  \\
+        \hline
+    \end{tabular}
+\end{table}
+
+    This makes the smalles number $0.0625$, any value less than this will get rounded either down to zero or up to $0.0625$. The smallest number in binary is:
+
+    $$0000.0001 = 0.0625$$
+
+\subsubsection{Does it matter}
+asd
+
+\subsubsection{How to work around it}
+asd
