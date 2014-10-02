@@ -34,23 +34,5 @@
 \renewcommand\bibname{References} %Renames "Bibliography" to "References" on ref page
 
 %include other pages
-\input{./content/title.tex}
-\input{./content/certificate.tex}
-\input{./content/abstract.tex}
-
-\pagenumbering{roman} %numbering before main content starts
-\tableofcontents
-\listoffigures
-
-\newpage
-\pagenumbering{arabic} %reset numbering to normal for the main content
-
-\input{./content/prob-definition.tex} %objective changed to problem definition
-\input{./content/introduction.tex} %literature survey included in this
-\input{./content/work-done.tex}
-\input{./content/future-work.tex}
-\input{./content/conclusion.tex}
-\input{./content/acknow.tex}
-\input{./content/ref.tex}
-
++\input{content/content.tex}
 \end{document}
