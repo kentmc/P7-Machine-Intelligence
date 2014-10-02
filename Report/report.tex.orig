@@ -36,11 +36,10 @@
 %\renewcommand\bibname{References} %Renames "Bibliography" to "References" on ref page
 
 %include other pages
+<<<<<<< HEAD
 \input{./content/title.tex}
-
 %\input{./content/certificate.tex}
 \input{./content/abstract.tex}
-
 
 \pagenumbering{roman} %numbering before main content starts
 \tableofcontents
@@ -49,11 +48,19 @@
 \newpage
 \pagenumbering{arabic} %reset numbering to normal for the main content
 
-\input{./content/content.tex}
-
-\input{content/acknowledgements.tex}
+\input{./content/introduction.tex} %literature survey included in this
+\input{./content/theory.tex}
+\input{./content/work-done.tex}
+\input{./content/results.tex}
+\input{./content/future-work.tex}
+\input{./content/conclusion.tex}
+\input{./content/acknow.tex}
+%\input{./content/ref.tex}
 
 \bibliographystyle{IEEEtrans}
 \bibliography{report}
 
+=======
++\input{content/content.tex}
+>>>>>>> 6146c0b059d93dd26366720c57b05ca51788a4ff
 \end{document}
