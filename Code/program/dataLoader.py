@@ -5,7 +5,7 @@ class DataLoader:
     def __init__(self):
         self.directory = "../data/"
 
-    def load_solution_file(self, file_name):
+    def load_probabilities_from_file(self, file_name):
         """
         Loads a solution file and returns a list where each element i is the probability of generating the i'th sequence
         """
@@ -19,7 +19,7 @@ class DataLoader:
             probabilities[i-1] = float(lines[i])
         return probabilities
     
-    def load_test_file(self, file_name):
+    def load_sequences_from_file(self, file_name):
         """
         Loads a test data file and returns the sequences as a list
         """

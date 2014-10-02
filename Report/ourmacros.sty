@@ -1,0 +1,33 @@
+\newcommand{\formatclass}[1] {\textcolor{deepblue}{#1}}
+\newcommand{\formatfunction}[1] {\textcolor{deepred}{#1}}
+\newcommand{\todo}[1] {\colorbox{black}{\textcolor{yellow}{TODO: #1}}}
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+numbers=left,
+basicstyle=\ttb\scriptsize,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\scriptsize\color{deepblue},
+emph={__init__},          % Custom highlighting
+emphstyle=\ttb\scriptsize\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+frame=tb,                         % Any extra options here
+showstringspaces=false,            % 
+breaklines=true
+}}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}

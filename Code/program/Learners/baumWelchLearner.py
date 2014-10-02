@@ -10,8 +10,8 @@ from utilities import count_unique_symbols
 # to fit our interface
 class BaumWelchLearner(Learner):
     
-    def __init__(self, num_states, train_data, test_data, solution_data):
-        Learner.__init__(self, train_data, test_data, solution_data)
+    def __init__(self, num_states, train_data):
+        Learner.__init__(self, train_data)
         self.num_states = num_states
         self.learn(self.train_data)
         
