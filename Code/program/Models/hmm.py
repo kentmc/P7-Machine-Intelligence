@@ -46,10 +46,6 @@ class HMM(Model):
             else:
                 for y in range(0, self.num_states):
                     self.transition_matrix[x][y] /= sumVal
-            print "sum1: {}".format(sum(self.transition_matrix[x]))
-                
-            if sum(self.transition_matrix[x]) == 0:
-                print "lol" 
                 
         # Normalize emission matrix
         for x in range(0, self.num_states):
@@ -60,11 +56,7 @@ class HMM(Model):
             else:
                 for y in range(0, self.num_symbols + 1):
                     self.emission_matrix[x][y] /= sumVal
-            print "sum2: {}".format(sum(self.emission_matrix[x]))
-            
-            if sum(self.emission_matrix[x]) == 0:
-                print "lol" 
-                
+
         # Normalize initial matrix
         sumVal = sum(self.initial_matrix)
         if sumVal == 0:
@@ -73,9 +65,6 @@ class HMM(Model):
         else:
             for x in range(0, self.num_states):
                 self.initial_matrix[x] /= sumVal 
-        print "sum3: {}".format(sum(self.initial_matrix))
-        if sum(self.initial_matrix) == 0:
-                print "lol" 
         
     def calc_sequence_probability(self, symbol_sequence):
         """

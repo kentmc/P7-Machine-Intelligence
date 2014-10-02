@@ -6,8 +6,10 @@ from copy import deepcopy
 
 class KentLearner(Learner):
 
-    def __init__(self, num_states, train_data):
+    def __init__(self, num_states, train_data, test_sequences, solution_probabilities):
         Learner.__init__(self, train_data)
+        self.test_sequences = test_sequences
+        self.solution_probabilities = solution_probabilities
         self.num_states = num_states
         self.learn()
         
@@ -32,7 +34,7 @@ class KentLearner(Learner):
         self.hmm = self.estimate_hmm(state_sequences, self.train_data)    
         
         for i in range(5000):
-            print "Score after {} iterations: {}".format(i, self.evaluate())
+            print "Score after {} iterations: {}".format(i, self.evaluate(self.test_sequences, self.solution_probabilities))
             self.iterate()
     
     def iterate(self):
@@ -44,7 +46,9 @@ class KentLearner(Learner):
         
         # calculate the hmm parameters from the estimated states
         estimated_hmm = self.estimate_hmm(state_sequences, self.train_data)
-        self.greedy_replace_rows(self.hmm, estimated_hmm)
+        
+        self.hmm = estimated_hmm
+        #self.greedy_replace_rows(self.hmm, estimated_hmm)
         
 
     def greedy_replace_rows(self, hmm, hmm_other):

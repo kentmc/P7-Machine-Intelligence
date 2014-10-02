@@ -1,3 +1,5 @@
+from decimal import *
+
 class DataLoader:
     '''
     Class for loading test and solution files
@@ -16,7 +18,7 @@ class DataLoader:
         
         #Cast the values in the file to floating points and save as a new list
         for i in range(1, len(lines)):
-            probabilities[i-1] = float(lines[i])
+            probabilities[i-1] = Decimal(lines[i])
         return probabilities
     
     def load_sequences_from_file(self, file_name):
