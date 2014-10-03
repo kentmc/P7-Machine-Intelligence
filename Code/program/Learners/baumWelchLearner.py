@@ -10,8 +10,10 @@ from utilities import count_unique_symbols
 # to fit our interface
 class BaumWelchLearner(Learner):
     
-    def __init__(self, num_states, train_data):
+    def __init__(self, num_states, train_data, test_sequences, solution_probabilities):
         Learner.__init__(self, train_data)
+        self.test_sequences = test_sequences
+        self.solution_probabilities = solution_probabilities
         self.num_states = num_states
         self.learn(self.train_data)
         
@@ -144,8 +146,6 @@ class BaumWelchLearner(Learner):
         a = 0
         for sequence in sett:
             a+=1
-            if a % 1000 == 0:
-                print "calculating prob. of sequence {} / {}".format(a, len(sett))
             probs.append(self.computeprobability((I, F, S, T), sequence, DPdict))
         return probs
     
@@ -209,11 +209,9 @@ class BaumWelchLearner(Learner):
         backward = dict()
         probs = []
         a = 0
-        print "Baum welch score: {}".format(self.evaluate())
+        print "Baum welch score (still iterating): {}".format(self.evaluate(self.test_sequences, self.solution_probabilities))
         for sequence in sett:
             a+=1
-            if a % 1000 == 0:
-                print "calculating back. prob. of sequence {} / {}".format(a, len(sett))
             probs.append(self.computeprobability((I, F, S, T), sequence, backward))
         # backward = P(s|start(q))
     
@@ -221,8 +219,6 @@ class BaumWelchLearner(Learner):
         a = 0
         for sequence in sett:
             a+=1
-            if a % 1000 == 0:
-                print "calculating forw. prob. of sequence {} / {}".format(a, len(sett))
             self.computeprobabilityreverse((I, F, S, T), sequence, forward)
         # forward = P(s,end(q))
     

@@ -1,3 +1,6 @@
+from decimal import *
+import math
+
 def count_unique_symbols(list_of_sequences):
     """
     Counts the number of unique symbols found in a list, assuming that all symbols are integers: 0, 1, ..., n
@@ -10,3 +13,13 @@ def count_unique_symbols(list_of_sequences):
                 
     # Add 1 because first symbol is 0
     return max_val_found + 1
+
+def calc_perplexity_mesaure(real_probabilities, guessed_probabilities):
+    # calculate score
+        score = Decimal(0)
+        for i in range(0, len(guessed_probabilities)):
+            real_pr = real_probabilities[i]
+            guessed_pr = guessed_probabilities[i]
+            score += Decimal(real_pr) * Decimal(math.log(guessed_pr, 2))
+        return math.pow(2, -score)
+    
