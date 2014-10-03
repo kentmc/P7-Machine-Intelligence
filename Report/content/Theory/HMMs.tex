@@ -17,7 +17,7 @@ Where:
 Such a hidden Markov model can be used to generate a sequence of observable symbols (signal): $$O = (o_1, ..., o_T)$$
 Where ${\forall t \in \{1, ..., T\}: o_t \in \Sigma}$, $o_t$ is the symbol observed at time $t$ and $T$ is the number of discrete time steps during the observation (number of observed symbols).
 
-Similarly, we denote a sequence of hidden states of the hidden Markov model as: $$Q = (q_0, ..., q_T)$$
+Similarly, we denote a sequence of hidden states of the hidden Markov model as: $$Q = (q_1, ..., q_T)$$
 Where ${\forall t \in \{1, ..., T\}: q_t \in S}$, $q_t$ is the state of the model at time $t$ and $T$ is the number of visited states.
 We define the probability of the hidden state sequence (walk) $Q$ given the model $\lambda$ as:
 $$P(Q|\lambda) = \pi_{q_1}a_{q_1q_2}...a_{q_{T-1}q_T}$$
