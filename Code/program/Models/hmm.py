@@ -2,6 +2,7 @@ import random
 import math
 from decimal import *
 from model import Model
+from copy import deepcopy
 
 class HMM(Model):
     def __init__(self, num_states, num_symbols):
@@ -19,7 +20,17 @@ class HMM(Model):
         
         # [a] = probability of state a being the first state
         self.initial_matrix = [Decimal(0)]*num_states 
-    
+        
+    def clone(self):
+        """
+        Returns a deep copied clone of itself
+        """
+        clone = HMM(self.num_states, self.num_symbols)
+        clone.emission_matrix = deepcopy(self.emission_matrix)
+        clone.transition_matrix = deepcopy(self.transition_matrix)
+        clone.emission_matrix = deepcopy(self.emission_matrix)
+        return clone
+        
     def randomize(self):
         """
         Randomizes all parameters of the hmm

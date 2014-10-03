@@ -3,6 +3,8 @@ from Learners.randomLearner import RandomLearner
 from Learners.baseline3gramLearner import BaseLine3GramLearner
 from Learners.baumWelchLearner import BaumWelchLearner
 from Learners.kentLearner import KentLearner
+from Learners.greedyLearner import GreedyLearner
+from Models.hmm import HMM
 
 """
 Tests different learners on a dataset
