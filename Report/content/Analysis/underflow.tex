@@ -1,5 +1,5 @@
 \subsection{Underflow}
-    Arithmetic underflow is a condition that can happen in computers, underflow is caused when a number is smaller than the minimum non-negative number a computer can store, and will therefore cause rounding errors bigger than usual. This can be seen by looking at how a computer stores numbers in binary, by looking at a 2 byte binary number with one byte before the decimal point and one byta after we get:\\
+    Arithmetic underflow is a condition that can happen in computers, underflow is caused when a number is smaller than the minimum non-negative number a computer can store, and will therefore cause rounding errors bigger than usual. This can be seen by looking at how a computer stores numbers in binary, by looking at a 2 byte binary number with one byte before the decimal point and one byte after we get:\\
 
 \begin{table}[!h]
     \begin{tabular}{|l|l|l|}
@@ -17,12 +17,12 @@
     \end{tabular}
 \end{table}
 
-    This makes the smalles number $0.0625$, any value less than this will get rounded either down to zero or up to $0.0625$. The smallest number in binary is:
+    This makes the smallest number $0.0625$, any value less than this will get rounded either down to zero or up to $0.0625$. The smallest number in binary is:
 
     $$0000.0001 = 0.0625$$
 
 \subsubsection{Does it matter}
-asd
+In many cases underflow could be neglected, if the program is not working with very small numbers, or the accuracy is not that important, but in some cases and for solid programs the program should be able to detect underflow. If an algorithm is working with probabilities and a very small number is inaccurate or zero, computing calculations with this number could cause big problems, especially in cases where the program will try to divide with zero. This is a very important event to be concerned of when working with probabilities that gets very small.  
 
 \subsubsection{How to work around it}
 asd
