@@ -2,6 +2,7 @@ import random
 import math
 from decimal import *
 from model import Model
+from copy import deepcopy
 
 class HMM(Model):
     def __init__(self, num_states, num_symbols):
@@ -19,7 +20,17 @@ class HMM(Model):
         
         # [a] = probability of state a being the first state
         self.initial_matrix = [Decimal(0)]*num_states 
-    
+        
+    def clone(self):
+        """
+        Returns a deep copied clone of itself
+        """
+        clone = HMM(self.num_states, self.num_symbols)
+        clone.emission_matrix = deepcopy(self.emission_matrix)
+        clone.transition_matrix = deepcopy(self.transition_matrix)
+        clone.emission_matrix = deepcopy(self.emission_matrix)
+        return clone
+        
     def randomize(self):
         """
         Randomizes all parameters of the hmm
@@ -46,10 +57,6 @@ class HMM(Model):
             else:
                 for y in range(0, self.num_states):
                     self.transition_matrix[x][y] /= sumVal
-            print "sum1: {}".format(sum(self.transition_matrix[x]))
-                
-            if sum(self.transition_matrix[x]) == 0:
-                print "lol" 
                 
         # Normalize emission matrix
         for x in range(0, self.num_states):
@@ -60,11 +67,7 @@ class HMM(Model):
             else:
                 for y in range(0, self.num_symbols + 1):
                     self.emission_matrix[x][y] /= sumVal
-            print "sum2: {}".format(sum(self.emission_matrix[x]))
-            
-            if sum(self.emission_matrix[x]) == 0:
-                print "lol" 
-                
+
         # Normalize initial matrix
         sumVal = sum(self.initial_matrix)
         if sumVal == 0:
@@ -73,9 +76,6 @@ class HMM(Model):
         else:
             for x in range(0, self.num_states):
                 self.initial_matrix[x] /= sumVal 
-        print "sum3: {}".format(sum(self.initial_matrix))
-        if sum(self.initial_matrix) == 0:
-                print "lol" 
         
     def calc_sequence_probability(self, symbol_sequence):
         """
