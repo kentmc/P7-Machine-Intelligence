@@ -17,6 +17,9 @@ class BaumWelchLearner(Learner):
         self.num_states = num_states
         self.learn(self.train_data)
         
+    def name(self):
+        return "Baum Welch Learner"
+    
     def learn(self, train_data):
         self.num_symbols = count_unique_symbols(train_data)
         ll_bound = 10.0

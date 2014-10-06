@@ -1,9 +1,13 @@
 from utilities import calc_perplexity_mesaure
 
 class Learner:
-    def __init__(self, train_data):
-        self.train_data = train_data
-        
+    
+    def train(self, train_data):
+        raise NotImplementedError('Subclasses of Learner must provide a train procedure!')
+    
+    def name(self):
+        raise NotImplementedError('Subclasses of Learner must provide a name!')
+    
     def calc_sequence_probability(self, symbol_sequence):
         raise NotImplementedError('Subclasses must override function calc_sequence_probability()!')
     
@@ -18,12 +22,11 @@ class Learner:
             guessed_probabilities[i] = self.calc_sequence_probability(test_sequences[i])
         
         # smooth to adjust for 0 probabilities
-        map((lambda x: x if x > 0 else 0.00000000000001), guessed_probabilities)
+        # map((lambda x: x if x > 0 else 0.00000000000001), guessed_probabilities)
         
         # normalize
         sum_guesses = sum(guessed_probabilities)
-        if sum_guesses != 0.0:
-            for i in range(len(test_sequences)):
-                guessed_probabilities[i] = guessed_probabilities[i] / sum_guesses
+        for i in range(len(test_sequences)):
+            guessed_probabilities[i] = guessed_probabilities[i] / sum_guesses
                 
         return calc_perplexity_mesaure(solution_probabilities, guessed_probabilities)
