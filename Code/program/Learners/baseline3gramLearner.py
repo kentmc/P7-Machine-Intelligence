@@ -2,11 +2,14 @@ from learner import Learner
 from decimal import *
 from sys import *
 
-class BaseLine3GramLearner(Learner):
+class Baseline3GramLearner(Learner):
 
     def __init__(self, train_data):
         Learner.__init__(self, train_data)
         self.threegramprobs = self.threegramdict(train_data)
+        
+    def name(self):
+        return "Baseline 3-Gram Learner"
 
     def calc_sequence_probability(self, symbol_sequence):
         prob = self.number('1.0')

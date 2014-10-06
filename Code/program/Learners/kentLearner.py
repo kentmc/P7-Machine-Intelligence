@@ -6,13 +6,13 @@ from copy import deepcopy
 
 class KentLearner(Learner):
 
-    def __init__(self, num_states, train_data, test_sequences, solution_probabilities):
-        Learner.__init__(self, train_data)
-        self.test_sequences = test_sequences
-        self.solution_probabilities = solution_probabilities
+    def train(self, num_states, train_data):
         self.num_states = num_states
         self.learn()
-        
+    
+    def name(self):
+        return "Kent Learner"
+    
     def learn(self):
         self.num_symbols = count_unique_symbols(self.train_data)
         self.hmm = HMM(self.num_states, self.num_symbols)
@@ -34,7 +34,8 @@ class KentLearner(Learner):
         self.hmm = self.estimate_hmm(state_sequences, self.train_data)    
         
         for i in range(5000):
-            print "Score after {} iterations: {}".format(i, self.evaluate(self.test_sequences, self.solution_probabilities))
+            probabilities = map(self.hmm.calc_sequence_probability, self.train_data)
+            print "Loglikelihood after {} iterations: {}".format(i, self.hmm.loglikelihood(probabilities))
             self.iterate()
     
     def iterate(self):
