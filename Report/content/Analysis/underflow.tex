@@ -25,4 +25,15 @@
 In many cases underflow could be neglected, if the program is not working with very small numbers, or the accuracy is not that important, but in some cases and for solid programs the program should be able to detect underflow. If an algorithm is working with probabilities and a very small number is inaccurate or zero, computing calculations with this number could cause big problems, especially in cases where the program will try to divide with zero. This is a very important event to be concerned of when working with probabilities that gets very small.  
 
 \subsubsection{How to work around it}
-asd
+In this project there is a high probability that very small numbers will occur, this demands a work around to the underflow problem. One possible work around is called \textit{log odds} this method maps values $[0;1]$ to $[-\infty; \infty]$. The log odds for state \textit{A} is the logarithm of the probability for state $A$ divided by the probability for state $\neg A$.\\
+
+    $$\frac{p(A)}{p(\neg A)} = \frac{p(A)}{1-p(A)}$$
+
+    $$l(A) = \log \frac{p(A)}{1-p(A)}$$
+
+    The mapping is shown on the graph below:\\
+Figure\\\\
+
+    Another way to work around the problem is with Pythons \textit{decimal} library, this library makes it possible to store decimal numbers with exact precision and detect underflow. It possible to define how many decimals you want on numbers in the decimal library.
+
+To determine what method works best, some tests needs to be done, in order to figure out when the \textit{log odds} would be prefer over the \textit{decimal} library.
