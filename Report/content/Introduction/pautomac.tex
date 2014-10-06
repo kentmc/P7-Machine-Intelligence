@@ -1,2 +1,174 @@
 \section{PAutomaC Competition}
 
+\subsection{{\LARGE{}PautomaC}}
+
+\enskip{}\quad{}PautomaC stands for Probabilistic Automata learning
+Competition. To win, the competitors had to try and create the most
+accurate algorithm for learning what are called Non-deterministic
+Probabilistic Finite state Automata (NPFA). The aim of this competition
+was to improve the existing knowledge on NPFA-learning algorithms.
+
+
+\subsubsection{{\Large{}Reminder about PAs.}}
+
+\quad{}\enskip{}More commonly refered to as simply Probabilistic
+Automaton (PA) or sometimes Rabin Automaton, like the name of Michael
+O. Rabin who introduced this concept in 1963, PAs generalise the concept
+of Non-deterministic Finite Automata (NFA). NFAs can transition to
+zero or more states, without requiring input symbols for state transitions.
+However, PAs introduce transitioning probabilities in the definition.
+Therefore, whereas NFAs all have a Deterministic equivalent, the introduction
+of the probability concept in PAs prevent the existence of DFA equivalents,
+unless all probabilities are equal to 0 or 1.
+
+The languages PAs recognise are called stochastic languages - of which
+the regular ones are a subset. More about the stochastic languages
+can be found {[}here{]}. The number of stochastic languages is uncountable.
+By their definition, PAs extend the Markov Chain concept. More formally:
+\begin{description}
+\item [{P:}] probability of transitioning to a particular state
+\item [{Q:}] finite set of states
+\item [{$q_{0}$:}] probability vector of being in a particular initial
+state
+\item [{$\varSigma$:}] finite set of input symbols
+\item [{$\delta:Q\times\varSigma\longrightarrow P(Q)$:}] transition function
+\item [{F:}] finite set of final states, with $F\subset Q$
+\end{description}
+The transition matrix T from a state q to a state q' must have the
+following property:
+
+\[
+\stackrel[q]{}{\sum}[T]_{qq'}=1
+\]
+
+
+This means that the probability of transitioning from a state to another
+(or possibly the same) is 1. A st
+
+Consider a DNA sequence. The observed symbols undoubtedly follow a
+model of some sort, yet it is unknown. The goal of a NPFA is to approximate
+this kind of model, and learning NPFAs ultimately leads to learning
+how DNA sequences are generated. A bit more in detail:
+\begin{itemize}
+\item An NPFA only has a finite number of states, like its ``Finite state''
+part suggests.
+\item Each state can transition to any number of states, including none.
+Each transition from this state has a probability of being picked,
+producing its associated symbol in the process. This symbol is what
+is actually observed in the sequence. This is the ``Probabilistic''
+part.
+\item Observing a certain symbol when transitioning from a certain state
+does NOT imply that the next state will necessarily be the same every
+time. In other words, a symbol can be associated to several transitions
+branching out from the same state. This is the ``Non-deterministic''
+part.
+\end{itemize}
+Albeit complex, NPFAs have many applications. Indeeed, in most cases,
+the only available data is the observed output. It is thus necessary
+to learn how to make a model out of these observed sequences to understand
+them.
+
+
+\part*{{\large{}\uline{How were the tests generated?}}}
+
+\quad{}\enskip{}Now that we know about the aim of PautomaC, it is
+time to know how they tested the participants. First of all, their
+test files have all been computer-generated. They include 4 model
+types:
+\begin{enumerate}
+\item Markov Chains
+\item Probabilistic Finite Automata (PFAs)
+\item Deterministic Probabilistic Finite Automata (DPFAs)
+\item Hidden Markoc Models (HMMs)
+\end{enumerate}
+The manner with which those files have been generated is as follows:
+\begin{itemize}
+\item N for the number of states
+\item A for the size of the alphabet (or number of observed symbols)
+\item S for the scarcity of symbols
+\item T for the scarcity of transitions\end{itemize}
+\begin{description}
+\item [{\textmd{The}}] ``S'' and ``T'' values can be confusing. Let's
+clarify what they mean:
+
+\begin{description}
+\item [{S}] represents the average percentage of symbols produced by any
+given state. In other words, each state will only produce S\% of the
+whole alphabet A in average. Do note that two states may still produce
+different symbols.
+\item [{T}] represents the average percentage of all possible transitions
+branching out from any given state. A transition here is a link from
+one state to another, with a symbol associated to it. With this in
+mind: for each state, out of all the possible transitions branching
+out from it (each with their respective symbol and destination state),
+only T\% will be generated.
+\end{description}
+\end{description}
+\enskip{}\enskip{}\enskip{}The organisers entered those 4 values
+for each file. Finally, they chose to set the number of initial states
+to T$\times$N and the number of final states to S$\times$N. Everything
+else is entirely computer-generated. 
+
+
+\part*{{\large{}\uline{The model files.}}}
+
+\enskip{}\enskip{}\enskip{}Generating a test model means that a
+model file is generated. This file contains all the necessary information
+to generate sequences. The information inside those files is layed
+out in a particular manner described as follows:
+\begin{description}
+\item [{I:}] (state number)\\
+Probability of starting the sequence in that state.\\
+\textit{Note: the sum of all those probabilities is equal to 1.}
+\item [{F:}] (state number)\\
+Probably of ending the sequence when in that state\textit{.}\\
+\textit{Note: those probabilities are independent of every other,
+including the symbol and transition ones. Also, their sum is NOT equal
+to 1.}
+\item [{S:}] (state number, symbol number)\\
+Probability of producing this symbol in this state.\\
+\textit{Note: the sum of all the probabilities for any one state is
+equal to 1.}
+\item [{T:}] (starting state number, symbol number, destination state number)\\
+Probability of reaching this destination state from this starting
+state, given this symbol.\\
+\textit{Note: the sum of all the probabilities sharing the same ``starting
+state number'' and ``symbol number'' is equal to 1.}
+\end{description}
+
+\part*{{\large{}\uline{Rating}}}
+
+\enskip{}\enskip{}\enskip{}At the time of the competition, the
+model and solution files were, of course, not available. The competitors
+had to provide, for each sequence, the probability for it to occur.
+Then, the organisers compared their results to the actual probabilities
+inside their solution files, and rated the competitors based on how
+close they were.
+
+Worthy of note is that only the results mattered. This means that
+the competitors\textquoteright{} models or numbers of states did not
+matter, so long as they were able to approximate the behaviour of
+the organisers\textquoteright{} one. The formula used is as follows:
+
+{\huge{}
+\[
+2^{-(\sum_{x\epsilon TestSet}P_{r_{T}}(x)\times\log(P_{r_{C}}(x)))}
+\]
+}{\huge \par}
+
+where (blah-blah represents blah-blah... all that stuff)
+
+
+\part*{{\large{}\uline{Using their data}}}
+
+\enskip{}\enskip{}\enskip{}Our project also dealing with finding
+a learning algorithm for such automata, we figured this would be a
+good place to start to understand the problem in more depth, as well
+as getting test files on which to test our algorithms.
+
+To know whether our algorithms are actually efficient or not, we will
+use the PautomaC test files as a part of our testing. The advantage
+is that we have their solution and model files, allowing us to compare
+our results to the probabilities of the actual model, just like how
+the competitors were rated in that competition. Our outputted results
+are fine.
