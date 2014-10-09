@@ -1,4 +1,5 @@
 from learner import *
+import math
 from dataLoader import DataLoader
 
 class Benchmarker:
@@ -46,5 +47,8 @@ class Benchmarker:
                 print "Evaluating learner: " + learner.name()
                 score = learner.evaluate(test_data, solution_data)
                 print "Achieved score: " + str(score)
-                f.write(", " + str(score))
+                str_score = " {0:.1f}".format(score)
+                while len(str_score) < 8:
+                    str_score = " " + str_score
+                f.write(", " + str_score)
         f.close()
