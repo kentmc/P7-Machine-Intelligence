@@ -71,15 +71,18 @@ L.~E. Baum and G.~R. Sell, ``Growth transformations for functions on
   \url{http://projecteuclid.org/euclid.pjm/1102983899}
 \BIBentrySTDinterwordspacing
 
-\bibitem{ben-gal2007bn}
-\BIBentryALTinterwordspacing
-I.~Ben-Gal, \emph{Bayesian Networks}.\hskip 1em plus 0.5em minus 0.4em\relax
-  John Wiley \& Sons, Ltd, 2008. [Online]. Available:
-  \url{http://dx.doi.org/10.1002/9780470061572.eqr089}
-\BIBentrySTDinterwordspacing
+\bibitem{cappe2005}
+O.~Capp{\'e}, E.~Moulines, and T.~Ryden, \emph{Inference in Hidden Markov
+  Models}, ser. Springer Series in Statistics.\hskip 1em plus 0.5em minus
+  0.4em\relax Springer, 2005.
 
 \bibitem{collins}
 M.~Collins, ``Probabilistic context-free grammars.''
+
+\bibitem{Dempster1977}
+A.~P. Dempster, N.~M. Laird, and D.~B. Rubin, ``Maximum likelihood from
+  incomplete data via the em algorithm,'' \emph{JOURNAL OF THE ROYAL
+  STATISTICAL SOCIETY, SERIES B}, vol.~39, no.~1, pp. 1--38, 1977.
 
 \bibitem{Forney1973}
 G.~D. Forney, ``The viterbi algorithm,'' \emph{Proc. of the IEEE}, vol.~61, pp.
@@ -88,6 +91,27 @@ G.~D. Forney, ``The viterbi algorithm,'' \emph{Proc. of the IEEE}, vol.~61, pp.
 \bibitem{jelinek1976}
 F.~Jelinek, ``Continuous speech recognition by statistical methods,''
   \emph{Proceedings of the IEEE}, vol.~64, no.~4, pp. 532--556, April 1976.
+
+\bibitem{levinson1983}
+\BIBentryALTinterwordspacing
+S.~E. Levinson, L.~R. Rabiner, and M.~M. Sondhi, ``An introduction to the
+  application of the theory of probabilistic functions of a markov process to
+  automatic speech recognition,'' \emph{Bell System Technical Journal},
+  vol.~62, no.~4, pp. 1035--1074, 1983. [Online]. Available:
+  \url{http://dx.doi.org/10.1002/j.1538-7305.1983.tb03114.x}
+\BIBentrySTDinterwordspacing
+
+\bibitem{li2000}
+X.~Li, M.~Parizeau, and R.~Plamondon, ``Training hidden markov models with
+  multiple observations-a combinatorial method,'' \emph{Pattern Analysis and
+  Machine Intelligence, IEEE Transactions on}, vol.~22, no.~4, pp. 371--377,
+  Apr 2000.
+
+\bibitem{piyathilaka2013}
+L.~Piyathilaka and S.~Kodagoda, ``Gaussian mixture based hmm for human daily
+  activity recognition using 3d skeleton features,'' in \emph{Industrial
+  Electronics and Applications (ICIEA), 2013 8th IEEE Conference on}, June
+  2013, pp. 567--572.
 
 \bibitem{Rabiner89hmm}
 L.~R. Rabiner, ``A tutorial on hidden markov models and selected applications
@@ -108,5 +132,9 @@ A.~Viterbi, ``Error bounds for convolutional codes and an asymptotically
   pp. 260--269, Sep. 2006. [Online]. Available:
   \url{http://dx.doi.org/10.1109/TIT.1967.1054010}
 \BIBentrySTDinterwordspacing
+
+\bibitem{wu1983}
+C.~F.~J. Wu, ``On the convergence properties of the {EM} algorithm,'' \emph{The
+  Annals of Statistics}, vol.~11, no.~1, pp. 95--103, 1983.
 
 \end{thebibliography}
