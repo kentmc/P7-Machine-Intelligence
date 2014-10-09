@@ -25,15 +25,17 @@ The languages PAs recognise are called stochastic languages - of which
 the regular ones are a subset. More about stochastic languages can
 be found {[}here{]}. The number of stochastic languages is uncountable.
 By their definition, PAs extend the Markov Chain concept. More formally:
+
 \begin{description}
-\item [{P:}] probability of transitioning to a particular state
-\item [{Q:}] finite set of states
-\item [{$q_{0}$:}] probability vector of being in a particular initial
-state
-\item [{$\varSigma$:}] finite set of input symbols
-\item [{$\delta:Q\times\varSigma\longrightarrow P(Q)$:}] transition function
-\item [{F:}] finite set of final states, with $F\subset Q$
+	\item [{P:}] probability of transitioning to a particular state
+	\item [{Q:}] finite set of states
+	\item [{$q_{0}$:}] probability vector of being in a particular initial
+	state
+	\item [{$\varSigma$:}] finite set of input symbols
+	\item [{$\delta:Q\times\varSigma\longrightarrow P(Q)$:}] transition function
+	\item [{F:}] finite set of final states, with $F\subset Q$
 \end{description}
+
 In addition, the transition matrix T from a state q to a state q'
 while producing the symbol s must have the following property:
 
