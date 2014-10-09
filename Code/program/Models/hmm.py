@@ -3,6 +3,7 @@ import math
 from decimal import *
 from model import Model
 from copy import deepcopy
+from numpy import *
 
 class HMM(Model):
     def __init__(self, num_states, num_symbols):
@@ -99,10 +100,6 @@ class HMM(Model):
         for i in range(0, self.num_states):
             summarize += dynamic_array[len(symbol_sequence)][i] * self.emission_matrix[i][self.num_symbols]
         return summarize
-        summarize = 0
-        for i in range(0, self.num_states):
-            summarize += dynamic_array[len(symbol_sequence)][i] * self.emission_matrix[i][self.num_symbols]
-        return summarize
     
     # Implementation from Wikipedia
     def viterbi(self, symbol_sequence):
@@ -134,6 +131,14 @@ class HMM(Model):
             n = t
         (prob, state) = max((V[n][y], y) for y in range(self.num_states))
         return (prob, path[state])
+    
+    def loglikelihood(self, probabilities):
+        sumt = Decimal(0)
+        log2 = log10(Decimal(2))
+        for index in range(len(probabilities)):
+            term = log10(probabilities[index]) / log2
+            sumt = sumt + term
+        return sumt
     
     def smooth_by(self, hmm_other, amount):
         """

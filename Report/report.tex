@@ -22,11 +22,12 @@
 
 \documentclass[12pt,a4paper]{report}
 \usepackage{color}
+\usepackage[pdftex]{graphicx}
+\usepackage{todonotes}
 \usepackage{ourmacros}
 \usepackage{listings}
 \usepackage{amsfonts}
 \usepackage{amsmath}
-\usepackage[pdftex]{graphicx}
 \usepackage{url}
 \usepackage{epstopdf} %What's this???
 \usepackage[bookmarks, colorlinks=false, pdfborder={0 0 0}, pdftitle={<pdf title here>}, pdfauthor={<author's name here>}, pdfsubject={<subject here>}, pdfkeywords={<keywords here>}]{hyperref} %for creating links in the pdf version and other additional pdf attributes, no effect on the printed document
@@ -34,6 +35,7 @@
 
 \begin{document}
 %\renewcommand\bibname{References} %Renames "Bibliography" to "References" on ref page
+\listoftodos
 
 %include other pages
 \input{./content/title.tex}
@@ -51,9 +53,9 @@
 
 \input{./content/content.tex}
 
-\input{content/acknowledgements.tex}
+%\input{content/acknowledgements.tex}
 
-\bibliographystyle{IEEEtran}
+\bibliographystyle{IEEEtrans}
 \bibliography{report}
 
 \end{document}

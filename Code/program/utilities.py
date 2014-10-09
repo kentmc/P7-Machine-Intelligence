@@ -14,6 +14,16 @@ def count_unique_symbols(list_of_sequences):
     # Add 1 because first symbol is 0
     return max_val_found + 1
 
+def longest_sequence_length(list_of_sequences):
+    """
+    Returns the length of the longest sequence
+    """
+    maxlength = 0
+    for seq in list_of_sequences:
+        if len(seq) > maxlength:
+            maxlength = len(seq)
+    return maxlength
+
 def calc_perplexity_mesaure(real_probabilities, guessed_probabilities):
     # calculate score
         score = Decimal(0)
@@ -22,4 +32,6 @@ def calc_perplexity_mesaure(real_probabilities, guessed_probabilities):
             guessed_pr = guessed_probabilities[i]
             score += Decimal(real_pr) * Decimal(math.log(guessed_pr, 2))
         return math.pow(2, -score)
+    
+    
     
