@@ -1,26 +1,19 @@
-from learner import Learner
+from learner import *
+from numpy import array
 from numpy.random.mtrand import dirichlet
-from numpy import *
-from sys import *
-from dataLoader import DataLoader
-import utilities
 from utilities import count_unique_symbols
+from math import log10
 
 # Rewritten from implementation found at http://ai.cs.umbc.edu/icgi2012/challenge/Pautomac/code/pautomac_baumwelch.py
 # to fit our interface
 class BaumWelchLearner(Learner):
-    
-    def __init__(self, num_states, train_data, test_sequences, solution_probabilities):
-        Learner.__init__(self, train_data)
-        self.test_sequences = test_sequences
-        self.solution_probabilities = solution_probabilities
+    def __init__(self, num_states):
         self.num_states = num_states
-        self.learn(self.train_data)
-        
+          
     def name(self):
         return "Baum Welch Learner"
     
-    def learn(self, train_data):
+    def train(self, train_data):
         self.num_symbols = count_unique_symbols(train_data)
         ll_bound = 10.0
         self.model = self.randommodel(self.num_states, self.num_symbols)
@@ -212,7 +205,7 @@ class BaumWelchLearner(Learner):
         backward = dict()
         probs = []
         a = 0
-        print "Baum welch score (still iterating): {}".format(self.evaluate(self.test_sequences, self.solution_probabilities))
+        print "Baum welch taking one more iteration"
         for sequence in sett:
             a+=1
             probs.append(self.computeprobability((I, F, S, T), sequence, backward))
@@ -251,7 +244,6 @@ class BaumWelchLearner(Learner):
         # P(S(q,a)|s) =  P(S(q,a),s)/P(s)
         # P(S(q,a)|s) =  P(end(q),S(q,a),tail(q))/P(s)
         # P(S(q,a)|s) =  P(end(q),head(s))*P(tail(s)|start(q))/P(s)
-            Stotal = self.number(0.0)
             for seq in range(len(sett)):
                 sequence = sett[seq]
                 prob = probs[seq]

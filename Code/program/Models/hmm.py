@@ -1,9 +1,8 @@
-import random
-import math
-from decimal import *
+from decimal import Decimal
 from model import Model
 from copy import deepcopy
-from numpy import *
+from random import random
+from math import log10
 
 class HMM(Model):
     def __init__(self, num_states, num_symbols):

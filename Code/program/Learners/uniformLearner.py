@@ -1,6 +1,5 @@
 from learner import Learner
-import random
-from decimal import *
+from decimal import Decimal
 
 class UniformLearner(Learner):
     def train(self, train_data):
