@@ -30,3 +30,5 @@ class Learner:
             guessed_probabilities[i] = guessed_probabilities[i] / sum_guesses
                 
         return calc_perplexity_mesaure(solution_probabilities, guessed_probabilities)
+    
+    
