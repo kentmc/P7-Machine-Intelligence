@@ -61,18 +61,17 @@ goal of a PA is to approximate this kind of model, and learning PAs
 ultimately leads to learning how DNA sequences are generated.
 
 
-\subsubsection{How were the tests generated}
+\subsubsection{Test generation}
 
-Now that we know about the aim of PautomaC, it is time to know how
-they tested the participants. First of all, their test files have
-all been computer-generated. They include 4 model types:
+All test files have been computer-generated. They include 4 model
+types:
 \begin{enumerate}
 \item Markov Chains
 \item Probabilistic Finite Automata (PFAs)
 \item Deterministic Probabilistic Finite Automata (DPFAs)
-\item Hidden Markov Models (HMMs)
+\item Hidden Markoc Models (HMMs)
 \end{enumerate}
-The manner with which those files have been generated is as follows:
+The manner in which those files have been generated is as follows:
 \begin{itemize}
 \item N for the number of states
 \item A for the size of the alphabet (or number of observed symbols)
@@ -129,22 +128,26 @@ state number'' and ``symbol number'' is equal to 1.}
 \subsubsection{Rating}
 
 At the time of the competition, the model and solution files were,
-of course, not available. The competitors had to provide, for each
-sequence, the probability for it to occur. Then, the organisers compared
+of course, not available. The competitors had to provide their solution
+file to each test file. Those solution files did not contain a model,
+though. What they contained instead was, for each sequence of the
+test file, the probability for it to occur. The organisers then compared
 their results to the actual probabilities inside their solution files,
-and rated the competitors based on how close they were.
-
-Worthy of note is that only the results mattered. This means that
-the competitors\textquoteright{} models or numbers of states did not
-matter, so long as they were able to approximate the behaviour of
-the organisers\textquoteright{} one. The formula used is as follows:
+and rated the competitors based on how close they were. The formula
+they used is:
 
 \[
 2^{-(\sum_{x\epsilon TestSet}P_{r_{T}}(x)\times\log(P_{r_{C}}(x)))}
 \]
 
 
-where (blah-blah represents blah-blah... all that stuff)
+where $P_{r_{T}}$ represents the organisers' probability for the
+sequence x, and $P_{r_{C}}$ the candidates' one.
+
+Worthy of note is that only the results mattered. This means that
+the competitors\textquoteright{} models or numbers of states did not
+matter, so long as they were able to approximate the behaviour of
+the organisers\textquoteright{} models.
 
 
 \subsubsection{Using their data}
