@@ -113,15 +113,67 @@ where $\alpha$ is any terminal symbol and A,B and C are any Non-terminals except
 In addition the rule $S \rightarrow \epsilon$ is permitted.
 \cite[p.109]{sipser}
 
-
-
-
-
-
-
 \subsubsection{Parsing with PCFG using the CKY Algorithm}
 
- % write about dynamic programming and how it relates to chomsky normal form.
+Using the CKY algorithm it is possible to find the parse tree for a given sentence $s$ with the hightest probability.
+That is the solution to 
+$$arg \max_{t \in \mathcal{T}_G(s)} p(t) = \text{ ?}$$
+The CKY algorithm can be applied all PCFGs that are in Chomsky Normal Form.
+This however is not as restrictive as it might appear, since all PCFGs can be rewritten to
+conform to chomsky normal form.
+\cite[p.10]{collins}
+
+The input to the CKY algorithm is a grammar $G = (N, \Sigma, S, R, q)$ and a sentence $s = x_1, x_2, \text{ ... } x_n$
+where $x_i$ is the ith word in the sentence.
+
+\begin{itemize}
+\item For a given sentence $s$ we define $\mathcal{T}(i,j,X)$ for any $X \in N$ and any (i,j) such that $1 \leq i \leq j \leq n$
+to be the set of all parse trees for the words $x_i, \text{ ... } x_j$ with the non-terminal X as the root of its tree.
+
+\item $$\pi(i,j,X) = \max_{t \in \mathcal{T}(i,j,X)}p(t)$$
+($\pi(i,j,X)$ is defined to be 0 if $\mathcal{T}(i,j,X)$ is the empty set)
+\end{itemize}
+
+Note that 
+$$\pi(1,n,S) = \max_{t \in \mathcal{T_G}(s)} p(t)$$
+
+The CKY algorithm uses a recursive definition of $\pi(i,j,X)$ that allows for bottom up dynamic programming.
+The base cases are handled in the following manner.
+$$ 
+\pi(i,i,X) = \begin{cases}
+q(X \rightarrow x_i)   &\text{if } X \rightarrow x_i \in R \\
+0                      &{otherwise}
+\end{cases}
+$$
+for all $i \in 1 \text{ ... } n$ and $X \in N$. 
+\cite[p.12]{collins}
+
+The recursive definition is as follows for all (i, j) such that $1 \leq i < j \leq n$ and for all $X \in N$.
+
+$$ \pi(i,j,X) = \max_{X \rightarrow YZ \wedge s \in \{i ... (j-1)\}}(q(X \rightarrow XZ) \times \pi(i,s,Y) \times \pi(s+1,j,Z))$$
+
+The algorithm works bottom up filling smaller sentences earlier so that they are avaliable when needed later on.
+The algorithm also stores back pointers of the non-terminal X and the optimal splitting point so that the parse tree can be constructed.  
+\cite[p.13]{collins}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -131,6 +131,9 @@ end
 
 \subsection{Estimating Model Parameters}
 
+%There is no analytical solution known for finding model parameters $A$, $B$, $\pi$ maximising the probability of a given observable sequence. In fact, no optimal way to estimate the parameters for hidden Markov models exists. However, an iterative method, the \emph{Baum-Welch} algorithm~\cite{baum1970}, can be used to derive $\lambda = (A, B, \pi)$ such that $P(O|\lambda)$ is locally maximised for a given signal $O$. The \emph{Baum-Welch} algorithm has been shown to be equivalent to the \emph{expectation maximisation} (EM) method for hidden Markov models~\cite{Dempster1977, wu1983}.
+
+%In this section we present a simple iterative approach to estimation of hidden Markov model parameters based primarily on the \emph{Baum-Welch} algorithm. This approach works for a single observable symbol sequence, however the \emph{Baum-Welch} algorithm can be extended to account for train data composed of multitude of signals~\cite{levinson1983, li2000}.
 
 \subsection{Classification}
 
@@ -139,6 +142,6 @@ The left-right model is used extensively for speech recognition.~\cite{bakis1976
 
 The hidden Markov model considered here follows the standard definition where the observable symbol is outputted in a state of the model. A modification is possible and used, again in the field of speech recognition, in which the outputted observable symbol is associated with a transition instead of a state~\cite{Rabiner89hmm, jelinek1983}. It has been proven useful to incorporate transitions that output no symbol (null transitions) into this modification~\cite{jelinek1983}.
 
-\todo{Fix this paragraph} The hidden Markov model defined in this section is a discrete hidden Markov model, with both discrete probability distribution of the observable symbols as well as a discrete distribution of transition probabilities on hidden states. It is possible to generalise a hidden Markov model by changing both of the afore mentioned probability distributions into continuous ones. A hidden Markov model with both continuous distribution on observable symbols and on hidden states is commonly known as a Bayesian network~\cite{ben-gal2007bn}.
+The hidden Markov model defined in this section is a discrete hidden Markov model, with both discrete probability distribution of the observable symbols as well as a discrete distribution of transition probabilities on hidden states. It is possible to generalise a hidden Markov model by changing both of the afore mentioned probability distributions into continuous ones. Typically the Gaussian distribution is used~\cite{cappe2005, piyathilaka2013}. In general case however, exact inference is infeasible in hidden Markov models with continuous latent variables and approximation methods must be used (extended Kalman filter, particle filter)~\cite{cappe2005}.
 
 As was mentioned before, the definition we presented is for a finite model but can be extended to account for infinite number of states or observable symbols straightforwardly. Many other variants, modifications and extensions also exist, some of them hinted in~\cite{Rabiner89hmm}.
