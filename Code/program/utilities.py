@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 from decimal import *
 import math
 import time
+=======
+from decimal import Decimal
+from math import log
+from math import pow
+>>>>>>> eeb01c2710e3ae2c32f52ddcfcf54ddd521335a2
 
 def count_unique_symbols(list_of_sequences):
     """
@@ -49,8 +55,8 @@ def calc_perplexity_mesaure(real_probabilities, guessed_probabilities):
         for i in range(0, len(guessed_probabilities)):
             real_pr = real_probabilities[i]
             guessed_pr = guessed_probabilities[i]
-            score += Decimal(real_pr) * Decimal(math.log(guessed_pr, 2))
-        return math.pow(2, -score)
+            score += Decimal(real_pr) * Decimal(log(guessed_pr, 2))
+        return pow(2, -score)
     
     
     

@@ -2,12 +2,11 @@
 WORK IN PROGRESS by Kent!
 """
 
-from learner import Learner
+from learner import *
 from Models.hmm import HMM
 from utilities import count_unique_symbols
 from numpy import random
-from decimal import *
-from copy import deepcopy
+from decimal import Decimal
 
 class GreedyLearner(Learner):
     def __init__(self, num_states, train_data, test_sequences, solution_probabilities):
@@ -16,8 +15,6 @@ class GreedyLearner(Learner):
         self.solution_probabilities = solution_probabilities
         self.num_states = num_states
         self.learn()
-        
-    
         
     def learn(self):
         self.num_symbols = count_unique_symbols(self.train_data)

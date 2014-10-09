@@ -1,11 +1,9 @@
 from learner import Learner
-from decimal import *
-from sys import *
+from decimal import Decimal
 
 class Baseline3GramLearner(Learner):
 
-    def __init__(self, train_data):
-        Learner.__init__(self, train_data)
+    def train(self, train_data):
         self.threegramprobs = self.threegramdict(train_data)
         
     def name(self):

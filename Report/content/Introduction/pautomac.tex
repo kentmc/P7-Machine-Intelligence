@@ -2,86 +2,78 @@
 
 \subsection{PautomaC}
 
-\enskip{}\quad{}PautomaC stands for Probabilistic Automata learning
-Competition. To win, the competitors had to try and create the most
-accurate algorithm for learning what are called Non-deterministic
-Probabilistic Finite state Automata (NPFA). The aim of this competition
-was to improve the existing knowledge on NPFA-learning algorithms.
+PautomaC stands for Probabilistic Automata learning Competition. To
+win, the competitors had to try and create the most accurate algorithm
+for learning what are called Non-deterministic Probabilistic Finite
+state Automata (NPFA). The aim of this competition was to improve
+the existing knowledge on NPFA-learning algorithms.
 
 
-\subsubsection{Reminder about PAs.}
+\subsubsection{Reminder about PAs}
 
-\quad{}\enskip{}More commonly refered to as simply Probabilistic
-Automaton (PA) or sometimes Rabin Automaton, like the name of Michael
-O. Rabin who introduced this concept in 1963, PAs generalise the concept
-of Non-deterministic Finite Automata (NFA). NFAs can transition to
-zero or more states, without requiring input symbols for state transitions.
-However, PAs introduce transitioning probabilities in the definition.
-Therefore, whereas NFAs all have a Deterministic equivalent, the introduction
+More commonly referred to as simply Probabilistic Automaton (PA) or
+sometimes Rabin Automaton, like the name of Michael O. Rabin who introduced
+this concept in 1963, PAs generalise the concept of Non-deterministic
+Finite Automata (NFA). NFAs can transition to zero or more states,
+without requiring input symbols for state transitions. However, PAs
+introduce transitioning probabilities in the definition. Therefore,
+whereas NFAs all have a Deterministic equivalent, the introduction
 of the probability concept in PAs prevent the existence of DFA equivalents,
 unless all probabilities are equal to 0 or 1.
 
 The languages PAs recognise are called stochastic languages - of which
-the regular ones are a subset. More about the stochastic languages
-can be found {[}here{]}. The number of stochastic languages is uncountable.
+the regular ones are a subset. More about stochastic languages can
+be found {[}here{]}. The number of stochastic languages is uncountable.
 By their definition, PAs extend the Markov Chain concept. More formally:
+
 \begin{description}
-\item [{P:}] probability of transitioning to a particular state
-\item [{Q:}] finite set of states
-\item [{$q_{0}$:}] probability vector of being in a particular initial
-state
-\item [{$\varSigma$:}] finite set of input symbols
-\item [{$\delta:Q\times\varSigma\longrightarrow P(Q)$:}] transition function
-\item [{F:}] finite set of final states, with $F\subset Q$
+	\item [{P:}] probability of transitioning to a particular state
+	\item [{Q:}] finite set of states
+	\item [{$q_{0}$:}] probability vector of being in a particular initial
+	state
+	\item [{$\varSigma$:}] finite set of input symbols
+	\item [{$\delta:Q\times\varSigma\longrightarrow P(Q)$:}] transition function
+	\item [{F:}] finite set of final states, with $F\subset Q$
 \end{description}
-The transition matrix T from a state q to a state q' must have the
-following property:
+
+In addition, the transition matrix T from a state q to a state q'
+while producing the symbol s must have the following property:
 
 \[
-\stackrel[q]{}{\sum}[T]_{qq'}=1
+\sum_{q'}[T_{s}]_{qq'}=1
 \]
 
 
-This means that the probability of transitioning from a state to another
-(or possibly the same) is 1. A st
-
-Consider a DNA sequence. The observed symbols undoubtedly follow a
-model of some sort, yet it is unknown. The goal of a NPFA is to approximate
-this kind of model, and learning NPFAs ultimately leads to learning
-how DNA sequences are generated. A bit more in detail:
+This means that, if a symbol s is produced, the probability of transitioning
+from a state to another (or possibly the same) is 1. A Probabilistic
+Automaton thus has:
 \begin{itemize}
-\item An NPFA only has a finite number of states, like its ``Finite state''
-part suggests.
-\item Each state can transition to any number of states, including none.
-Each transition from this state has a probability of being picked,
-producing its associated symbol in the process. This symbol is what
-is actually observed in the sequence. This is the ``Probabilistic''
-part.
-\item Observing a certain symbol when transitioning from a certain state
-does NOT imply that the next state will necessarily be the same every
-time. In other words, a symbol can be associated to several transitions
-branching out from the same state. This is the ``Non-deterministic''
-part.
+\item A probability of being in a particular initial state
+\item A probability of producing a symbol depending on the current state
+\item A probability of transitioning from a state to another, depending
+on the symbol produced
+\item A probability of ending the sequence when in a final state
 \end{itemize}
-Albeit complex, NPFAs have many applications. Indeeed, in most cases,
+Albeit complex, PAs have many applications. Indeed, in most cases,
 the only available data is the observed output. It is thus necessary
 to learn how to make a model out of these observed sequences to understand
-them.
+them. DNA sequences are a good example of this problem. The observed
+symbols undoubtedly follow a model of some sort, yet unknown. The
+goal of a PA is to approximate this kind of model, and learning PAs
+ultimately leads to learning how DNA sequences are generated.
 
 
-\subsubsection{How were the tests generated?}
+\subsubsection{Test generation}
 
-\quad{}\enskip{}Now that we know about the aim of PautomaC, it is
-time to know how they tested the participants. First of all, their
-test files have all been computer-generated. They include 4 model
+All test files have been computer-generated. They include 4 model
 types:
 \begin{enumerate}
 \item Markov Chains
 \item Probabilistic Finite Automata (PFAs)
 \item Deterministic Probabilistic Finite Automata (DPFAs)
-\item Hidden Markoc Models (HMMs)
+\item Hidden Markov Models (HMMs)
 \end{enumerate}
-The manner with which those files have been generated is as follows:
+The manner in which those files have been generated is as follows:
 \begin{itemize}
 \item N for the number of states
 \item A for the size of the alphabet (or number of observed symbols)
@@ -104,18 +96,17 @@ out from it (each with their respective symbol and destination state),
 only T\% will be generated.
 \end{description}
 \end{description}
-\enskip{}\enskip{}\enskip{}The organisers entered those 4 values
-for each file. Finally, they chose to set the number of initial states
-to T$\times$N and the number of final states to S$\times$N. Everything
-else is entirely computer-generated. 
+The organisers entered those 4 values for each file. Finally, they
+chose to set the number of initial states to T$\times$N and the number
+of final states to S$\times$N. Everything else is entirely computer-generated. 
 
 
-\subsubsection{The model files.}
+\subsubsection{The model files}
 
-\enskip{}\enskip{}\enskip{}Generating a test model means that a
-model file is generated. This file contains all the necessary information
-to generate sequences. The information inside those files is layed
-out in a particular manner described as follows:
+Generating a test model means that a model file is generated. This
+file contains all the necessary information to generate sequences.
+The information inside those files is displayed in a particular manner
+described as follows:
 \begin{description}
 \item [{I:}] (state number)\\
 Probability of starting the sequence in that state.\\
@@ -138,37 +129,33 @@ state number'' and ``symbol number'' is equal to 1.}
 
 \subsubsection{Rating}
 
-\enskip{}\enskip{}\enskip{}At the time of the competition, the
-model and solution files were, of course, not available. The competitors
-had to provide, for each sequence, the probability for it to occur.
-Then, the organisers compared their results to the actual probabilities
-inside their solution files, and rated the competitors based on how
-close they were.
+At the time of the competition, the model and solution files were,
+of course, not available. The competitors had to provide their solution
+file to each test file. Those solution files did not contain a model,
+though. What they contained instead was, for each sequence of the
+test file, the probability for it to occur. The organisers then compared
+their results to the actual probabilities inside their solution files,
+and rated the competitors based on how close they were. The formula
+they used is:
+
+\[
+2^{-(\sum_{x\epsilon TestSet}P_{r_{T}}(x)\times\log(P_{r_{C}}(x)))}
+\]
+
+
+where $P_{r_{T}}$ represents the organisers' probability for the
+sequence x, and $P_{r_{C}}$ the candidates' one.
 
 Worthy of note is that only the results mattered. This means that
 the competitors\textquoteright{} models or numbers of states did not
 matter, so long as they were able to approximate the behaviour of
-the organisers\textquoteright{} one. The formula used is as follows:
-
-{\huge{}
-\[
-2^{-(\sum_{x\epsilon TestSet}P_{r_{T}}(x)\times\log(P_{r_{C}}(x)))}
-\]
-}{\huge \par}
-
-where (blah-blah represents blah-blah... all that stuff)
+the organisers\textquoteright{} models.
 
 
-\subsubsection{Using their data}
+\subsubsection{Exploiting their data}
 
-\enskip{}\enskip{}\enskip{}Our project also dealing with finding
-a learning algorithm for such automata, we figured this would be a
-good place to start to understand the problem in more depth, as well
-as getting test files on which to test our algorithms.
-
-To know whether our algorithms are actually efficient or not, we will
-use the PautomaC test files as a part of our testing. The advantage
-is that we have their solution and model files, allowing us to compare
-our results to the probabilities of the actual model, just like how
-the competitors were rated in that competition. Our outputted results
-are fine.
+Our project also deals with finding a learning algorithm for these
+automata. As such, the data available on PautomaC is a good starting
+point. Additionally, now that the solution and model files have been
+made publicly available, this gives us a means with which our algorithms
+can be tested.

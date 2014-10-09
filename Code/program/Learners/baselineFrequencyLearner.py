@@ -1,14 +1,10 @@
-from numpy import *
-from decimal import *
-from sys import *
 from learner import Learner
-from decimal import *
-from sys import *
+from decimal import Decimal
 
 class BaselineFrequencyLearner(Learner):
 
-    def __init__(self, train_data):
-        Learner.__init__(self, train_data)
+    def train(self, train_data):
+        self.train_data_len = len(train_data)
         self.DPdict = dict()
         for sequence in train_data:
             if self.DPdict.has_key(tuple(sequence)):
@@ -20,4 +16,4 @@ class BaselineFrequencyLearner(Learner):
         return "Baseline Frequency Learner"
     
     def calc_sequence_probability(self, symbol_sequence):
-        return Decimal(self.DPdict[tuple(symbol_sequence)]) / Decimal(len(self.train_data))
+        return Decimal(self.DPdict[tuple(symbol_sequence)]) / Decimal(self.train_data_len)

@@ -6,12 +6,14 @@ from Learners.kentLearner import KentLearner
 from Learners.greedyLearner import GreedyLearner
 from Learners.baselineFrequencyLearner import BaselineFrequencyLearner
 from Learners.theisLearner import TheisLearner
-from Models.hmm import HMM
+from Learners.uniformLearner import UniformLearner
 from Learners import baselineFrequencyLearner
 from benchmarker import *
 
 benchmarker = Benchmarker()
-benchmarker.add_learners([RandomLearner(), TheisLearner()])
-benchmarker.add_data_sets([1, 2, 3, 4, 5])
-benchmarker.run_benchmark("C:/Users/Kent/Desktop/testresult.txt")
+#benchmarker.add_learners([UniformLearner(), BaumWelchLearner(20), TheisLearner(), Baseline3GramLearner(), BaselineFrequencyLearner()])
+benchmarker.add_learners([UniformLearner(), KentLearner(), Baseline3GramLearner(), BaselineFrequencyLearner()])
+
+benchmarker.add_data_sets([1])
+benchmarker.run_benchmark("C:/Users/Kent/Desktop/testresult2.txt")
 print "Done"
