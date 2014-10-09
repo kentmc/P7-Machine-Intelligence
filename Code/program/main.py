@@ -11,7 +11,7 @@ from Learners import baselineFrequencyLearner
 from benchmarker import *
 
 benchmarker = Benchmarker()
-benchmarker.add_learners([RandomLearner(), UniformLearner(), TheisLearner(), Baseline3GramLearner(), BaselineFrequencyLearner()])
+benchmarker.add_learners([UniformLearner(), BaumWelchLearner(20), TheisLearner(), Baseline3GramLearner(), BaselineFrequencyLearner()])
 benchmarker.add_data_sets([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 benchmarker.run_benchmark("C:/Users/Kent/Desktop/testresult.txt")
 print "Done"

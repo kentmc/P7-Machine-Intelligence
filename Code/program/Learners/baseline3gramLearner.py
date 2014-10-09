@@ -1,6 +1,5 @@
 from learner import Learner
-from decimal import *
-from sys import *
+from decimal import Decimal
 
 class Baseline3GramLearner(Learner):
 

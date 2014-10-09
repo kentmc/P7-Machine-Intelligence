@@ -1,9 +1,5 @@
-from numpy import *
-from decimal import *
-from sys import *
 from learner import Learner
-from decimal import *
-from sys import *
+from decimal import Decimal
 
 class BaselineFrequencyLearner(Learner):
 

@@ -1,10 +1,6 @@
-from numpy import *
-from decimal import *
-from sys import *
+from utilities import count_unique_symbols, longest_sequence_length
 from learner import Learner
-from decimal import *
-from sys import *
-from utilities import *
+from decimal import Decimal
 
 class TheisLearner(Learner):
     """

@@ -1,5 +1,5 @@
 import unittest
-from hmm import HMM
+from Models.hmm import HMM
 
 class TestHMM(unittest.TestCase):
     def test_hmm_3States_2Sym_1Char(self):
