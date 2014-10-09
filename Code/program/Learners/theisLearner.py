@@ -27,7 +27,6 @@ class TheisLearner(Learner):
         for x in range(len(train_data)):
             for y in range(len(train_data[x])):
                 self.table[y][train_data[x][y]] += 1
-            # increment the stop symbol count
             
         #normalize
         for x in range(len(self.table)):
