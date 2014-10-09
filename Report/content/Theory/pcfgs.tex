@@ -50,19 +50,57 @@ $$p(t) \geq 0$$
 and 
 $$\sum_{t \in \mathcal{T}_G}p(t) = 1$$ 
 
+Defining the function $p(t)$ could be difficult because of the fact that the set $\mathcal{T}_G$ most likely will be infinite.
+
 \cite[p.6]{collins}
 
+The motivation for defining the function $p(t)$ is that once we have it,
+we can determine the probabilities of the different parse trees for a 
+string $s$ and get the most likely derivation. 
+$$arg \max_{t \in \mathcal{T}_G(s)} p(t)$$
 
+\cite[p.7]{collins}
 
+\subsubsection{Definition of PCFGs}
 
+A PCFG consists of:
+\begin{itemize}
+\item A CFG $G = (N, \Sigma, S, R)$
+\item A parameter $q(\alpha \leftarrow \beta)$
+\end{itemize}
+For each rule $\alpha \rightarrow \beta \in R$ the parameter $q(\alpha \rightarrow \beta)$ is
+the conditional probability that the rule $\alpha \rightarrow \beta$ is chosen in a left-derivation,
+given that the non-terminal that is being expanded is $\alpha$.
+
+For any non-terminal $X \in N$ we have the constraint
+
+$$\sum_{\alpha \rightarrow \beta \in R|\alpha=X}q(\alpha \rightarrow \beta) = 1$$
+
+In addition we have the constraint that $q(\alpha \rightarrow \beta) \geq 0$ for any $\alpha \rightarrow \beta \in R$.
+Given a parse-tree $t \in \mathcal{T}_G$ containing rules $\alpha_1 \rightarrow \beta_1, \alpha_2 \rightarrow \beta_2, \text{ ... } \alpha_n \rightarrow \beta_n$
+The probability of t given the PCFG is
+
+$$p(t) = \prod_{i=1}^n q(\alpha_i \rightarrow \beta_i)$$
+
+\cite[p.7-8]{collins}
+
+Now that we have a way of assigning probabilities to parse-trees it is possible to chose the one with the highest probability and thereby get around the
+problem of ambiguity in grammars.
 
 \subsubsection{Deriving a PCFG from a Corpus}
+What remains is the question of how to derive a PCFG from a corpus of data.
+We assume a training set which consists of parse trees $t_1, t_2, \text{ ... } t_m$
 
-
-
-
-
-
+The PCFG (N, $\Sigma$, S, R, q) derived from the corpus is defined as follows
+\begin{itemize}
+\item N is the set of all non-terminals seen in $t_1, \text{ ... } t_m$
+\item $\Sigma$ is the set of all words seen in $t_1, \text{ ... } t_m$
+\item S is the start symbol.
+\item The set of rules R is taken to be the set of all rules $\alpha \rightarrow \beta$ seen in $t_1, \text{ ... } t_m$
+\item The maximum likelyhood parameter estimates are 
+$$q_{ML}(\alpha \rightarrow \beta) = \frac{\text{count}(\alpha \rightarrow \beta)}{\text{count}(\alpha)}$$
+\end{itemize}
+\cite[p.9-10]{collins}
 
 \subsection{Chomsky Normal Form}
 A Context-free grammar is in Chomsky normal form if every rule in R is of the form
