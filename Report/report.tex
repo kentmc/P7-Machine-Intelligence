@@ -30,10 +30,21 @@
 \usepackage{amsmath}
 \usepackage{url}
 \usepackage{epstopdf} %What's this???
+%\usepackage{hyperref}
 \usepackage[bookmarks, colorlinks=false, pdfborder={0 0 0}, pdftitle={<pdf title here>}, pdfauthor={<author's name here>}, pdfsubject={<subject here>}, pdfkeywords={<keywords here>}]{hyperref} %for creating links in the pdf version and other additional pdf attributes, no effect on the printed document
 %\usepackage[final]{pdfpages} %for embedding another pdf, remove if not required
 
+% Load the package
+\usepackage[xindy]{glossaries}
+
+% Generate the glossary
+\makeglossaries
+
 \begin{document}
+%include other pages
+\input{./glossary.tex}
+Test text \gls{utc}
+\printglossaries
 %\renewcommand\bibname{References} %Renames "Bibliography" to "References" on ref page
 \listoftodos
 
