@@ -1,4 +1,31 @@
-%Term definitions
-\newglossaryentry{utc}{name=UTC, description={Coordinated Universal Time}}
-\newglossaryentry{adt}{name=ADT, description={Atlantic Daylight Time}}
-\newglossaryentry{est}{name=EST, description={Eastern Standard Time}}
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% Term definitions
+%
+%     \newglossaryentry{<label>}{<settings>}
+%
+% Example
+%
+\newglossaryentry{computer}
+{
+	name=computer,
+	description={is a programmable machine that receives input,
+		stores and manipulates data, and provides
+		output in a useful format}
+}
+%
+%
+% Defining acronyms
+%
+%    \newacronym{<label>}{<abbrv>}{<full>}
+%
+% Example
+%
+\newacronym{lvm}{LVM}{Logical Volume Manager}
+%
+% Use
+%
+%    \gls{computer}
+%    \gls{lvm}
+%
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
