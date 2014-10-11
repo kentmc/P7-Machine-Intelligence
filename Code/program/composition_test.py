@@ -19,6 +19,8 @@ dataloader = DataLoader()
 
 train_data = dataloader.load_sequences_from_file("../data/" + "1" + ".pautomac" + ".test")
 
-comps = collect_unique_symbol_compositions(train_data, 2)
+#comps = collect_unique_symbol_compositions(train_data, 2)
 
-print comps.index([1, 1])
+MathiasLearner.train(train_data)
+
+#print comps.index([1, 1])

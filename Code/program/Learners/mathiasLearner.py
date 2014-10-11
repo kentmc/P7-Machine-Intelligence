@@ -5,6 +5,7 @@ from learner import Learner
 from decimal import *
 from sys import *
 from utilities import *
+import time
 
 class MathiasLearner(Learner):
     """
@@ -28,28 +29,22 @@ class MathiasLearner(Learner):
         # n = number of symbols - r = size of compositions 
         # n! / (n - r)!(r!) for instance: 23! / (23 - 4)!(4!) = 1771
         # 1771 * 1771 = 3.136.441 unique probabilities
-        self.table = [[0]*(compositions) for x in range(compositions)]
+        self.table = [[0]*(len(compositions)+1) for x in range(len(compositions)+1)]
 
         # using the composition list.index as our table index, we increment counts for transitions
         for line in range(len(train_data)):
-            for symbol in range(len(train_data[line]))
-                
+            for symbol in xrange(0, len(train_data[line]) - 3):
+                from_comp = compositions.index([train_data[line][symbol]] + [train_data[line][symbol + 1]])   #[a, b]
+                to_comp = compositions.index([train_data[line][symbol + 2]] + [train_data[line][symbol + 3]]) #[c, d]
+                print "from comp {} to comp {}".format(from_comp, to_comp)
+                self.table[from_comp][to_comp] += 1 #note that our table cannot assign prob. for every possible transition. 
+                                                    #Either train with test data, or expand the table if unknown transitions are found.
 
-
-
-
-
-
-
-
-
-
-
-        # increment counters for all compositions using all sequences in the test data
-        for x in range(len(train_data)):                # for every line
-            for y in range(len(train_data[x])):  # for every 2 symbol of that line
-                if train_data
-                self.table[y][train_data[x][y]] += 1
+        # # increment counters for all compositions using all sequences in the test data
+        # for x in range(len(train_data)):                # for every line
+        #     for y in range(len(train_data[x])):  # for every 2 symbol of that line
+        #         if train_data
+        #         self.table[y][train_data[x][y]] += 1
 
         #normalize
         for x in range(len(self.table)):

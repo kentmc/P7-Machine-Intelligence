@@ -169,7 +169,23 @@ In simpler terms:
 \end{itemize}
 \end{samepage}
 
-\todo{Finish Baum-Welch section}
+The above definition can be obtained from standard Lagrange optimisation using Lagrange multipliers for the maximisation of the Baum auxiliary function~\cite{Rabiner89hmm}:
+$$Q(\lambda,\overline{\lambda})=\sum_{Q\in\mathcal{Q}^T_\lambda}(P(Q|O,\lambda)\log(P(O,Q|\overline{\lambda})))$$
+
+Please note that $\mathcal{Q}^T_\lambda = \mathcal{Q}^T_{\overline{\lambda}}$ in the case the afore stated computation of $\overline{\lambda}$ is employed, as $\overline{a_{ij}}=0$ iff $a_{ij}=0$.
+
+Baum et al.~\cite{baum1968, baum1970, baker1975} have proven that the maximisation of the above expression leads to higher probability of outputting the coveted signal $O$:
+$$\overline{\lambda}=\max_{\lambda'}{Q(\lambda,\lambda')} \rightarrow P(O|\overline{\lambda}) \geq P(O|\lambda)$$
+
+Moreover the convergence of this method has been also proven by Baum et al.~\cite{baum1968, baker1975}. Namely a model $\overline{\lambda}$ computed by the previously given definition is either:
+\begin{enumerate}
+\item a critical point of probability function $P(O|\lambda)$ implying that $\overline{\lambda}=\lambda$.
+\item a model with higher probability of producing the desired observable sequence $O$, meaning $P(O|\overline{\lambda}) > P(O|\lambda)$
+\end{enumerate}
+
+The whole \emph{Baum-Welch} algorithm can also be viewed as an instance of an EM algorithm. In this case the computation of the Baum auxiliary function ($Q(\lambda,\overline{\lambda})$) would be the expectation (E) step, whilst the maximisation (M) step would be maximisation over the values of $\overline{\lambda}$~\cite{Dempster1977, Rabiner89hmm}.
+
+As learning the hidden Markov model parameters can be considered an optimisation problem, other approaches are possible, such as the gradient techniques~\cite{levinson1983, Rabiner89hmm}.
 
 \subsection{Classification}
 

@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-from decimal import *
-import math
-import time
-=======
 from decimal import Decimal
 from math import log
 from math import pow
->>>>>>> eeb01c2710e3ae2c32f52ddcfcf54ddd521335a2
 
 def count_unique_symbols(list_of_sequences):
     """
@@ -22,21 +16,21 @@ def collect_unique_symbol_compositions(list_of_sequences, composition_length = 2
     """
     Counts the number of unique symbols found in a list, assuming that all symbols are integers: 0, 1, ..., n
     """
-    replica, unique = 0, 0
+    duplicates, unique = 0, 0
     composition_list = []
-    for i in xrange(0, len(list_of_sequences)): #for every line 
-        for p in xrange(0, len(list_of_sequences[i]) - (composition_length - 1)): #for every symbol
-            composition = [(list_of_sequences[i][p])] + [(list_of_sequences[i][p+1])]
+    for line in xrange(0, len(list_of_sequences)): #for every line 
+        for symbol in xrange(0, len(list_of_sequences[line]) - (composition_length - 1)): #for every symbol
+            composition = [(list_of_sequences[line][symbol])] + [(list_of_sequences[line][symbol+1])]
             #print composition
             #time.sleep(1)
             if composition in composition_list:
-                replica += 1
+                duplicates += 1
                 break
             else:
                 unique += 1
                 composition_list += [composition]
     
-    # print replica, unique                
+    print "{} duplicates {} unique compositions".format(duplicates, unique)             
     return composition_list
 
 def longest_sequence_length(list_of_sequences):
