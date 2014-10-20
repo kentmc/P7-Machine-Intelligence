@@ -14,5 +14,5 @@ benchmarker.add_learners([BaumWelchLearner(20)])
 #benchmarker.add_learners([UniformLearner(), KentLearner(), TheisLearner(), Baseline3GramLearner(), BaselineFrequencyLearner()])
 
 benchmarker.add_data_sets([6])
-benchmarker.run_benchmark("C:/Users/Kent/Desktop/bw1.txt")
+benchmarker.run_benchmark("C:/Users/Kent/Desktop/temp.txt")
 print "Done"

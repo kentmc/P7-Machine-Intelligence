@@ -11,6 +11,8 @@ def count_unique_symbols(list_of_sequences):
         for p in xrange(0, len(list_of_sequences[i])):
             if (list_of_sequences[i][p] > max_val_found):
                 max_val_found = list_of_sequences[i][p]
+    # Add 1 because first symbol is 0
+    return max_val_found + 1
 
 def collect_unique_symbol_compositions(list_of_sequences, composition_length = 2):
     """
