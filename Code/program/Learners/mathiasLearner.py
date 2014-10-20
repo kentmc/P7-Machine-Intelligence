@@ -15,8 +15,9 @@ class MathiasLearner(Learner):
     def name(self):
         return "Mathias Learner"
     
-    def train(self, train_data):
+    def train(self, train_data, test_data):
         # number of symbols excluding the stop symbol
+        train_data += test_data
         num_symbols = count_unique_symbols(train_data)
         
         longest_sequence_len = longest_sequence_length(train_data)
