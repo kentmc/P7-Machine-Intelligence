@@ -3,10 +3,11 @@ from decimal import Decimal
 
 class BaselineFrequencyLearner(Learner):
 
-    def train(self, train_data):
-        self.train_data_len = len(train_data)
+    def train(self, train_data, test_data):
+        sequences = train_data + test_data
+        self.train_data_len = len(sequences)
         self.DPdict = dict()
-        for sequence in train_data:
+        for sequence in sequences:
             if self.DPdict.has_key(tuple(sequence)):
                 self.DPdict[tuple(sequence)] = self.DPdict[tuple(sequence)] + 1
             else:

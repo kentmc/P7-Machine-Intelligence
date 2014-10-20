@@ -2,7 +2,7 @@ from utilities import calc_perplexity_mesaure
 
 class Learner:
     
-    def train(self, train_data):
+    def train(self, train_sequences, test_sequences):
         raise NotImplementedError('Subclasses of Learner must provide a train procedure!')
     
     def name(self):

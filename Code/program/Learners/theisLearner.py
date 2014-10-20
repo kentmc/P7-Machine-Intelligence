@@ -10,19 +10,21 @@ class TheisLearner(Learner):
     def name(self):
         return "Theis Learner"
     
-    def train(self, train_data):
-        # number of symbols excluding the stop symbol
-        num_symbols = count_unique_symbols(train_data)
+    def train(self, train_data, test_data):
+        sequences = train_data + test_data
         
-        longest_sequence_len = longest_sequence_length(train_data)
+        # number of symbols excluding the stop symbol
+        num_symbols = count_unique_symbols(sequences)
+        
+        longest_sequence_len = longest_sequence_length(sequences)
         
         # keeps track of occurences of symbols at different positions: [position][symbol]
         self.table = [[0]*(num_symbols) for x in range(longest_sequence_len)]
         
         # increment counters for all symbols at all position, using all sequences in the test data
-        for x in range(len(train_data)):
-            for y in range(len(train_data[x])):
-                self.table[y][train_data[x][y]] += 1
+        for x in range(len(sequences)):
+            for y in range(len(sequences[x])):
+                self.table[y][sequences[x][y]] += 1
             # increment the stop symbol count
             
         #normalize

@@ -41,7 +41,7 @@ class Benchmarker:
             solution_data = dataloader.load_probabilities_from_file("../data/" + str(dataset_id) + ".pautomac_solution" + ".txt")
             for learner in self.learners:
                 print "Training learner: " + learner.name()
-                learner.train(train_data+test_data)
+                learner.train(train_data, test_data)
                 print "Evaluating learner: " + learner.name()
                 score = learner.evaluate(test_data, solution_data)
                 print "Achieved score: " + str(score)
