@@ -2,7 +2,7 @@ from learner import Learner
 from decimal import Decimal
 
 class UniformLearner(Learner):
-    def train(self, train_data):
+    def train(self, train_data, test_data):
         pass
     
     def name(self):

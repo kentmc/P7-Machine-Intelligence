@@ -3,8 +3,8 @@ from decimal import Decimal
 
 class Baseline3GramLearner(Learner):
 
-    def train(self, train_data):
-        self.threegramprobs = self.threegramdict(train_data)
+    def train(self, train_data, test_data):
+        self.threegramprobs = self.threegramdict(train_data + test_data)
         
     def name(self):
         return "Baseline 3-Gram Learner"

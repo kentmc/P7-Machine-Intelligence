@@ -13,16 +13,17 @@ class BaumWelchLearner(Learner):
     def name(self):
         return "Baum Welch Learner"
     
-    def train(self, train_data):
-        self.num_symbols = count_unique_symbols(train_data)
+    def train(self, train_data, test_data):
+        sequences = train_data + test_data
+        self.num_symbols = count_unique_symbols(sequences)
         ll_bound = 10.0
         self.model = self.randommodel(self.num_states, self.num_symbols)
         prev = -1.0
         ll = -1.0
         while prev == -1.0 or ll - prev > ll_bound:
             prev = ll
-            self.model = self.iterateEM(self.model, train_data)
-            probs = self.computeprobabilities(self.model, train_data)
+            self.model = self.iterateEM(self.model, sequences)
+            probs = self.computeprobabilities(self.model, sequences)
             ll = self.loglikelihood(probs)
     
     def calc_sequence_probability(self, symbol_sequence):
