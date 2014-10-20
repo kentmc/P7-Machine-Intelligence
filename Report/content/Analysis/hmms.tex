@@ -131,9 +131,61 @@ end
 
 \subsection{Estimating Model Parameters}
 
-%There is no analytical solution known for finding model parameters $A$, $B$, $\pi$ maximising the probability of a given observable sequence. In fact, no optimal way to estimate the parameters for hidden Markov models exists. However, an iterative method, the \emph{Baum-Welch} algorithm~\cite{baum1970}, can be used to derive $\lambda = (A, B, \pi)$ such that $P(O|\lambda)$ is locally maximised for a given signal $O$. The \emph{Baum-Welch} algorithm has been shown to be equivalent to the \emph{expectation maximisation} (EM) method for hidden Markov models~\cite{Dempster1977, wu1983}.
+There is no analytical solution known for finding model parameters $A$, $B$, $\pi$ maximising the probability of a given observable sequence. In fact, no optimal way to estimate the parameters for hidden Markov models exists. However, an iterative method, the \emph{Baum-Welch} algorithm~\cite{baum1970}, can be used to derive $\lambda = (A, B, \pi)$ such that $P(O|\lambda)$ is locally maximised for a given signal $O$. The \emph{Baum-Welch} algorithm has been shown to be equivalent to the \emph{expectation maximisation} (EM) method for hidden Markov models~\cite{Dempster1977, wu1983}.
 
-%In this section we present a simple iterative approach to estimation of hidden Markov model parameters based primarily on the \emph{Baum-Welch} algorithm. This approach works for a single observable symbol sequence, however the \emph{Baum-Welch} algorithm can be extended to account for train data composed of multitude of signals~\cite{levinson1983, li2000}.
+In this section we present a simple iterative approach to estimation of hidden Markov model parameters based primarily on the \emph{Baum-Welch} algorithm. This approach works for a single observable symbol sequence, however the \emph{Baum-Welch} algorithm can be extended to account for train data composed of multitude of signals~\cite{levinson1983, li2000}.
+
+We first define a couple of auxiliary variables to simplify the consequent constructs:
+
+\begin{align*}
+\forall t\in\{1,...,T-1\},\forall i,j\in \{1,...,n\}: \gamma_t(i,j) &= P(q_t =S_i, q_{t+1}=S_j|O,\lambda)\\
+&= \frac{\alpha_t(i)a_{ij}\beta_{t+1}(j)}{\sum_{k=1}^n\sum_{l=1}^n(\alpha_t(k)a_{kl}\beta_{t+1}(l))}\\
+\\
+\forall t\in\{1,...,T-1\},\forall i\in\{1,...,n\}: \delta_t(i) &=P(q_t=S_i|O,\lambda)\\
+&=\sum_{j=1}^n\gamma_t(i,j)\\
+\forall i\in\{1,...,n\}: \delta_T(i) &= P(q_T=S_i|O,\lambda)\\
+&= \frac{\alpha_T(i)}{\sum_{j=1}^n\alpha_T(j)}
+\end{align*}
+
+Where the variable $\gamma_t(i,j)$ equals the probability of being in state $S_i$ at the time $t$ and transitioning to state $S_j$ at time $(t+1)$ given the model $\lambda$ and observable sequence $O$. The variable $\delta_t(i)$ equals the probability of being in state $S_i$ at time $t$.
+
+Given some model $\lambda = (A,B,\pi)$, possibly with completely random parameters, we can then iteratively compute a new model $\overline{\lambda} = (\overline{A},\overline{B},\overline{\pi})$ as:
+
+\begin{align*}
+\forall i\in\{1,...,n\}: \overline{\pi_i} &= \delta_1(i)\\
+\forall i,j\in\{1,...,n\}: \overline{a_{ij}} &= \frac{\sum_{t=1}^T\gamma_t(i,j)}{\sum_{t=1}^{T-1}\sum_{k=1}^n\gamma_t(i,k)}\\
+\forall i\in\{1,...,n\},\forall j\in\{1,...,m\}:\overline{b_{ij}}&=\frac{\sum_{t\in\mathcal{T}_O(\sigma_j)}\delta_t(i)}{\sum_{t=1}^T\delta_t(i)}
+\end{align*}
+
+Where for $\sigma \in \Sigma$ and signal $O$, $\mathcal{T}_O(\sigma) = \{t\in\{1,...,T\}|o_t=\sigma\}$
+
+\begin{samepage}
+
+In simpler terms:
+\begin{itemize}
+\item[$\overline{\pi_i}$] is the expected number of times state $S_i$ is visited at time $1$. The property $\sum_{i=1}^n\overline{\pi_i}=1$ is satisfied automatically as $\sum_{i=1}^n\delta_1(i)=1$ holds by definition.
+\item[$\overline{a_{ij}}$] is the expected number of transitions from state $S_i$ to state $S_j$, normalised by expected number of all transitions from state $S_i$ in order for the property $\sum_{j=1}^n\overline{a_{ij}}=1$ to be satisfied.
+\item[$\overline{b_{ij}}$] is the expected number of times state $S_i$ is visited and the symbol $\sigma_j$ is outputted simultaneously. Again, a normalisation by expected number of times in state $S_i$ is required to satisfy the property $\sum_{j=1}^m\overline{b_{ij}}=1$.
+\end{itemize}
+\end{samepage}
+
+The above definition can be obtained from standard Lagrange optimisation using Lagrange multipliers for the maximisation of the Baum auxiliary function~\cite{Rabiner89hmm}:
+$$Q(\lambda,\overline{\lambda})=\sum_{Q\in\mathcal{Q}^T_\lambda}(P(Q|O,\lambda)\log(P(O,Q|\overline{\lambda})))$$
+
+Please note that $\mathcal{Q}^T_\lambda = \mathcal{Q}^T_{\overline{\lambda}}$ in the case the afore stated computation of $\overline{\lambda}$ is employed, as $\overline{a_{ij}}=0$ iff $a_{ij}=0$.
+
+Baum et al.~\cite{baum1968, baum1970, baker1975} have proven that the maximisation of the above expression leads to higher probability of outputting the coveted signal $O$:
+$$\overline{\lambda}=\max_{\lambda'}{Q(\lambda,\lambda')} \rightarrow P(O|\overline{\lambda}) \geq P(O|\lambda)$$
+
+Moreover the convergence of this method has been also proven by Baum et al.~\cite{baum1968, baker1975}. Namely a model $\overline{\lambda}$ computed by the previously given definition is either:
+\begin{enumerate}
+\item a critical point of probability function $P(O|\lambda)$ implying that $\overline{\lambda}=\lambda$.
+\item a model with higher probability of producing the desired observable sequence $O$, meaning $P(O|\overline{\lambda}) > P(O|\lambda)$
+\end{enumerate}
+
+The whole \emph{Baum-Welch} algorithm can also be viewed as an instance of an EM algorithm. In this case the computation of the Baum auxiliary function ($Q(\lambda,\overline{\lambda})$) would be the expectation (E) step, whilst the maximisation (M) step would be maximisation over the values of $\overline{\lambda}$~\cite{Dempster1977, Rabiner89hmm}.
+
+As learning the hidden Markov model parameters can be considered an optimisation problem, other approaches are possible, such as the gradient techniques~\cite{levinson1983, Rabiner89hmm}.
 
 \subsection{Classification}
 
