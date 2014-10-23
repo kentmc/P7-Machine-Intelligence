@@ -51,7 +51,7 @@ The forward variable $\alpha_t(i)$, formally defined as: $$\alpha_t(i)=P((o_1, .
 The forward variable can be computed iteratively as:
 \begin{align*}
 \forall i\in \{1, ..., n\}&: \alpha_1(i)=\pi_ib_{S_i}(o_1)\\
-\forall i\in \{1, ..., n\}, t\in\{2, ..., T\}&: \alpha_t(i) = \sum_{j=1}^n{(\alpha_{t-1}(j)a_{ij})}b_{S_i}(o_t)
+\forall i\in \{1, ..., n\}, t\in\{2, ..., T\}&: \alpha_t(i) = \sum_{j=1}^n{(\alpha_{t-1}(j)a_{ji})}b_{S_i}(o_t)
 \end{align*}
 
 It is easy to see that the probability of an observable sequence $O$ can be obtained by summing through the forward variables at time $T$ for all of the hidden states:
