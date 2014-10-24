@@ -6,3 +6,6 @@
 *.pdf
 *.DS_Store
 WorkSheet.rtf
+Debug
+/report/report.synctex.gz(busy)
+/report/pictures/*.dia~
