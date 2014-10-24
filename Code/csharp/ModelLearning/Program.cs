@@ -10,18 +10,9 @@ namespace ModelLearning {
     class Program {
         static void Main(string[] args) {
 
-            DataLoader dataLoader = new DataLoader();
-            SequenceData trainSequences = dataLoader.LoadSequences(@"Data/1.pautomac.train");
-            SequenceData testSequences = dataLoader.LoadSequences(@"Data/1.pautomac.test");
-            double[] realProbs = dataLoader.LoadSolutions(@"Data/1.pautomac_solution.txt");
-
-            //trainSequences.AddSequences(testSequences);
-
-            HiddenMarkovModel hmm = new HiddenMarkovModel(20, trainSequences.NumSymbols);
-            var teacher = new BaumWelchLearning(hmm) { Tolerance = 0.001, Iterations = 0 };
-            double likelyhood = teacher.Run(trainSequences.CloneNoneEmptySequences());
-            double score = PautomacEvaluator.Evaluate(hmm, testSequences, realProbs);
-            Console.WriteLine("Score: " + score);
+            List<Learner> learners = new List<Learner>() { new Learners.ManfredLearner() };
+            List<int> datasets = new List<int>(){1, 2, 3};
+            Benchmarker.Run(learners, datasets);
             Console.ReadLine();
         }
     }

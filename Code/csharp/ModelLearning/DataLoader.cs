@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ModelLearning {
-    class DataLoader {
-        public SequenceData LoadSequences(string file) {
+    static class DataLoader {
+        public static SequenceData LoadSequences(string file) {
             string[] lines = System.IO.File.ReadAllLines(file);
             //parse number of different symbols
             int num_symbols = Int32.Parse(lines[0].Split(' ')[1]);
@@ -23,7 +23,7 @@ namespace ModelLearning {
             return seqData;
         }
 
-        public double[] LoadSolutions(string file) {
+        public static double[] LoadSolutions(string file) {
             string[] lines = System.IO.File.ReadAllLines(file);
             //parse number of different symbols
             int numSequences = Int32.Parse(lines[0]);

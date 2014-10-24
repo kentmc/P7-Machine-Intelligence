@@ -15,22 +15,12 @@ namespace ModelLearning {
             return Math.Pow(2, -score);
         }
 
-        public static double Evaluate(HiddenMarkovModel hmm, SequenceData testSequences, double[] realProbs) {
+        public static double Evaluate(Learner learner, SequenceData testSequences, double[] solutionData) {
             double[] guessedProbs = new double[testSequences.Count];
-            for (int i = 0; i < testSequences.Count; i++) {
-                //calculate probabiliy of each sequence given model
-
-                if (testSequences[i].Length == 0)
-                    guessedProbs[i] = 0.5;
-                else{
-                    ForwardBackwardAlgorithm.Forward(hmm, testSequences[i], out guessedProbs[i]);
-                    guessedProbs[i] = Math.Exp(guessedProbs[i]); //convert from log to real number
-                }
-            }
-
+            for (int i = 0; i < guessedProbs.Length; i++)
+                guessedProbs[i] = learner.CalculateProbability(testSequences[i]);
             guessedProbs = Normalize(guessedProbs);
-
-            return Evaluate(guessedProbs, realProbs);
+            return Evaluate(guessedProbs, solutionData);
         }
 
         private static double[] Normalize(double[] vals){
@@ -43,6 +33,5 @@ namespace ModelLearning {
                     result[i] = vals[i] / sum;
             return result;
         }
-
     }
 }
