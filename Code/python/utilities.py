@@ -1,6 +1,7 @@
 from decimal import Decimal
 from math import log
 from math import pow
+import time
 
 def count_unique_symbols(list_of_sequences):
     """
@@ -22,14 +23,15 @@ def collect_unique_symbol_compositions(list_of_sequences, composition_length = 2
     composition_list = []
     for line in xrange(0, len(list_of_sequences)): #for every line 
         for symbol in xrange(0, len(list_of_sequences[line]) - (composition_length - 1)): #for every symbol
+            #print len(list_of_sequences[line]) - (composition_length - 1)
             composition = [(list_of_sequences[line][symbol])] + [(list_of_sequences[line][symbol+1])]
             #print composition
             #time.sleep(1)
             if composition in composition_list:
                 duplicates += 1
-                break
             else:
                 unique += 1
+                #print "new comp {}".format(composition)  
                 composition_list += [composition]
     
     print "{} duplicates {} unique compositions".format(duplicates, unique)             

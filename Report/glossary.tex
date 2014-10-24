@@ -12,6 +12,24 @@
 		stores and manipulates data, and provides
 		output in a useful format}
 }
+
+\newglossaryentry{fb_algorithm}
+{
+	name={forward-backward procedure},
+	description={a dynamic programming based algorithm for HMM used for smoothing (computing the posterior marginals of all hidden state variables given a signal).}
+}
+
+\newglossaryentry{viterbi}
+{
+	name={Viterbi algorithm},
+	description={a dynamic programming based algorithm used to find the most likely hidden state sequence given an observable sequence in HMM.}
+}
+	
+\newglossaryentry{baum-welch}
+{
+	name={Baum-Welch algorithm},
+	description={an algorithm used for estimation of parameter values in HMM utilising the EM principle.}
+}
 %
 %
 % Defining acronyms
@@ -21,6 +39,10 @@
 % Example
 %
 \newacronym{lvm}{LVM}{Logical Volume Manager}
+
+\newacronym{hmm}{HMM}{Hidden Markov Model}
+\newacronym{em}{EM}{Expectation-Maximisation}
+
 %
 % Use
 %
@@ -28,4 +50,3 @@
 %    \gls{lvm}
 %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
