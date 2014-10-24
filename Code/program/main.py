@@ -11,9 +11,8 @@ from Learners import baselineFrequencyLearner
 from benchmarker import *
 
 benchmarker = Benchmarker()
-benchmarker.add_learners([MathiasLearner()])
+benchmarker.add_learners([MathiasLearner(from_composition = 3, to_composition = 3)])
 #benchmarker.add_learners([UniformLearner(), KentLearner(), KentLearner(), TheisLearner(), Baseline3GramLearner(), BaselineFrequencyLearner()])
 
-benchmarker.add_data_sets([10])
+benchmarker.add_data_sets(range(1,11))
 benchmarker.run_benchmark("results.txt")
-print "Done"
