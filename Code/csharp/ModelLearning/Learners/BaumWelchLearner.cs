@@ -17,7 +17,10 @@ namespace ModelLearning.Learners {
         }
 
         public double CalculateProbability(int[] sequence) {
-            return Math.Exp(hmm.Evaluate(sequence));
+            if (sequence.Length == 0)
+                return 1.0;
+            else
+                return hmm.Evaluate(sequence);
         }
 
         public void Learn(SequenceData trainingData, SequenceData testData) {

@@ -8,7 +8,7 @@ using Accord.Statistics.Models.Markov;
 namespace ModelLearning {
     static class ModelConverter {
         public static HMMGraph HMM2Graph(HiddenMarkovModel hmm){
-            HMMGraph g = new HMMGraph(hmm.Symbols, true);
+            HMMGraph g = new HMMGraph(hmm.Symbols);
 
             bool[] reachable = FindReachableNodes(hmm);
             Node[] nodes = new Node[hmm.States];

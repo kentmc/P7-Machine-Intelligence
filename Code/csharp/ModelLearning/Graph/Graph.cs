@@ -10,12 +10,10 @@ namespace ModelLearning {
 
         public HashSet<Node> Nodes;
         public int NumSymbols;
-        public bool IsLogarithmic;
 
-        public HMMGraph(int numSymbols, bool isLogarithmic) {
+        public HMMGraph(int numSymbols) {
             NumSymbols = numSymbols;
             Nodes = new HashSet<Node>();
-            IsLogarithmic = isLogarithmic;
         }
 
         public void AddNode(Node n) {

@@ -8,9 +8,8 @@ using Accord.Statistics.Models.Markov;
 namespace ModelLearning {
     class Program {
         static void Main(string[] args) {
-
             List<Learner> learners = new List<Learner>() { 
-                new Learners.BaumWelchLearner(20, 0.000000001)
+                new Learners.BaumWelchLearner(3, 0.001)
 
             };
             List<int> datasets = new List<int>(){1, 2, 3};
