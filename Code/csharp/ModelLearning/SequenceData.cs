@@ -23,11 +23,11 @@ namespace ModelLearning {
 
         public int NumSymbols { get { return symbols; } }
 
-        public List<int[]> GetSequences() {
-            return sequences;
-        }
-
-        public int[][] CloneNoneEmptySequences() {
+        /// <summary>
+        /// Returns a deep copy of all sequences
+        /// </summary>
+        /// <returns></returns>
+        public int[][] GetSequences() {
             int[][] clonedSeq = new int[sequences.Count() - emptySequences][];
             int count = 0;
             foreach (int[] seq in sequences){

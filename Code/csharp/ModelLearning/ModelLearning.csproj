@@ -33,10 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Accord.Statistics, Version=2.13.1.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Frameworks\Accord.Statistics.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,11 +42,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Accord.Math\Matrix.cs" />
+    <Compile Include="Accord.Math\Properties\AssemblyInfo.cs" />
+    <Compile Include="Accord.Statistics.Controls\ArrayDataView\ArrayDataView.cs" />
+    <Compile Include="Accord.Statistics.Controls\ArrayDataView\ArrayPropertyDescriptor.cs" />
+    <Compile Include="Accord.Statistics.Controls\ArrayDataView\ArrayRowView.cs" />
+    <Compile Include="Accord.Statistics.Controls\Properties\AssemblyInfo.cs" />
+    <Compile Include="Accord.Statistics\Models\Markov\Discrete\HiddenMarkovModel.cs" />
+    <Compile Include="Accord.Statistics\Models\Markov\Discrete\MarkovSequenceClassifier.cs" />
+    <Compile Include="Accord.Statistics\Properties\AssemblyInfo.cs" />
     <Compile Include="Benchmarker.cs" />
     <Compile Include="DataLoader.cs" />
     <Compile Include="Graph\Edge.cs" />
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Learner.cs" />
+    <Compile Include="Learners\BaumWelchLearner.cs" />
+    <Compile Include="Learners\UniformLearner.cs" />
     <Compile Include="Learners\ManfredLearner.cs" />
     <Compile Include="ModelConverter.cs" />
     <Compile Include="Graph\Node.cs" />
@@ -123,6 +130,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Accord.Math\Accord.Math.csproj" />
+    <Content Include="Accord.Statistics.Controls\Accord.Controls.Statistics.csproj" />
+    <Content Include="Accord.Statistics\Accord.Statistics.csproj" />
+    <Content Include="Accord.Statistics\Properties\CustomDictionary.xml" />
     <Content Include="Data\1.pautomac_solution.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -153,6 +164,12 @@
     <Content Include="Data\9.pautomac_solution.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

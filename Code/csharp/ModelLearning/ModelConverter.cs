@@ -51,7 +51,7 @@ namespace ModelLearning {
                 foreach (KeyValuePair<int, double> symbolProb in nodes[i].Emissions)
                     emissions[i, symbolProb.Key] = symbolProb.Value;
             }
-            return new HiddenMarkovModel(transitions, emissions, initial, g.IsLogarithmic);
+            return new HiddenMarkovModel(transitions, emissions, initial);
         }
 
 
