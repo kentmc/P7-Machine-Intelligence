@@ -3,7 +3,6 @@
 *.ini
 *.gz
 *.db
-*.pdf
 *.DS_Store
 WorkSheet.rtf
 Debug
