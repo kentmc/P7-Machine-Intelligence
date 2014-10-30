@@ -8,16 +8,24 @@ using System.Threading.Tasks;
 namespace ModelLearning {
     class HMMGraph {
 
-        public HashSet<Node> Nodes;
+        public List<Node> Nodes;
         public int NumSymbols;
 
         public HMMGraph(int numSymbols) {
             NumSymbols = numSymbols;
-            Nodes = new HashSet<Node>();
+            Nodes = new List<Node>();
         }
 
         public void AddNode(Node n) {
             Nodes.Add(n);
+        }
+
+        public int NumNodes {
+            get { return Nodes.Count(); }
+        }
+
+        public Node GetNode(int index) {
+            return Nodes[index];
         }
 
         private void NormalizeInitial() {

@@ -26,7 +26,7 @@ namespace ModelLearning {
         public int NumSymbols { get { return symbols; } }
 
         /// <summary>
-        /// Converts all added sequences to an array
+        /// This method should call every time sequences have been added, as it converts all the sequences to an array
         /// </summary>
         public void Finalize() {
             sequences = sequence_list.ToArray();

@@ -8,7 +8,8 @@ namespace ModelLearning {
     class Node {
         public double InitialProbability;
         public Dictionary<Node, double> Transitions;
-        public Dictionary<int, double> Emissions;
+        public Dictionary<int, double> Emissions; 
+
         public Node() {
             InitialProbability = 0;
             Transitions = new Dictionary<Node, double>();

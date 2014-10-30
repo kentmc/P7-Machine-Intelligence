@@ -41,20 +41,19 @@ namespace ModelLearning {
         /// <param name="g"></param>
         /// <returns></returns>
         public static HiddenMarkovModel Graph2HMM(HMMGraph g) {
-            List<Node> nodes = g.Nodes.ToList();
             double[] initial = new double[g.Nodes.Count];
-            for (int i = 0; i < nodes.Count; i++)
-                initial[i] = nodes[i].InitialProbability;
+            for (int i = 0; i < g.NumNodes; i++)
+                initial[i] = g.Nodes[i].InitialProbability;
 
-            double[,] transitions = new double[nodes.Count, nodes.Count];
-            double[,] emissions = new double[nodes.Count, g.NumSymbols];
+            double[,] transitions = new double[g.NumNodes, g.NumNodes];
+            double[,] emissions = new double[g.NumNodes, g.NumSymbols];
 
-            for (int i = 0; i < nodes.Count; i++) {
-                foreach (KeyValuePair<Node, double> toProb in nodes[i].Transitions.ToList()) {
-                    int toNodeIndex = nodes.IndexOf(toProb.Key);
+            for (int i = 0; i < g.NumNodes; i++) {
+                foreach (KeyValuePair<Node, double> toProb in g.Nodes[i].Transitions.ToList()) {
+                    int toNodeIndex = g.Nodes.IndexOf(toProb.Key);
                     transitions[i, toNodeIndex] = toProb.Value;
                 }
-                foreach (KeyValuePair<int, double> symbolProb in nodes[i].Emissions)
+                foreach (KeyValuePair<int, double> symbolProb in g.Nodes[i].Emissions)
                     emissions[i, symbolProb.Key] = symbolProb.Value;
             }
             return new HiddenMarkovModel(transitions, emissions, initial);
