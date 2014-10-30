@@ -24,16 +24,22 @@ namespace ModelLearning {
                     if (reachable[i]) {
                         nodes[i].InitialProbability = hmm.Probabilities[i];
                         for (int j = 0; j < hmm.States; j++)
-                            if (hmm.Transitions[i, j] != 0)
-                                nodes[i].Transitions.Add(nodes[j], hmm.Transitions[i, j]);
+                            nodes[i].SetTransition(nodes[j], hmm.Transitions[i, j]);
                         for (int k = 0; k < hmm.Symbols; k++)
-                            if (hmm.Emissions[i, k] != 0)
-                                nodes[i].Emissions.Add(k, hmm.Emissions[i, k]);
+                            nodes[i].SetEmission(k, hmm.Emissions[i, k]);
                     }
                 }
             return g;
         }
 
+
+
+        /// <summary>
+        /// Constructs a HMM from a HMMGraph.
+        /// The HMMGraph does not need to be normalized, but the HMM is guaranteed to be.
+        /// </summary>
+        /// <param name="g"></param>
+        /// <returns></returns>
         public static HiddenMarkovModel Graph2HMM(HMMGraph g) {
             List<Node> nodes = g.Nodes.ToList();
             double[] initial = new double[g.Nodes.Count];

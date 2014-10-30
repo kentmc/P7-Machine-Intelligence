@@ -25,7 +25,7 @@ namespace ModelLearning.Learners {
 
         public void Learn(SequenceData trainingData, SequenceData testData) {
             hmm = new HiddenMarkovModel(trainingData.NumSymbols, states);
-            hmm.Learn(trainingData.GetSequences(), tolerance);
+            hmm.Learn(trainingData.GetNonempty(), tolerance);
         }
 
         public string Name() {

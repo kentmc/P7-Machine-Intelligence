@@ -6,17 +6,19 @@ using System.Threading.Tasks;
 
 namespace ModelLearning {
     class SequenceData {
-        private List<int[]> sequences;
-        int emptySequences;
-        int symbols;
+        private int[][] sequences;
+        private int[][] non_empty_sequences;
+        private List<int[]> sequence_list;
+        private int emptySequences;
+        private int symbols;
 
         public SequenceData(int symbols) {
             emptySequences = 0;
             this.symbols = symbols;
-            sequences = new List<int[]>();
+            sequence_list = new List<int[]>();
         }
         public void AddSequence(int[] seq) {
-            sequences.Add(seq);
+            sequence_list.Add(seq);
             if (seq.Length == 0)
                 emptySequences++;
         }
@@ -24,33 +26,40 @@ namespace ModelLearning {
         public int NumSymbols { get { return symbols; } }
 
         /// <summary>
+        /// Converts all added sequences to an array
+        /// </summary>
+        public void Finalize() {
+            sequences = sequence_list.ToArray();
+            non_empty_sequences = sequence_list.Where(s => s.Length != 0).ToArray();
+        }
+
+        /// <summary>
         /// Returns a deep copy of all sequences
         /// </summary>
         /// <returns></returns>
-        public int[][] GetSequences() {
-            int[][] clonedSeq = new int[sequences.Count() - emptySequences][];
-            int count = 0;
-            foreach (int[] seq in sequences){
-                if (seq.Length == 0)
-                    continue;
-                clonedSeq[count] = new int[seq.Length];
-                for (int j = 0; j < seq.Length; j++)
-                    clonedSeq[count][j] = seq[j];
-                count++;
-            }
-            return clonedSeq;
+        public int[][] GetAll() {
+            return sequences;
         }
 
-        public int Count { get { return sequences.Count; } }
+        public int Count {
+            get { return sequences.GetLength(0); }
+        }
 
         public int[] this[int i] {
-            get { return sequences[i]; }
+            get {
+                return sequences[i]; 
+            }
         }
 
         public void AddSequences(SequenceData sequenceData) {
             for (int i = 0; i < sequenceData.Count; i++)
-                sequences.Add(sequenceData[i]);
+                sequence_list.Add(sequenceData[i]);
             emptySequences += sequenceData.emptySequences;
+            Finalize();
+        }
+
+        internal int[][] GetNonempty() {
+            return non_empty_sequences;
         }
     }
 }
