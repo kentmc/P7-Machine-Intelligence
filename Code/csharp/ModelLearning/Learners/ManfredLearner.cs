@@ -55,6 +55,7 @@ namespace ModelLearning.Learners {
         public void Learn(SequenceData trainingData, SequenceData testData) {
             HMMGraph graph = Random2NodeGraph(trainingData.NumSymbols);
             bestHmm = ModelConverter.Graph2HMM(graph);
+            bestHmm.Learn(trainingData.GetNonempty(), baumwelch_iterations);
             bestLikelihood = LogLikelihood(bestHmm, trainingData);
 
             for (int iteration = 0; iteration < manfred_iterations; iteration++){
