@@ -5,8 +5,15 @@ using System.Text;
 
 namespace ModelLearning {
     static class Benchmarker {
-        public static void Run(IEnumerable<Learner> learners, IEnumerable<int> datasets) {
+        public static void Run(IEnumerable<Learner> learners, IEnumerable<int> datasets, string output_file) {
+            System.IO.StreamWriter file = new System.IO.StreamWriter(output_file);
+            file.Write("Dataset");
+            foreach(Learner l in learners)
+                file.Write(", "+l.Name());
+
             foreach (int i in datasets) {
+                file.WriteLine();
+                file.Write(i);
                 Console.WriteLine("Benchmarking dataset "+i);
                 SequenceData trainSequences = DataLoader.LoadSequences(@"Data/" + i + ".pautomac.train");
                 SequenceData testSequences = DataLoader.LoadSequences(@"Data/" + i + ".pautomac.test");
@@ -17,9 +24,11 @@ namespace ModelLearning {
                     learner.Learn(trainSequences, testSequences);
                     Console.WriteLine("Evaluating learner");
                     double score = PautomacEvaluator.Evaluate(learner, testSequences, solutions);
-                    Console.WriteLine(learner.Name() + " score: "+score);
+                    Console.WriteLine(learner.Name() + " score: " + String.Format("{0:0.000}", score));
+                    file.Write(", " + String.Format("{0:0.000}", score));
                 }
             }
+            file.Close();
         }
     }
 }

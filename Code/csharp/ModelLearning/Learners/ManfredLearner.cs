@@ -62,7 +62,6 @@ namespace ModelLearning.Learners {
                 Console.WriteLine("Iteration " + iteration +" / " + manfred_iterations);
 
                 //try adding a new node with random parameters 10 different times and choose the best solution
-                double current_max_likelihood = double.NegativeInfinity;
                 HiddenMarkovModel current_best_hmm = null;
                 for (int i = 0; i < 10; i++) {
                     graph = ModelConverter.HMM2Graph(bestHmm);
@@ -71,7 +70,7 @@ namespace ModelLearning.Learners {
                     hmm.Learn(testData.GetNonempty(), baumwelch_iterations); //Run the BaumWelch algorithm
                     double likelihood = LogLikelihood(hmm, trainingData);
                     if (likelihood > bestLikelihood) {
-                        current_max_likelihood = likelihood;
+                        bestLikelihood = likelihood;
                         current_best_hmm = hmm;
                         Console.WriteLine("+");
                     }
@@ -79,8 +78,7 @@ namespace ModelLearning.Learners {
                         Console.WriteLine("-");
                     }
                 }
-                if (current_max_likelihood > bestLikelihood){
-                    bestLikelihood = current_max_likelihood;
+                if (current_best_hmm != null){
                     bestHmm = current_best_hmm;
                     Console.WriteLine("Likelihood increased to " + bestLikelihood);
                 }
