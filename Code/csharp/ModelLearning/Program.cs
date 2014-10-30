@@ -9,7 +9,9 @@ namespace ModelLearning {
     class Program {
         static void Main(string[] args) {
             List<Learner> learners = new List<Learner>() { 
-                new Learners.ManfredLearner(20, 20)
+                new Learners.ManfredLearner(8, 20),
+                //new Learners.BaumWelchLearner(8, 0.0001),
+                new Learners.JaegerLearner(8, 20),
             };
             List<int> datasets = new List<int>(){1, 2, 3};
             Benchmarker.Run(learners, datasets);
