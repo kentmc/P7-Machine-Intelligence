@@ -59,7 +59,7 @@ namespace ModelLearning.Learners
             return loglikelihood;
         }
 
-        public void Learn(SequenceData trainingData, SequenceData testData)
+        public void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData)
         {
             HMMGraph graph = RandomGraph(trainingData.NumSymbols);
             bestHmm = ModelConverter.Graph2HMM(graph);
