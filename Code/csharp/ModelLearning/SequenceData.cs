@@ -28,7 +28,7 @@ namespace ModelLearning {
         /// <summary>
         /// This method should call every time sequences have been added, as it converts all the sequences to an array
         /// </summary>
-        public void Finalize() {
+        public void SaveAddedSequences() {
             sequences = sequence_list.ToArray();
             non_empty_sequences = sequence_list.Where(s => s.Length != 0).ToArray();
         }
@@ -55,7 +55,7 @@ namespace ModelLearning {
             for (int i = 0; i < sequenceData.Count; i++)
                 sequence_list.Add(sequenceData[i]);
             emptySequences += sequenceData.emptySequences;
-            Finalize();
+            SaveAddedSequences();
         }
 
         internal int[][] GetNonempty() {

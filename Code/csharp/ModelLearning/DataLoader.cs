@@ -20,7 +20,7 @@ namespace ModelLearning {
                 int[] currentSeq = currentSeqStr.Skip(1).Select(p => Int32.Parse(p)).ToArray();
                 seqData.AddSequence(currentSeq);
             }
-            seqData.Finalize();
+            seqData.SaveAddedSequences();
             return seqData;
         }
 

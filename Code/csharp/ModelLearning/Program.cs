@@ -10,7 +10,7 @@ namespace ModelLearning {
         static void Main(string[] args) {
 
             List<Learner> learners = new List<Learner>() { 
-                new Learners.ManfredLearner(20, 10),
+                new Learners.KentManfredLearner(5, 0.01),
                 new Learners.BaumWelchLearner(20, 0.0001),
                 new Learners.UniformLearner()
             };
