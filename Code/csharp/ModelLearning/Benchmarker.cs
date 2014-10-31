@@ -40,7 +40,7 @@ namespace ModelLearning {
                 file.Write(", " + l.Name() + " AvgScore");
                 file.Write(", " + l.Name() + " MedianScore");
                 file.Write(", " + l.Name() + " AvgTime");
-                file.Write(", " + l.Name() + " MedianTime\n");
+                file.WriteLine(", " + l.Name() + " MedianTime");
             }
         }
 
@@ -48,6 +48,11 @@ namespace ModelLearning {
 
             Dictionary<Learner, double[]> achieved_scores = new Dictionary<Learner, double[]>();
             Dictionary<Learner, double[]> elapsed_times = new Dictionary<Learner, double[]>();
+            
+            foreach (Learner learner in learners) {
+                achieved_scores[learner] = new double[num_runs];
+                elapsed_times[learner] = new double[num_runs];
+            }
 
             for (int r = 0; r < num_runs; r++) {
                 //Split training data randomly into train and validation sets
@@ -76,7 +81,7 @@ namespace ModelLearning {
                 file.Write((int)Utilities.Mean(achieved_scores[learner]) + ", ");
                 file.Write((int)Utilities.Median(achieved_scores[learner]) + ", ");
                 file.Write((int)Utilities.Mean(elapsed_times[learner]) + ", ");
-                file.Write((int)Utilities.Median(elapsed_times[learner]));
+                file.WriteLine((int)Utilities.Median(elapsed_times[learner]));
             }
         }
     }
