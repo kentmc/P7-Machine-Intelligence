@@ -1,3 +1,4 @@
+*.swp
 /Code/program/Learners/*.pyc
 *.pyc
 *.ini
