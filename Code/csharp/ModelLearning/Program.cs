@@ -12,7 +12,9 @@ namespace ModelLearning {
             List<Learner> learners = new List<Learner>() { 
                 new Learners.KentManfredLearner(5, 0.01),
                 new Learners.BaumWelchLearner(20, 0.0001),
-                new Learners.UniformLearner()
+                new Learners.UniformLearner(),
+                new Learners.StrictJaegerLearner(6, 0.001),
+                new Learners.JaegerLearner(18, 0.001, 0.95)
             };
 
             while (true) {
