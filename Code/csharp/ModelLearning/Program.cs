@@ -10,20 +10,33 @@ namespace ModelLearning {
         static void Main(string[] args) {
 
             List<Learner> learners = new List<Learner>() { 
-                new Learners.KentManfredLearner(5, 0.01),
-                new Learners.BaumWelchLearner(20, 0.0001),
+                new Learners.KentManfredLearner(20, 0.001),
+                new Learners.BaumWelchLearner(20, 0.001),
                 new Learners.UniformLearner()
             };
 
             while (true) {
+                //Select number of runs
+                int num_runs = ShowInterfaceSelectNumRuns();
+                if (num_runs == -1)
+                    continue;
+
+                //select output file
                 string output_file = ShowInterfaceSelectOutputFile();
+
+                //select learners
                 List<Learner> selected_learners = ShowInterfaceSelectLearners(learners);
                 if (selected_learners == null)
                     continue;
+
+                //select datasets
                 List<int> selected_datasets = ShowInterfaceSelectDatasets(10);
                 if (selected_datasets == null)
                     continue;
-                Benchmarker.Run(selected_learners, selected_datasets, output_file);
+
+                //Run benchmarker
+                Benchmarker.Run(selected_learners, selected_datasets, output_file, num_runs);
+                
                 Console.WriteLine("Benchmarking has finished with success!");
                 Console.WriteLine("Do another benchmark ? y/n");
                 string response = Console.ReadLine();
@@ -35,10 +48,23 @@ namespace ModelLearning {
         }
 
         static string ShowInterfaceSelectOutputFile() {
-            Console.WriteLine("\nEnter name for the output file (default is 'benchmark_result.txt')");
+            Console.WriteLine("\nEnter name for output file (default: 'benchmark_result.txt')");
             string response = Console.ReadLine();
             return response == "" ? "benchmark_result.txt" : response;
         }
+
+        static int ShowInterfaceSelectNumRuns() {
+            Console.WriteLine("\nEnter number of runs (default: 1, min: 1, max: 1000)");
+            string response = Console.ReadLine();
+            int runs;
+            if (!Int32.TryParse(response, out runs))
+                return -1;
+            if (runs <= 0 || runs > 1000)
+                return -1;
+            else
+                return runs;
+        }
+
 
         static List<int> ShowInterfaceSelectDatasets(int num_datasets) {
             List<int> selected_datasets = new List<int>();

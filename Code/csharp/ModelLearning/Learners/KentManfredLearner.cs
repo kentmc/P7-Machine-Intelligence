@@ -53,7 +53,7 @@ namespace ModelLearning.Learners {
             return loglikelihood;
         }
 
-        public void Learn(SequenceData trainingData, SequenceData testData) {
+        public void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
             HMMGraph graph = Random2NodeGraph(trainingData.NumSymbols);
             bestHmm = ModelConverter.Graph2HMM(graph);
             bestLikelihood = LogLikelihood(bestHmm, trainingData);
@@ -67,7 +67,7 @@ namespace ModelLearning.Learners {
                     RandomlyExtendGraphSparsely(graph);
                     HiddenMarkovModel hmm = ModelConverter.Graph2HMM(graph);
                     hmm.Learn(testData.GetNonempty(), 10); //Run the BaumWelch algorithm
-                    double likelihood = LogLikelihood(hmm, trainingData);
+                    double likelihood = LogLikelihood(hmm, validationData);
                     if (likelihood > bestLikelihood) {
                         bestLikelihood = likelihood;
                         current_best_hmm = hmm;
@@ -84,6 +84,8 @@ namespace ModelLearning.Learners {
                 else
                     Console.WriteLine("Likelihood stays the same");
             }
+            Console.WriteLine("Runs Baum Welch last time with the right threshold");
+            bestHmm.Learn(trainingData.GetNonempty(), threshold);
         }
 
 
@@ -106,10 +108,11 @@ namespace ModelLearning.Learners {
 
             //Set random transition probabilities from log n random nodes to the new node (in both directions)
             int out_degree = (int)Math.Ceiling(Math.Log(g.NumNodes));
-            List<Node> shuffled_nodes = g.Nodes.Select(n => n).ToList();
+            List<Node> node_list_copy = g.Nodes.Select(n => n).ToList();
+            Utilities.Shuffle(node_list_copy);
             for (int i = 0; i < out_degree; i++) {
-                    shuffled_nodes[i].SetTransition(new_node, ran.NextDouble());
-                    new_node.SetTransition(shuffled_nodes[i], ran.NextDouble());
+                node_list_copy[i].SetTransition(new_node, ran.NextDouble());
+                new_node.SetTransition(node_list_copy[i], ran.NextDouble());
             }
 
             //Normalize graph

@@ -61,5 +61,24 @@ namespace ModelLearning {
         internal int[][] GetNonempty() {
             return non_empty_sequences;
         }
+
+        public Tuple<SequenceData, SequenceData> RandomSplit(double ratio) {
+            SequenceData part1 = new SequenceData(NumSymbols);
+            SequenceData part2 = new SequenceData(NumSymbols);
+            List<int[]> shuffled = sequence_list.Select(e => e).ToList();
+            Utilities.Shuffle(shuffled);
+            int size_part1 = (int)(shuffled.Count * ratio);
+            for (int i = 0; i < shuffled.Count; i++) {
+                if (i < size_part1)
+                    part1.AddSequence(shuffled[i]);
+                else
+                    part2.AddSequence(shuffled[i]);
+            }
+            part1.SaveAddedSequences();
+            part2.SaveAddedSequences();
+            return new Tuple<SequenceData, SequenceData>(part1, part2);
+        }
+
+        
     }
 }
