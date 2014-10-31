@@ -9,17 +9,22 @@ namespace ModelLearning.Learners
     class JaegerLearner : Learner
     {
         private Random random;
-        private HiddenMarkovModel best_hmm;
-        private double best_likelihood;
+        private HiddenMarkovModel bestHmm;
+
+        private double epsilon;
 
         //settings
-        private int jaeger_iterations, baumwelch_iterations;
+        private int jaeger_iterations;
+        private double baumwelch_threshold;
 
 
-        public JaegerLearner(int jaeger_iterations, int baumwelch_iterations) {
+        public JaegerLearner(int jaeger_iterations, double baumwelch_threshold, double precision)
+        {
             this.jaeger_iterations = jaeger_iterations;
-            this.baumwelch_iterations = baumwelch_iterations;
-            random = new Random();     
+            this.baumwelch_threshold = baumwelch_threshold;
+            random = new Random();
+
+            epsilon = (1 - precision);
         }
 
         private HMMGraph Random2NodeGraph(int num_symbols) {
@@ -56,33 +61,35 @@ namespace ModelLearning.Learners
         public void Learn(SequenceData trainingData, SequenceData testData)
         {
             HMMGraph graph = Random2NodeGraph(trainingData.NumSymbols);
-            best_hmm = ModelConverter.Graph2HMM(graph);
-            best_likelihood = LogLikelihood(best_hmm, trainingData);
+            bestHmm = ModelConverter.Graph2HMM(graph);
+            //best_likelihood = LogLikelihood(best_hmm, trainingData);
+
+            bestHmm.Learn(trainingData.GetNonempty(), baumwelch_threshold);
 
             for (int i = 0; i < jaeger_iterations; i++)
             {
                 Console.WriteLine("Taking one more iteration");
 
-                HMMGraph old_graph = graph; //for backup if we fail to improve it
-                graph = ModelConverter.HMM2Graph(best_hmm);
+                //HMMGraph old_graph = graph; //for backup if we fail to improve it
+                graph = ModelConverter.HMM2Graph(bestHmm);
 
                 Dictionary<int, double> nodePerformance = new Dictionary<int, double>();
                 Dictionary<int, int> nodeOccurence = new Dictionary<int, int>();
                 double hiddenStateSequenceProbability;
                 foreach (int[] signal in trainingData.GetNonempty())
                 {
-                    int[] hiddenStateSequence = best_hmm.Decode(signal, out hiddenStateSequenceProbability);
+                    int[] hiddenStateSequence = bestHmm.Decode(signal, out hiddenStateSequenceProbability);
 
                     for (int j = 0; j < hiddenStateSequence.Length;j++)
                     {
                         if (nodePerformance.ContainsKey(hiddenStateSequence[j]))
                         {
-                            nodePerformance[hiddenStateSequence[j]] += (Math.Log(hiddenStateSequenceProbability) * Math.Log(best_hmm.Emissions[hiddenStateSequence[j], signal[j]]));
+                            nodePerformance[hiddenStateSequence[j]] += (Math.Log(hiddenStateSequenceProbability) * Math.Log(bestHmm.Emissions[hiddenStateSequence[j], signal[j]]));
                             nodeOccurence[hiddenStateSequence[j]]++;
                         }
                         else
                         {
-                            nodePerformance.Add(hiddenStateSequence[j], (Math.Log(hiddenStateSequenceProbability) * Math.Log(best_hmm.Emissions[hiddenStateSequence[j], signal[j]])));
+                            nodePerformance.Add(hiddenStateSequence[j], (Math.Log(hiddenStateSequenceProbability) * Math.Log(bestHmm.Emissions[hiddenStateSequence[j], signal[j]])));
                             nodeOccurence.Add(hiddenStateSequence[j], 1);
                         }
                     }
@@ -93,118 +100,59 @@ namespace ModelLearning.Learners
                     nodePerformance[node] /= nodeOccurence[node];
                 }
 
-                int weakPoint = nodePerformance.Keys.Aggregate((a, b) => ((nodePerformance[b] < nodePerformance[a]) ? b : a));
+                int weakPoint = nodePerformance.Keys.Aggregate((a, b) => ((nodePerformance[b] > nodePerformance[a]) ? b : a));
                 SplitWorstPerformingNode(graph, weakPoint);
+                CutWeakEdges(graph);
 
                 //RandomlyExtendGraph(graph, 1.0 - 1.0 / Math.Log(graph.NumSymbols));
-                HiddenMarkovModel hmm = ModelConverter.Graph2HMM(graph);
+                bestHmm = ModelConverter.Graph2HMM(graph);
 
                 Console.WriteLine("Running BaumWelch");
-                hmm.Learn(testData.GetNonempty(), baumwelch_iterations); //Run the BaumWelch algorithm
-                double likelihood = LogLikelihood(hmm, trainingData);
-                if (likelihood > best_likelihood)
-                {
-                    best_likelihood = likelihood;
-                    best_hmm = hmm;
-                }
+                bestHmm.Learn(testData.GetNonempty(), baumwelch_threshold); //Run the BaumWelch algorithm
+
+                Console.WriteLine();
+                Console.WriteLine("Log Likelyhood: {0}", LogLikelihood(bestHmm, trainingData));
             }
         }
 
         private void SplitWorstPerformingNode(HMMGraph graph, int node)
         {
-            //int newSize = ((int)Math.Sqrt(best_hmm.Transitions.Length) + 1);
-
-            //double[,] newTransitionMatrix = new double[newSize, newSize];
-            //double[] newProbabilities = new double[newSize];
-
-            //for (int i = 0; i < (newSize - 1); i++)
-            //{
-            //    for (int j = 0; j < (newSize - 1); j++)
-            //    {
-            //        double value = best_hmm.Transitions[i, j];
-
-            //        if (j == node)
-            //        {
-            //            value /= 2;
-            //        }
-
-            //        newTransitionMatrix[i, j] = value;
-            //    }
-                
-            //    newTransitionMatrix[i, (newSize - 1)] = (best_hmm.Transitions[i, node] / 2);
-            //    newTransitionMatrix[(newSize - 1), i] = best_hmm.Transitions[node, i];
-            //}
-
-            //newTransitionMatrix[(newSize - 1), (newSize - 1)] = 0;
-
-            //HiddenMarkovModel hmm = new HiddenMarkovModel(newTransitionMatrix, best_hmm.Emissions, best_hmm.Probabilities)
-
             Node splitNode = graph.Nodes[node];
             Node newNode = new Node();
 
             graph.AddNode(newNode);
 
-            splitNode.InitialProbability /= 2;
             newNode.InitialProbability = splitNode.InitialProbability;
 
-            foreach (Node n in splitNode.Transitions.Keys)
+            foreach (Node n in graph.Nodes)
             {
-                newNode.SetTransition(n, splitNode.Transitions[n]);
+                newNode.SetTransition(n, random.NextDouble());
             }
 
             foreach (int i in splitNode.Emissions.Keys)
             {
-                newNode.SetEmission(i, splitNode.Emissions[i]);
+                newNode.SetEmission(i, random.NextDouble());
             }
 
             foreach (Node n in graph.Nodes)
             {
                 if (n.Transitions.ContainsKey(splitNode))
                 {
-                    n.Transitions[splitNode] /= 2;
                     n.SetTransition(newNode, n.Transitions[splitNode]);
-
-                    Node weakestTransition = n.Transitions.Keys.Aggregate((a, b) => ((n.Transitions[b] < n.Transitions[a]) ? b : a));
-
-                    n.Transitions.Remove(weakestTransition);
                 }
             }
 
             graph.Normalize();
         }
 
-
-        /// <summary>
-        /// Extends the graph by adding a new node with random transitions, emissions and initial prabability.
-        /// Removes all transitions to or from the node that's below the given threshold
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="threshold"></param>
-        private void RandomlyExtendGraph(HMMGraph g, double threshold) {
-            //add a new node
-            Node new_node = new Node();
-            g.AddNode(new_node);
-
-            //Set random initial probability
-            new_node.InitialProbability = random.NextDouble();
-
-            //Set random emission probabilities for the new node
-            for (int i = 0; i < g.NumSymbols; i++ )
-                new_node.SetEmission(i, random.NextDouble());
-
-            //Set random transition probabilities from all nodes to the new node and opposite.
-            //Graph is kept sparse by removing edges that have probabilities less than threshold
-            foreach (Node n in g.Nodes) {
-                double new_prob = random.NextDouble();
-                if (new_prob >= threshold)
-                    n.SetTransition(new_node, random.NextDouble());
-                new_prob = random.NextDouble();
-                if (new_prob >= threshold)
-                    new_node.SetTransition(n, random.NextDouble());
+        private void CutWeakEdges(HMMGraph graph)
+        {
+            foreach (Node node in graph.Nodes)
+            {
+                node.Transitions = node.Transitions.Keys.Where(n => (node.Transitions[n] >= epsilon)).ToDictionary(n => n, n => node.Transitions[n]);
             }
 
-            //Normalize graph
-            g.Normalize();
+            graph.Normalize();
         }
 
         public string Name() {
@@ -215,7 +163,7 @@ namespace ModelLearning.Learners
             if (sequence.Length == 0)
                 return 1.0;
             else
-                return best_hmm.Evaluate(sequence);
+                return bestHmm.Evaluate(sequence);
         }
     }
 }
