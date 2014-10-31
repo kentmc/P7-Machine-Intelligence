@@ -10,7 +10,7 @@ namespace ModelLearning.Learners {
             return 1.0;
         }
 
-        public void Learn(SequenceData trainingData, SequenceData testData) {
+        public void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
         }
 
         public string Name() {

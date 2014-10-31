@@ -66,7 +66,7 @@ namespace ModelLearning.Learners
 
             bestHmm.Learn(trainingData.GetNonempty(), baumwelchThreshold);
 
-            for (int i = 0; i < (maxStates - trainingData.NumSymbols); i++)
+            while (bestHmm.States < maxStates)
             {
                 Console.WriteLine("Taking one more iteration");
 
@@ -106,7 +106,7 @@ namespace ModelLearning.Learners
                 bestHmm = ModelConverter.Graph2HMM(graph);
 
                 Console.WriteLine("Running BaumWelch");
-                bestHmm.Learn(testData.GetNonempty(), baumwelchThreshold); //Run the BaumWelch algorithm
+                bestHmm.Learn(trainingData.GetNonempty(), baumwelchThreshold); //Run the BaumWelch algorithm
 
                 Console.WriteLine();
                 Console.WriteLine("Log Likelihood: {0}", LogLikelihood(bestHmm, trainingData));

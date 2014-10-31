@@ -23,7 +23,8 @@ namespace ModelLearning.Learners {
                 return hmm.Evaluate(sequence);
         }
 
-        public void Learn(SequenceData trainingData, SequenceData testData) {
+        public void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
+            trainingData.AddSequences(validationData);
             hmm = new HiddenMarkovModel(trainingData.NumSymbols, states);
             hmm.Learn(trainingData.GetNonempty(), tolerance);
         }

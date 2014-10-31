@@ -8,7 +8,7 @@ namespace ModelLearning {
 
         double CalculateProbability(int[] sequence);
 
-        void Learn(SequenceData trainingData, SequenceData testData);
+        void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData);
 
         string Name();
     }
