@@ -67,6 +67,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SequenceData.cs" />
+    <Compile Include="Learners\StrictJaegerLearner.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>

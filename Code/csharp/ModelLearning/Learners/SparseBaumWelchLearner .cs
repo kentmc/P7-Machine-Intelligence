@@ -63,6 +63,7 @@ namespace ModelLearning.Learners {
             List<Node> shuffled = graph.Nodes.Select(e => e).ToList();
             Utilities.Shuffle(shuffled);
 
+
             graph.Normalize();
         }
 
