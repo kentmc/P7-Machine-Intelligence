@@ -22,7 +22,7 @@ The latter function outputs a list of probabilities, where each probability is r
 A learner has only one responsibility: Given a list of training sequences, it must learn a probabilistic model as close as possible to the model used to generate those sequences. How this is done is up to the implementer to choose. The only requirement is that he implements a \formatfunction{calc\_probability(sequence)} function, which given a sequence should return how likely it is that the learned model generated that sequence.
 The \formatclass{Learner} class has an already implemented function called \formatfunction{evaluate(sequences, probabilities)}, which uses the \formatfunction{calc\_probability(sequence)} function to calculate probabilities for all provided sequences.
 The probabilities are then normalised, and a score is calculated based on the Pautomac evaluation criteria.
-The \formatfunction{evaluate} function can bee seen by \ref{code:learner}.
+The \formatfunction{evaluate} function can be seen by \ref{code:learner}.
 A learner should also define a name.
 
 \subsection{Model}
