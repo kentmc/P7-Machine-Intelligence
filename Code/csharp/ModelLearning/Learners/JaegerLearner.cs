@@ -14,14 +14,14 @@ namespace ModelLearning.Learners
         private double epsilon;
 
         //settings
-        private int jaeger_iterations;
-        private double baumwelch_threshold;
+        private int maxStates;
+        private double baumwelchThreshold;
 
 
-        public JaegerLearner(int jaeger_iterations, double baumwelch_threshold, double precision)
+        public JaegerLearner(int maxStates, double baumwelchThreshold, double precision)
         {
-            this.jaeger_iterations = jaeger_iterations;
-            this.baumwelch_threshold = baumwelch_threshold;
+            this.maxStates = maxStates;
+            this.baumwelchThreshold = baumwelchThreshold;
             random = new Random();
 
             epsilon = (1 - precision);
@@ -64,9 +64,9 @@ namespace ModelLearning.Learners
             bestHmm = ModelConverter.Graph2HMM(graph);
             //best_likelihood = LogLikelihood(best_hmm, trainingData);
 
-            bestHmm.Learn(trainingData.GetNonempty(), baumwelch_threshold);
+            bestHmm.Learn(trainingData.GetNonempty(), baumwelchThreshold);
 
-            for (int i = 0; i < jaeger_iterations; i++)
+            for (int i = 0; i < (maxStates - 2); i++)
             {
                 Console.WriteLine("Taking one more iteration");
 
@@ -108,10 +108,10 @@ namespace ModelLearning.Learners
                 bestHmm = ModelConverter.Graph2HMM(graph);
 
                 Console.WriteLine("Running BaumWelch");
-                bestHmm.Learn(testData.GetNonempty(), baumwelch_threshold); //Run the BaumWelch algorithm
+                bestHmm.Learn(testData.GetNonempty(), baumwelchThreshold); //Run the BaumWelch algorithm
 
                 Console.WriteLine();
-                Console.WriteLine("Log Likelyhood: {0}", LogLikelihood(bestHmm, trainingData));
+                Console.WriteLine("Log Likelihood: {0}", LogLikelihood(bestHmm, trainingData));
             }
         }
 
