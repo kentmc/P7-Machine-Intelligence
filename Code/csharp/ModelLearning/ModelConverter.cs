@@ -9,26 +9,18 @@ namespace ModelLearning {
     static class ModelConverter {
         public static HMMGraph HMM2Graph(HiddenMarkovModel hmm){
             HMMGraph g = new HMMGraph(hmm.Symbols);
-
-            bool[] reachable = FindReachableNodes(hmm);
             Node[] nodes = new Node[hmm.States];
-
             for (int i = 0; i < hmm.States; i++) {
-                if (reachable[i]) {
-                    nodes[i] = new Node();
-                    g.AddNode(nodes[i]);
-                }
+                nodes[i] = new Node();
+                g.AddNode(nodes[i]);
             }
-
-                for (int i = 0; i < hmm.States; i++) {
-                    if (reachable[i]) {
-                        nodes[i].InitialProbability = hmm.Probabilities[i];
-                        for (int j = 0; j < hmm.States; j++)
-                            nodes[i].SetTransition(nodes[j], hmm.Transitions[i, j]);
-                        for (int k = 0; k < hmm.Symbols; k++)
-                            nodes[i].SetEmission(k, hmm.Emissions[i, k]);
-                    }
-                }
+            for (int i = 0; i < hmm.States; i++) {
+                nodes[i].InitialProbability = hmm.Probabilities[i];
+                for (int j = 0; j < hmm.States; j++)
+                    nodes[i].SetTransition(nodes[j], hmm.Transitions[i, j]);
+                for (int k = 0; k < hmm.Symbols; k++)
+                    nodes[i].SetEmission(k, hmm.Emissions[i, k]);
+            }
             return g;
         }
 

@@ -4,12 +4,23 @@ using System.Linq;
 using System.Text;
 
 namespace ModelLearning {
-    interface Learner {
+    abstract class Learner {
 
-        double CalculateProbability(int[] sequence);
+        private bool verbose;
 
-        void Learn(SequenceData trainingData, SequenceData testData);
+        public void SetVerbosity(bool val) {
+            verbose = val;
+        }
 
-        string Name();
+        public abstract double CalculateProbability(int[] sequence);
+
+        public abstract void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData);
+
+        public abstract string Name();
+
+        protected void WriteLine(string str){
+            if (verbose)
+                Console.WriteLine(str);
+        }
     }
 }

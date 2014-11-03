@@ -28,7 +28,7 @@ namespace ModelLearning {
         /// <summary>
         /// This method should call every time sequences have been added, as it converts all the sequences to an array
         /// </summary>
-        public void Finalize() {
+        public void SaveAddedSequences() {
             sequences = sequence_list.ToArray();
             non_empty_sequences = sequence_list.Where(s => s.Length != 0).ToArray();
         }
@@ -55,11 +55,30 @@ namespace ModelLearning {
             for (int i = 0; i < sequenceData.Count; i++)
                 sequence_list.Add(sequenceData[i]);
             emptySequences += sequenceData.emptySequences;
-            Finalize();
+            SaveAddedSequences();
         }
 
         internal int[][] GetNonempty() {
             return non_empty_sequences;
         }
+
+        public Tuple<SequenceData, SequenceData> RandomSplit(double ratio) {
+            SequenceData part1 = new SequenceData(NumSymbols);
+            SequenceData part2 = new SequenceData(NumSymbols);
+            List<int[]> shuffled = sequence_list.Select(e => e).ToList();
+            Utilities.Shuffle(shuffled);
+            int size_part1 = (int)(shuffled.Count * ratio);
+            for (int i = 0; i < shuffled.Count; i++) {
+                if (i < size_part1)
+                    part1.AddSequence(shuffled[i]);
+                else
+                    part2.AddSequence(shuffled[i]);
+            }
+            part1.SaveAddedSequences();
+            part2.SaveAddedSequences();
+            return new Tuple<SequenceData, SequenceData>(part1, part2);
+        }
+
+        
     }
 }
