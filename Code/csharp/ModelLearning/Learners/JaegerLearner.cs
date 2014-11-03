@@ -58,7 +58,7 @@ namespace ModelLearning.Learners
             return loglikelihood;
         }
 
-        public void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData)
+        public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData)
         {
             HMMGraph graph = Random2NodeGraph(trainingData.NumSymbols);
             bestHmm = ModelConverter.Graph2HMM(graph);
@@ -68,7 +68,7 @@ namespace ModelLearning.Learners
 
             while (bestHmm.States < maxStates)
             {
-                Console.WriteLine("Taking one more iteration");
+                WriteLine("Taking one more iteration");
 
                 //HMMGraph old_graph = graph; //for backup if we fail to improve it
                 graph = ModelConverter.HMM2Graph(bestHmm);
@@ -107,11 +107,11 @@ namespace ModelLearning.Learners
                 //RandomlyExtendGraph(graph, 1.0 - 1.0 / Math.Log(graph.NumSymbols));
                 bestHmm = ModelConverter.Graph2HMM(graph);
 
-                Console.WriteLine("Running BaumWelch");
+                WriteLine("Running BaumWelch");
                 bestHmm.Learn(trainingData.GetNonempty(), baumwelchThreshold); //Run the BaumWelch algorithm
 
-                Console.WriteLine();
-                Console.WriteLine("Log Likelihood: {0}", LogLikelihood(bestHmm, trainingData));
+                WriteLine("");
+                WriteLine("Log Likelihood: {0}" + LogLikelihood(bestHmm, trainingData));
             }
         }
 
@@ -155,11 +155,11 @@ namespace ModelLearning.Learners
             graph.Normalize();
         }
 
-        public string Name() {
+        public override string Name() {
             return "JaegerLearner";
         }
 
-        public double CalculateProbability(int[] sequence) {
+        public override double CalculateProbability(int[] sequence) {
             if (sequence.Length == 0)
                 return 1.0;
             else

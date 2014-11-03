@@ -16,20 +16,20 @@ namespace ModelLearning.Learners {
             this.tolerance = tolerance;
         }
 
-        public double CalculateProbability(int[] sequence) {
+        public override double CalculateProbability(int[] sequence) {
             if (sequence.Length == 0)
                 return 1.0;
             else
                 return hmm.Evaluate(sequence);
         }
 
-        public void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
+        public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
             trainingData.AddSequences(validationData);
             hmm = new HiddenMarkovModel(trainingData.NumSymbols, states);
             hmm.Learn(trainingData.GetNonempty(), tolerance);
         }
 
-        public string Name() {
+        public override string Name() {
             return "Baum Welch Learner";
         }
     }

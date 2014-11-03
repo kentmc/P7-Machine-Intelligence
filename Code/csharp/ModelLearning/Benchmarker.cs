@@ -18,18 +18,19 @@ namespace ModelLearning {
             StreamWriter file = new System.IO.StreamWriter(output_file);
             WriteColumnNames(file, learners);
 
-            foreach (int i in datasets) {
-                file.Write(i + ", " + num_runs + ", ");
+           int num = 1;
+           foreach (int dataset in datasets) {
+                Console.WriteLine("Dataset " + (num++) + " / " + datasets.Count());
+                file.Write(dataset + ", " + num_runs + ", ");
 
                 //Load train, and test data
-                SequenceData trainData = DataLoader.LoadSequences(@"Data/" + i + ".pautomac.train");
-                SequenceData testData = DataLoader.LoadSequences(@"Data/" + i + ".pautomac.test");
+                SequenceData trainData = DataLoader.LoadSequences(@"Data/" + dataset + ".pautomac.train");
+                SequenceData testData = DataLoader.LoadSequences(@"Data/" + dataset + ".pautomac.test");
 
                 //Load solutions
-                double[] solutions = DataLoader.LoadSolutions(@"Data/" + i + ".pautomac_solution.txt");
+                double[] solutions = DataLoader.LoadSolutions(@"Data/" + dataset + ".pautomac_solution.txt");
 
                 BenchmarkLearners(learners, num_runs, trainData, testData, solutions, file);
-                
             }
             file.Close();
         }
@@ -45,7 +46,6 @@ namespace ModelLearning {
         }
 
         private static void BenchmarkLearners(IEnumerable<Learner> learners, int num_runs, SequenceData trainData, SequenceData testData, double[] solutions, StreamWriter file) {
-
             Dictionary<Learner, double[]> achieved_scores = new Dictionary<Learner, double[]>();
             Dictionary<Learner, double[]> elapsed_times = new Dictionary<Learner, double[]>();
             
@@ -55,12 +55,14 @@ namespace ModelLearning {
             }
 
             for (int r = 0; r < num_runs; r++) {
+                Console.Write("\nRun " + r + " / " + num_runs);
                 //Split training data randomly into train and validation sets
                 Tuple<SequenceData, SequenceData> split = trainData.RandomSplit(0.6666666);
                 trainData = split.Item1;
                 SequenceData validationData = split.Item2;
 
                 foreach (Learner learner in learners) {
+                    Console.WriteLine("\nEvaluating learner " + learner.Name());
                     //Track how much time learning takes for the particular Learner
                     Stopwatch sw = new Stopwatch();
                     sw.Start();
