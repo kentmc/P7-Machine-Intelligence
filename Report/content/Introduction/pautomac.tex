@@ -4,27 +4,25 @@
 
 PautomaC stands for Probabilistic Automata learning Competition. To
 win, the competitors had to try and create the most accurate algorithm
-for learning what are called Non-deterministic Probabilistic Finite
-state Automata (NPFA). The aim of this competition was to improve
-the existing knowledge on NPFA-learning algorithms.
+for learning what are called \gls{npfa}. The aim of this competition was to improve
+the existing knowledge on \gls{npfa} learning algorithms.
 
 
 \subsubsection{Reminder about PAs}
 
-More commonly referred to as simply Probabilistic Automaton (PA) or
+More commonly referred to as simply \gls{pa} or
 sometimes Rabin Automaton, like the name of Michael O. Rabin who introduced
-this concept in 1963, PAs generalise the concept of Non-deterministic
-Finite Automata (NFA). NFAs can transition to zero or more states,
-without requiring input symbols for state transitions. However, PAs
+this concept in 1963, \gls{pa}s generalise the concept of \gls{nfa}. \gls{nfa}s can transition to zero or more states,
+without requiring input symbols for state transitions. However, \gls{pa}s
 introduce transitioning probabilities in the definition. Therefore,
-whereas NFAs all have a Deterministic equivalent, the introduction
-of the probability concept in PAs prevent the existence of DFA equivalents,
+whereas \gls{nfa}s all have a Deterministic equivalent, the introduction
+of the probability concept in \gls{pa}s prevent the existence of \gls{dfa} equivalents,
 unless all probabilities are equal to 0 or 1.
 
-The languages PAs recognise are called stochastic languages - of which
+The languages \gls{pa}s recognise are called stochastic languages - of which
 the regular ones are a subset. More about stochastic languages can
 be found {[}here{]}. The number of stochastic languages is uncountable.
-By their definition, PAs extend the Markov Chain concept. More formally:
+By their definition, \gls{pa}s extend the Markov Chain concept. More formally:
 
 \begin{description}
 	\item [{P:}] probability of transitioning to a particular state
@@ -54,13 +52,13 @@ Automaton thus has:
 on the symbol produced
 \item A probability of ending the sequence when in a final state
 \end{itemize}
-Albeit complex, PAs have many applications. Indeed, in most cases,
+Albeit complex, \gls{pa}s have many applications. Indeed, in most cases,
 the only available data is the observed output. It is thus necessary
 to learn how to make a model out of these observed sequences to understand
-them. DNA sequences are a good example of this problem. The observed
+them. \gls{dna} sequences are a good example of this problem. The observed
 symbols undoubtedly follow a model of some sort, yet unknown. The
-goal of a PA is to approximate this kind of model, and learning PAs
-ultimately leads to learning how DNA sequences are generated.
+goal of a \gls{pa} is to approximate this kind of model, and learning \gls{pa}s
+ultimately leads to learning how \gls{dna} sequences are generated.
 
 
 \subsubsection{Test generation}
