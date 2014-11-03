@@ -20,7 +20,7 @@ namespace ModelLearning {
 
            int num = 1;
            foreach (int dataset in datasets) {
-                Console.WriteLine("Dataset " + (num++) + " / " + datasets.Count());
+                Console.WriteLine("\n\nDataset " + (num++) + " / " + datasets.Count());
                 file.Write(dataset + ", " + num_runs + ", ");
 
                 //Load train, and test data
@@ -38,11 +38,12 @@ namespace ModelLearning {
         private static void WriteColumnNames(StreamWriter file, IEnumerable<Learner> learners) {
             file.Write("Dataset, Runs");
             foreach (Learner l in learners) {
-                file.Write(", " + l.Name() + " AvgScore");
+                file.Write(", " + l.Name() + " MeanScore");
                 file.Write(", " + l.Name() + " MedianScore");
-                file.Write(", " + l.Name() + " AvgTime");
-                file.WriteLine(", " + l.Name() + " MedianTime");
+                file.Write(", " + l.Name() + " MeanTime");
+                file.Write(", " + l.Name() + " MedianTime");
             }
+            file.WriteLine();
         }
 
         private static void BenchmarkLearners(IEnumerable<Learner> learners, int num_runs, SequenceData trainData, SequenceData testData, double[] solutions, StreamWriter file) {
@@ -55,7 +56,7 @@ namespace ModelLearning {
             }
 
             for (int r = 0; r < num_runs; r++) {
-                Console.Write("\nRun " + r + " / " + num_runs);
+                Console.Write("\nRun " + (r+1) + " / " + num_runs);
                 //Split training data randomly into train and validation sets
                 Tuple<SequenceData, SequenceData> split = trainData.RandomSplit(0.6666666);
                 trainData = split.Item1;
@@ -79,12 +80,15 @@ namespace ModelLearning {
         }
 
         private static void WriteResultOfRun(IEnumerable<Learner> learners, Dictionary<Learner, double[]> achieved_scores, Dictionary<Learner, double[]> elapsed_times, StreamWriter file) {
+            string sep = "";
             foreach (Learner learner in learners) {
-                file.Write((int)Utilities.Mean(achieved_scores[learner]) + ", ");
-                file.Write((int)Utilities.Median(achieved_scores[learner]) + ", ");
-                file.Write((int)Utilities.Mean(elapsed_times[learner]) + ", ");
-                file.WriteLine((int)Utilities.Median(elapsed_times[learner]));
+                file.Write(sep + (int)Utilities.Mean(achieved_scores[learner]));
+                file.Write(", " + (int)Utilities.Median(achieved_scores[learner]));
+                file.Write(", " + (int)Utilities.Mean(elapsed_times[learner]));
+                file.Write(", " + (int)Utilities.Median(elapsed_times[learner]));
+                sep = ", ";
             }
+            file.WriteLine();
         }
     }
 
