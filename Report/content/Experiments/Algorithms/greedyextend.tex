@@ -1,0 +1,13 @@
+\subsection{Greedy Extend}
+This algorithm starts with a graph $G$ of 1 node. The node has initial probability 1, loops to itself with probability 1, and its emission probabilities are chosen randomly and normalized.
+
+Through a number of iterations $i = 1 ... k$, do the following:
+\begin{itemize}
+\item $G'$ = $(V(G) \cup \{y'\}, E(G))$, where $y'$ is a new node with a random initial probability in range $[0, 1]$ and random emission probabilities summing to $1$.
+\item Choose a number of random nodes $Y = \{y_1, y_2, ... , y_l\} \in V(G')$, where $l = \lceil log(|V(G')|) \rceil$ and $\forall a,b: y_a \neq y_b$.
+\item For each $y \in Y$, the transitions $(y, y')$ and $(y', y)$ are added to $E(G')$ with random transition probabilities.
+\item Normalize $G'$ and run Baum Welch on $G'$.
+\item If $LL(G') > LL(G)$, where $LL(G)$ is the log likelihood of $G$, then set $G = G'$.
+\end{itemize}
+
+Return $G$.
