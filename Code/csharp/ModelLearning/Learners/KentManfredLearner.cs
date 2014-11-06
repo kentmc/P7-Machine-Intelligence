@@ -57,7 +57,8 @@ namespace ModelLearning.Learners {
             HMMGraph graph = Random2NodeGraph(trainingData.NumSymbols);
             bestHmm = ModelConverter.Graph2HMM(graph);
             bestLikelihood = LogLikelihood(bestHmm, trainingData);
-            while (bestHmm.States < maxStates){
+            int start_states = bestHmm.States;
+            for (int expands = 0; expands < maxStates - start_states; expands++){
                 WriteLine("Number of states: " + bestHmm.States);
                 //each iteration will extend the graph with one additional node
                 //try adding a new node with random parameters n different times and choose the best solution
