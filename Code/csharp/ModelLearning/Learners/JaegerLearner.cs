@@ -9,7 +9,8 @@ namespace ModelLearning.Learners
     class JaegerLearner : Learner
     {
         private Random random;
-        private HiddenMarkovModel bestHmm;
+        //private HiddenMarkovModel bestHmm;
+        private SparseHiddenMarkovModel bestHMM;
 
         private double epsilon;
 
@@ -51,45 +52,48 @@ namespace ModelLearning.Learners
         /// <param name="g"></param>
         /// <param name="evaluationData"></param>
         /// <returns></returns>
-        public double LogLikelihood(HiddenMarkovModel hmm, SequenceData evaluationData) {
+        public double LogLikelihood(SparseHiddenMarkovModel hmm, SequenceData evaluationData) {
             double loglikelihood = 0;
             for (int i = 0; i < evaluationData.Count; i++)
-                loglikelihood += hmm.Evaluate(evaluationData[i], true);
+                loglikelihood += Math.Log(hmm.Evaluate(evaluationData[i]));
             return loglikelihood;
         }
 
         public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData)
         {
             HMMGraph graph = Random2NodeGraph(trainingData.NumSymbols);
-            bestHmm = ModelConverter.Graph2HMM(graph);
+            //bestHmm = ModelConverter.Graph2HMM(graph);
             //best_likelihood = LogLikelihood(best_hmm, trainingData);
 
-            bestHmm.Learn(trainingData.GetNonempty(), baumwelchThreshold);
+            bestHMM = SparseHiddenMarkovModel.FromGraph(graph);
 
-            while (bestHmm.States < maxStates)
+            bestHMM.Learn(trainingData, baumwelchThreshold);
+
+            while (bestHMM.NumberOfStates < maxStates)
             {
                 WriteLine("Taking one more iteration");
 
                 //HMMGraph old_graph = graph; //for backup if we fail to improve it
-                graph = ModelConverter.HMM2Graph(bestHmm);
+                graph = bestHMM.ToGraph();
 
                 Dictionary<int, double> nodePerformance = new Dictionary<int, double>();
                 Dictionary<int, int> nodeOccurence = new Dictionary<int, int>();
                 double hiddenStateSequenceProbability;
-                foreach (int[] signal in trainingData.GetNonempty())
+                foreach (int[] signal in validationData.GetNonempty())
                 {
-                    int[] hiddenStateSequence = bestHmm.Decode(signal, out hiddenStateSequenceProbability);
+                    int[] hiddenStateSequence = bestHMM.Viterby(signal, out hiddenStateSequenceProbability);
 
                     for (int j = 0; j < hiddenStateSequence.Length;j++)
                     {
                         if (nodePerformance.ContainsKey(hiddenStateSequence[j]))
                         {
-                            nodePerformance[hiddenStateSequence[j]] += (Math.Log(hiddenStateSequenceProbability) * Math.Log(bestHmm.Emissions[hiddenStateSequence[j], signal[j]]));
+                            //nodePerformance[hiddenStateSequence[j]] += (Math.Log(hiddenStateSequenceProbability) + Math.Log(bestHmm.Emissions[hiddenStateSequence[j], signal[j]]));
+                            nodePerformance[hiddenStateSequence[j]] += (Math.Log(hiddenStateSequenceProbability) + Math.Log(bestHMM.EmissionProbability(hiddenStateSequence[j], signal[j])));
                             nodeOccurence[hiddenStateSequence[j]]++;
                         }
                         else
                         {
-                            nodePerformance.Add(hiddenStateSequence[j], (Math.Log(hiddenStateSequenceProbability) * Math.Log(bestHmm.Emissions[hiddenStateSequence[j], signal[j]])));
+                            nodePerformance.Add(hiddenStateSequence[j], (Math.Log(hiddenStateSequenceProbability) + Math.Log(bestHMM.EmissionProbability(hiddenStateSequence[j], signal[j]))));
                             nodeOccurence.Add(hiddenStateSequence[j], 1);
                         }
                     }
@@ -100,18 +104,17 @@ namespace ModelLearning.Learners
                     nodePerformance[node] /= nodeOccurence[node];
                 }
 
-                int weakPoint = nodePerformance.Keys.Aggregate((a, b) => ((nodePerformance[b] > nodePerformance[a]) ? b : a));
+                int weakPoint = nodePerformance.Keys.Aggregate((a, b) => ((nodePerformance[b] < nodePerformance[a]) ? b : a));
                 SplitWorstPerformingNode(graph, weakPoint);
                 CutWeakEdges(graph);
 
-                //RandomlyExtendGraph(graph, 1.0 - 1.0 / Math.Log(graph.NumSymbols));
-                bestHmm = ModelConverter.Graph2HMM(graph);
+                bestHMM = SparseHiddenMarkovModel.FromGraph(graph);
 
                 WriteLine("Running BaumWelch");
-                bestHmm.Learn(trainingData.GetNonempty(), baumwelchThreshold); //Run the BaumWelch algorithm
+                bestHMM.Learn(trainingData, baumwelchThreshold); //Run the BaumWelch algorithm
 
-                WriteLine("");
-                WriteLine("Log Likelihood: {0}" + LogLikelihood(bestHmm, trainingData));
+                //WriteLine("");
+                WriteLine("Log Likelihood: " + LogLikelihood(bestHMM, validationData));
             }
         }
 
@@ -163,7 +166,7 @@ namespace ModelLearning.Learners
             if (sequence.Length == 0)
                 return 1.0;
             else
-                return bestHmm.Evaluate(sequence);
+                return bestHMM.Evaluate(sequence);
         }
     }
 }

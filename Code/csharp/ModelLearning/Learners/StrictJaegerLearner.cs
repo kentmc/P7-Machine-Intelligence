@@ -76,7 +76,7 @@ namespace ModelLearning.Learners
                 Dictionary<int, double> nodePerformance = new Dictionary<int, double>();
                 Dictionary<int, int> nodeOccurence = new Dictionary<int, int>();
                 double hiddenStateSequenceProbability;
-                foreach (int[] signal in trainingData.GetNonempty())
+                foreach (int[] signal in validationData.GetNonempty())
                 {
                     int[] hiddenStateSequence = bestHmm.Decode(signal, out hiddenStateSequenceProbability);
 
@@ -84,12 +84,12 @@ namespace ModelLearning.Learners
                     {
                         if (nodePerformance.ContainsKey(hiddenStateSequence[j]))
                         {
-                            nodePerformance[hiddenStateSequence[j]] += (Math.Log(hiddenStateSequenceProbability) * Math.Log(bestHmm.Emissions[hiddenStateSequence[j], signal[j]]));
+                            nodePerformance[hiddenStateSequence[j]] += (Math.Log(hiddenStateSequenceProbability) + Math.Log(bestHmm.Emissions[hiddenStateSequence[j], signal[j]]));
                             nodeOccurence[hiddenStateSequence[j]]++;
                         }
                         else
                         {
-                            nodePerformance.Add(hiddenStateSequence[j], (Math.Log(hiddenStateSequenceProbability) * Math.Log(bestHmm.Emissions[hiddenStateSequence[j], signal[j]])));
+                            nodePerformance.Add(hiddenStateSequence[j], (Math.Log(hiddenStateSequenceProbability) + Math.Log(bestHmm.Emissions[hiddenStateSequence[j], signal[j]])));
                             nodeOccurence.Add(hiddenStateSequence[j], 1);
                         }
                     }
@@ -100,7 +100,7 @@ namespace ModelLearning.Learners
                     nodePerformance[node] /= nodeOccurence[node];
                 }
 
-                int weakPoint = nodePerformance.Keys.Aggregate((a, b) => ((nodePerformance[b] > nodePerformance[a]) ? b : a));
+                int weakPoint = nodePerformance.Keys.Aggregate((a, b) => ((nodePerformance[b] < nodePerformance[a]) ? b : a));
                 SplitWorstPerformingNode(graph, weakPoint);
 
                 bestHmm = ModelConverter.Graph2HMM(graph);
