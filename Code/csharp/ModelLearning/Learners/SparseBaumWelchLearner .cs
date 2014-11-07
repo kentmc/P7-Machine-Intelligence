@@ -23,7 +23,7 @@ namespace ModelLearning.Learners {
             ran = new Random();
         }
 
-        public double CalculateProbability(int[] sequence) {
+        public override double CalculateProbability(int[] sequence) {
             if (sequence.Length == 0)
                 return 1.0;
             else
@@ -47,7 +47,7 @@ namespace ModelLearning.Learners {
             }
         }
 
-        public void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
+        public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
             HMMGraph graph = new HMMGraph(trainingData.NumSymbols);
 
             //Add nodes and set initial and emission probabilities
@@ -63,11 +63,12 @@ namespace ModelLearning.Learners {
             List<Node> shuffled = graph.Nodes.Select(e => e).ToList();
             Utilities.Shuffle(shuffled);
 
-
             graph.Normalize();
+            hmm = ModelConverter.Graph2HMM(graph);
+            hmm.Learn(trainingData.GetNonempty(), tolerance);
         }
 
-        public string Name() {
+        public override string Name() {
             return "Sparse Baum Welch Learner";
         }
     }

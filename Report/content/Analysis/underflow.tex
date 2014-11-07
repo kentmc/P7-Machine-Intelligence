@@ -17,7 +17,13 @@
     \end{tabular}
 \end{table}
 
-	\missingfigure{Figure of bit configuration}
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\linewidth]{pictures/binary_underflow.png}
+		\caption{Binary representation}
+		\label{fig:binary_underflow}
+	\end{figure}
+
 
     This makes the smallest number $0.0625$, any value less than this will get rounded either down to zero or up to $0.0625$. The smallest number in binary is:
 
@@ -34,7 +40,12 @@ In this project there is a high probability that very small numbers will occur, 
     $$l(A) = \log \frac{p(A)}{1-p(A)}$$
 
     The mapping is shown on the graph below:\\
-	\missingfigure{Mapping graph}
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\linewidth]{pictures/logodds_mapping.png}
+		\caption{Mapping for log odds}
+		\label{fig:log_odds}
+	\end{figure}
 
     Another way to work around the problem is with Pythons \textit{decimal} library, this library makes it possible to store decimal numbers with exact precision and detect underflow. It possible to define how many decimals you want on numbers in the decimal library.
 

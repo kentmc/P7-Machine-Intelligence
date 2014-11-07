@@ -53,12 +53,13 @@ namespace ModelLearning.Learners {
             return loglikelihood;
         }
 
-        public void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
+        public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
             HMMGraph graph = Random2NodeGraph(trainingData.NumSymbols);
             bestHmm = ModelConverter.Graph2HMM(graph);
             bestLikelihood = LogLikelihood(bestHmm, trainingData);
-            while (bestHmm.States < maxStates){
-                Console.WriteLine("Number of states: " + bestHmm.States);
+            int start_states = bestHmm.States;
+            for (int expands = 0; expands < maxStates - start_states; expands++){
+                WriteLine("Number of states: " + bestHmm.States);
                 //each iteration will extend the graph with one additional node
                 //try adding a new node with random parameters n different times and choose the best solution
                 HiddenMarkovModel current_best_hmm = null;
@@ -71,20 +72,20 @@ namespace ModelLearning.Learners {
                     if (likelihood > bestLikelihood) {
                         bestLikelihood = likelihood;
                         current_best_hmm = hmm;
-                        Console.WriteLine("+");
+                        WriteLine("+");
                     }
                     else {
-                        Console.WriteLine("-");
+                        WriteLine("-");
                     }
                 }
                 if (current_best_hmm != null){
                     bestHmm = current_best_hmm;
-                    Console.WriteLine("Likelihood increased to " + bestLikelihood);
+                    WriteLine("Likelihood increased to " + bestLikelihood);
                 }
                 else
-                    Console.WriteLine("Likelihood stays the same");
+                    WriteLine("Likelihood stays the same");
             }
-            Console.WriteLine("Runs Baum Welch last time with the right threshold");
+            WriteLine("Runs Baum Welch last time with the right threshold");
             bestHmm.Learn(trainingData.GetNonempty(), threshold);
         }
 
@@ -136,11 +137,11 @@ namespace ModelLearning.Learners {
             }
         }
 
-        public string Name() {
+        public override string Name() {
             return "KentManfredLearner";
         }
 
-        public double CalculateProbability(int[] sequence) {
+        public override double CalculateProbability(int[] sequence) {
             if (sequence.Length == 0)
                 return 1.0;
             else

@@ -6,14 +6,14 @@ using System.Text;
 namespace ModelLearning.Learners {
     class UniformLearner : Learner {
 
-        public double CalculateProbability(int[] sequence) {
+        public override double CalculateProbability(int[] sequence) {
             return 1.0;
         }
 
-        public void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
+        public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
         }
 
-        public string Name() {
+        public override string Name() {
             return "UniformLearner";
         }
     }

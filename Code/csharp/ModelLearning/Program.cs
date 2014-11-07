@@ -8,11 +8,14 @@ using Accord.Statistics.Models.Markov;
 namespace ModelLearning {
     class Program {
         static void Main(string[] args) {
-
+            double threshold = 0.001;
+            int max_states = 20;
             List<Learner> learners = new List<Learner>() { 
-                new Learners.KentManfredLearner(20, 0.001),
-                new Learners.BaumWelchLearner(20, 0.001),
-                new Learners.UniformLearner()
+                new Learners.KentManfredLearner(max_states, threshold),
+                new Learners.BaumWelchLearner(max_states, threshold),
+                new Learners.SparseBaumWelchLearner(max_states, threshold),
+                new Learners.StrictJaegerLearner(max_states, threshold),
+                new Learners.JaegerLearner(max_states, threshold, 0.95)
             };
 
             while (true) {
@@ -34,13 +37,17 @@ namespace ModelLearning {
                 if (selected_datasets == null)
                     continue;
 
+                //Select verbosity
+                bool verbose = ShowInterfaceSelectYesNo("Show intermediate output from learners?");
+                foreach (Learner learner in learners)
+                    learner.SetVerbosity(verbose);
+
                 //Run benchmarker
+                Console.WriteLine("\nStarting benchmarker");
                 Benchmarker.Run(selected_learners, selected_datasets, output_file, num_runs);
                 
-                Console.WriteLine("Benchmarking has finished with success!");
-                Console.WriteLine("Do another benchmark ? y/n");
-                string response = Console.ReadLine();
-                if (response.Length > 0 && response.ToLower()[0] == 'y')
+                Console.WriteLine("\nBenchmarking has finished with success!");
+                if (ShowInterfaceSelectYesNo("Do another bencmark?"))
                     continue;
                 else
                     break;
@@ -83,6 +90,21 @@ namespace ModelLearning {
                 }
             }
             return selected_datasets;
+        }
+
+        /// <summary>
+        /// Returns true if user selectes yes or false if no
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        static bool ShowInterfaceSelectYesNo(string str) {
+            Console.WriteLine();
+            Console.WriteLine(str + " y/n");
+            string response = Console.ReadLine();
+            if (response.Length > 0 && response.ToLower()[0] == 'y')
+                return true;
+            else
+                return false;
         }
 
         static List<Learner> ShowInterfaceSelectLearners(List<Learner> learners) {

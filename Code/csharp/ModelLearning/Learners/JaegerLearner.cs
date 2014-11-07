@@ -52,14 +52,14 @@ namespace ModelLearning.Learners
         /// <param name="g"></param>
         /// <param name="evaluationData"></param>
         /// <returns></returns>
-        public double LogLikelihood(HiddenMarkovModel hmm, SequenceData evaluationData) {
+        public double LogLikelihood(SparseHiddenMarkovModel hmm, SequenceData evaluationData) {
             double loglikelihood = 0;
             for (int i = 0; i < evaluationData.Count; i++)
-                loglikelihood += hmm.Evaluate(evaluationData[i], true);
+                loglikelihood += Math.Log(hmm.Evaluate(evaluationData[i]));
             return loglikelihood;
         }
 
-        public void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData)
+        public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData)
         {
             HMMGraph graph = Random2NodeGraph(trainingData.NumSymbols);
             //bestHmm = ModelConverter.Graph2HMM(graph);
@@ -71,7 +71,7 @@ namespace ModelLearning.Learners
 
             while (bestHMM.NumberOfStates < maxStates)
             {
-                Console.WriteLine("Taking one more iteration");
+                WriteLine("Taking one more iteration");
 
                 //HMMGraph old_graph = graph; //for backup if we fail to improve it
                 graph = bestHMM.ToGraph();
@@ -108,14 +108,13 @@ namespace ModelLearning.Learners
                 SplitWorstPerformingNode(graph, weakPoint);
                 CutWeakEdges(graph);
 
-                //RandomlyExtendGraph(graph, 1.0 - 1.0 / Math.Log(graph.NumSymbols));
                 bestHMM = SparseHiddenMarkovModel.FromGraph(graph);
 
-                Console.WriteLine("Running BaumWelch");
+                WriteLine("Running BaumWelch");
                 bestHMM.Learn(trainingData, baumwelchThreshold); //Run the BaumWelch algorithm
 
-                //Console.WriteLine();
-                //Console.WriteLine("Log Likelihood: {0}", LogLikelihood(bestHMM, trainingData));
+                //WriteLine("");
+                WriteLine("Log Likelihood: " + LogLikelihood(bestHMM, validationData));
             }
         }
 
@@ -159,11 +158,11 @@ namespace ModelLearning.Learners
             graph.Normalize();
         }
 
-        public string Name() {
+        public override string Name() {
             return "JaegerLearner";
         }
 
-        public double CalculateProbability(int[] sequence) {
+        public override double CalculateProbability(int[] sequence) {
             if (sequence.Length == 0)
                 return 1.0;
             else
