@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ModelLearning {
-    class Node {
+    public class Node {
         public double InitialProbability;
         public Dictionary<Node, double> Transitions;
         public Dictionary<int, double> Emissions; 

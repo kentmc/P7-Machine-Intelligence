@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ModelLearning
 {
-    class SparseHiddenMarkovModel
+    public class SparseHiddenMarkovModel
     {
         private Random random;
         private int _numberOfStates;
@@ -237,11 +237,6 @@ namespace ModelLearning
 
             forwardVariables.Add(0, stateEmits);
 
-            //foreach (int i in emittents[signal[0]])
-            //{
-            //    forwardVariables[0, i] = initialDistribution[i] * emissionProbabilities[i, signal[0]];
-            //}
-
             for (int t = 1; t < signal.Length; t++)
             {
                 stateEmits = new Dictionary<int, double>();
@@ -275,23 +270,6 @@ namespace ModelLearning
             }
 
             return forwardVariables;
-
-            //for (int t = 1; t < signal.Length; t++)
-            //{
-            //    foreach (int j in emittents[signal[t]])
-            //    {
-            //        double score = 0.0;
-
-            //        foreach (int i in transitionsIn[j])
-            //        {
-            //            score += (forwardVariables[(t - 1), i] * transitionProbabilities[i, j]);
-            //        }
-
-            //        forwardVariables[t, j] = (score * emissionProbabilities[j, signal[t]]);
-            //    }
-            //}
-
-            //return forwardVariables;
         }
 
         private Dictionary<int, Dictionary<int, double>> Backward(int[] signal, double[] scales)
@@ -308,8 +286,6 @@ namespace ModelLearning
             foreach(int i in emittents[signal[(signal.Length - 1)]])
             {
                 stateEmits.Add(i, (1 / scales[(signal.Length - 1)]));
-
-                //backwardVariables[(signal.Length - 1), i] = 1;
             }
 
             backwardVariables.Add((signal.Length - 1), stateEmits);
@@ -339,23 +315,6 @@ namespace ModelLearning
             }
 
             return backwardVariables;
-
-            //for (int t = (signal.Length - 2); t >= 0; t--)
-            //{
-            //    foreach (int i in emittents[signal[t]])
-            //    {
-            //        double score = 0.0;
-
-            //        foreach (int j in transitionsOut[i])
-            //        {
-            //            score += (transitionProbabilities[i, j] * emissionProbabilities[j, signal[(t + 1)]] * backwardVariables[(t + 1), j]);
-            //        }
-
-            //        backwardVariables[t, i] = score;
-            //    }
-            //}
-
-            //return backwardVariables;
         }
 
         public double Evaluate(int[] signal)
@@ -369,195 +328,434 @@ namespace ModelLearning
 
             Dictionary<int, Dictionary<int, double>> forwardVariables = Forward(signal, out scales);
 
-            return (forwardVariables[(signal.Length - 1)].Values.Sum() * scales[(signal.Length - 1)]);
+            //return (forwardVariables[(signal.Length - 1)].Values.Sum() * scales[(signal.Length - 1)]);
+
+            double probability = 0.0;
+
+            for (int i = 0; i < signal.Length; i++)
+            {
+                probability += Math.Log(scales[i]);
+            }
+
+            return probability;
         }
 
-        public void Learn(SequenceData trainingData, double threshold)
+        public void Learn(int[][] signals, double threshold)
         {
-            int[][] signals = trainingData.GetNonempty();
-
-            Dictionary<int, Dictionary<int, Dictionary<int, double>>>[] epsilon = new Dictionary<int, Dictionary<int, Dictionary<int, double>>>[signals.Length];
-            Dictionary<int, Dictionary<int, double>>[] gamma = new Dictionary<int, Dictionary<int, double>>[signals.Length];
-
-            double oldLikelihood = Double.MinValue;
-            double likelihood = 0.0;
-
-            double scale = 0.0;
-            double score = 0.0;
-
+            int N = signals.Length;
             bool stop = false;
 
-            while (!stop)
-            {
-                for (int i = 0; i < signals.Length; i++)
-                {
-                    epsilon[i] = new Dictionary<int, Dictionary<int, Dictionary<int, double>>>();
-                    gamma[i] = new Dictionary<int, Dictionary<int, double>>();
+            double[] pi = initialDistribution;
+            double[,] A = transitionProbabilities;
+            double[,] B = emissionProbabilities;
 
+            // Initialization
+            double[][, ,] epsilon = new double[N][, ,]; // also referred as ksi or psi
+            double[][,] gamma = new double[N][,];
+
+            for (int i = 0; i < N; i++)
+            {
+                int T = signals[i].Length;
+                epsilon[i] = new double[T, NumberOfStates, NumberOfStates];
+                gamma[i] = new double[T, NumberOfStates];
+            }
+
+
+            // Calculate initial model log-likelihood
+            double oldLikelihood = Double.MinValue;
+            double newLikelihood = 0;
+
+
+            do // Until convergence or max iterations is reached
+            {
+                Console.Write("*");
+                // For each sequence in the observations input
+                for (int i = 0; i < N; i++)
+                {
+                    var sequence = signals[i];
+                    int T = sequence.Length;
                     double[] scaling;
 
+                    // 1st step - Calculating the forward probability and the
+                    //            backward probability for each HMM state.
                     Dictionary<int, Dictionary<int, double>> forwardVariables = Forward(signals[i], out scaling);
                     Dictionary<int, Dictionary<int, double>> backwardVariables = Backward(signals[i], scaling);
 
-                    for (int t = 0; t < signals[i].Length; t++)
-                    {
-                        Dictionary<int, double> symbolGamma = new Dictionary<int, double>();
-                        
-                        scale = 0.0;
+                    double[,] fwd = new double[T, NumberOfStates];
+                    double[,] bwd = new double[T, NumberOfStates];
 
+                    foreach (int t in forwardVariables.Keys)
+                    {
                         foreach (int j in forwardVariables[t].Keys)
                         {
-                            if (backwardVariables[t].TryGetValue(j, out score))
-                            {
-                                score *= forwardVariables[t][j];
-
-                                symbolGamma.Add(j, score);
-                                scale += score;
-                            }
+                            fwd[t, j] = forwardVariables[t][j];
                         }
-
-                        if (scale != 0)
-                        {
-                            for (int j = 0; j < symbolGamma.Keys.Count; j++)
-                            {
-                                symbolGamma[symbolGamma.Keys.ElementAt(j)] /= scale;
-                            }
-                        }
-
-                        gamma[i].Add(t, symbolGamma);
                     }
 
-                    for (int t = 0; t < (signals[i].Length - 1); t++)
+                    foreach (int t in backwardVariables.Keys)
                     {
-                        Dictionary<int, Dictionary<int, double>> symbolEpsilon = new Dictionary<int, Dictionary<int, double>>();
-
-                        scale = 0.0;
-
-                        foreach (int j in forwardVariables[t].Keys)
+                        foreach (int j in backwardVariables[t].Keys)
                         {
-                            int[] validStates = backwardVariables[(t + 1)].Keys.Intersect(transitionsOut[j]).Intersect(emittents[signals[i][(t + 1)]]).ToArray();
+                            bwd[t, j] = backwardVariables[t][j];
+                        }
+                    }
 
-                            Dictionary<int, double> transitionEpsilon = new Dictionary<int, double>();
+                    // 2nd step - Determining the frequency of the transition-emission pair values
+                    //            and dividing it by the probability of the entire string.
 
-                            foreach (int k in validStates)
+
+                    // Calculate gamma values for next computations
+                    for (int t = 0; t < T; t++)
+                    {
+                        double s = 0;
+
+                        for (int k = 0; k < NumberOfStates; k++)
+                        {
+                            double b, f;
+
+                            //forwardVariables[t].TryGetValue(k, out f);
+                            //backwardVariables[t].TryGetValue(k, out b);
+
+                            //s += gamma[i][t, k] = f * b;
+
+                            if (forwardVariables[t].TryGetValue(k, out f) && backwardVariables[t].TryGetValue(k, out b))
                             {
-                                score = (forwardVariables[t][j] * backwardVariables[(t + 1)][k] * emissionProbabilities[k, signals[i][(t + 1)]] * transitionProbabilities[j, k]);
-                                scale += score;
-
-                                transitionEpsilon.Add(k, score);
+                                s += gamma[i][t, k] = f * b;
                             }
-
-                            symbolEpsilon.Add(j, transitionEpsilon);
                         }
 
-                        if (scale != 0)
+                        if (s != 0) // Scaling
                         {
-                            for (int j = 0; j < symbolEpsilon.Keys.Count; j++)
+                            for (int k = 0; k < NumberOfStates; k++)
                             {
-                                for (int k = 0; k < symbolEpsilon[symbolEpsilon.Keys.ElementAt(j)].Keys.Count; k++)
+                                gamma[i][t, k] /= s;
+                            }
+                        }
+                    }
+
+                    // Calculate epsilon values for next computations
+                    for (int t = 0; t < T - 1; t++)
+                    {
+                        double s = 0;
+
+                        for (int k = 0; k < NumberOfStates; k++)
+                        {
+                            foreach (int l in transitionsOut[k])
+                            {
+                                double b, f;
+
+                                //forwardVariables[t].TryGetValue(k, out f);
+                                //backwardVariables[(t + 1)].TryGetValue(l, out b);
+
+                                //s += epsilon[i][t, k, l] = f * A[k, l] * b * B[l, sequence[t + 1]];
+
+                                if (forwardVariables[t].TryGetValue(k, out f) && backwardVariables[(t + 1)].TryGetValue(l, out b))
                                 {
-                                    symbolEpsilon[symbolEpsilon.Keys.ElementAt(j)][symbolEpsilon[symbolEpsilon.Keys.ElementAt(j)].Keys.ElementAt(k)] /= scale;
+                                    s += epsilon[i][t, k, l] = f * A[k, l] * b * B[l, sequence[t + 1]];
                                 }
                             }
                         }
 
-                        epsilon[i].Add(t, symbolEpsilon);
+                        if (s != 0) // Scaling
+                        {
+                            for (int k = 0; k < NumberOfStates; k++)
+                            {
+                                foreach (int l in transitionsOut[k])
+                                {
+                                    epsilon[i][t, k, l] /= s;
+                                }
+                            }
+                        }
                     }
 
-                    likelihood += Math.Log(forwardVariables[(signals[i].Length - 1)].Values.Sum() * scaling[(signals[i].Length - 1)]);
+                    // Compute log-likelihood for the given sequence
+                    for (int t = 0; t < scaling.Length; t++)
+                        newLikelihood += Math.Log(scaling[t]);
                 }
 
-                likelihood /= signals.Length;
 
-                if (Math.Abs(likelihood - oldLikelihood) <= threshold)
+                // Average the likelihood for all sequences
+                newLikelihood /= signals.Length;
+
+
+                // Check if the model has converged or we should stop
+                if (threshold > Math.Abs(newLikelihood - oldLikelihood))
                 {
                     stop = true;
                 }
+
                 else
                 {
-                    oldLikelihood = likelihood;
-                    likelihood = 0.0;
+                    // 3. Continue with parameter re-estimation
+                    oldLikelihood = newLikelihood;
+                    newLikelihood = 0.0;
 
-                    for (int i = 0; i < NumberOfStates; i++)
+
+                    // 3.1 Re-estimation of initial state probabilities 
+                    for (int k = 0; k < NumberOfStates; k++)
                     {
-                        double sum = 0.0;
+                        double sum = 0;
 
-                        for (int j = 0; j < signals.Length; j++)
+                        for (int i = 0; i < N; i++)
                         {
-                            if (gamma[j][0].TryGetValue(i, out score))
-                            {
-                                sum += score;
-                            }
+                            sum += gamma[i][0, k];
                         }
 
-                        initialDistribution[i] = (sum / signals.Length);
+                        pi[k] = sum / N;
                     }
 
                     double[] gammaSum = new double[NumberOfStates];
 
+                    // 3.2 Re-estimation of transition probabilities 
                     for (int i = 0; i < NumberOfStates; i++)
                     {
-                        for (int k = 0; k < signals.Length; k++)
+                        gammaSum[i] = 0.0;
+
+                        for (int k = 0; k < N; k++)
                         {
-                            for (int l = 0; l < signals[k].Length; l++)
+                            for (int l = 0; l < (signals[k].Length- 1); l++)
                             {
-                                if (gamma[k][l].TryGetValue(i, out score))
-                                {
-                                    gammaSum[i] += score;
-                                }
+                                gammaSum[i] += gamma[k][l, i];
                             }
                         }
-                    }
 
-                    for (int i = 0; i < NumberOfStates; i++)
-                    {
-                        foreach (int j in transitionsIn[i])
+                        //for (int j = 0; j < NumberOfStates; j++)
+                        foreach (int j in transitionsOut[i])
                         {
-                            double epsilonSum = 0.0;
+                            double num = 0;
 
-                            for (int k = 0; k < signals.Length; k++)
+                            for (int k = 0; k < N; k++)
                             {
-                                for (int l = 0; l < (signals[k].Length - 1); l++)
-                                {
-                                    Dictionary<int, double> epsilonValues;
+                                int T = signals[k].Length;
 
-                                    if (epsilon[k][l].TryGetValue(i, out epsilonValues) && epsilonValues.TryGetValue(j, out score))
-                                    {
-                                        epsilonSum += score;
-                                    }
+                                for (int l = 0; l < T - 1; l++)
+                                {
+                                    num += epsilon[k][l, i, j];
                                 }
                             }
 
-                            transitionProbabilities[i, j] = (epsilonSum / gammaSum[i]);
+                            A[i, j] = ((gammaSum[i] != 0) ? (num / gammaSum[i]) : 0.0);
                         }
                     }
 
+                    // 3.3 Re-estimation of emission probabilities
                     for (int i = 0; i < NumberOfStates; i++)
                     {
+                        for (int k = 0; k < N; k++)
+                        {
+                            gammaSum[i] += gamma[k][(signals[k].Length - 1), i];
+                        }
+
+                        //for (int j = 0; j < NumberOfSymbols; j++)
                         foreach (int j in emissions[i])
                         {
-                            double symbolSum = 0.0;
+                            double num = 0;
 
-                            for (int k = 0; k < signals.Length; k++)
+                            for (int k = 0; k < N; k++)
                             {
-                                for (int l = 0; l < signals[k].Length; l++)
+                                int T = signals[k].Length;
+
+                                for (int l = 0; l < T; l++)
                                 {
                                     if (signals[k][l] == j)
-                                    {
-                                        if (gamma[k][l].TryGetValue(i, out score))
-                                        {
-                                            symbolSum += score;
-                                        }
-                                    }
+                                        num += gamma[k][l, i];
                                 }
                             }
 
-                            emissionProbabilities[i, j] = (symbolSum / gammaSum[i]);
+                            B[i, j] = ((gammaSum[i] != 0) ? (num / gammaSum[i]) : 0.0);
                         }
                     }
+
                 }
-            }
+
+            } while (!stop);
         }
+
+        //public void Learn(SequenceData trainingData, double threshold)
+        //public void Learn(int[][] signals, double threshold)
+        //{
+        //    //int[][] signals = trainingData.GetNonempty();
+
+        //    Dictionary<int, Dictionary<int, Dictionary<int, double>>>[] epsilon = new Dictionary<int, Dictionary<int, Dictionary<int, double>>>[signals.Length];
+        //    Dictionary<int, Dictionary<int, double>>[] gamma = new Dictionary<int, Dictionary<int, double>>[signals.Length];
+
+        //    double oldLikelihood = Double.MinValue;
+        //    double likelihood = 0.0;
+
+        //    double scale = 0.0;
+        //    double score = 0.0;
+
+        //    bool stop = false;
+
+        //    while (!stop)
+        //    {
+        //        for (int i = 0; i < signals.Length; i++)
+        //        {
+        //            epsilon[i] = new Dictionary<int, Dictionary<int, Dictionary<int, double>>>();
+        //            gamma[i] = new Dictionary<int, Dictionary<int, double>>();
+
+        //            double[] scaling;
+
+        //            Dictionary<int, Dictionary<int, double>> forwardVariables = Forward(signals[i], out scaling);
+        //            Dictionary<int, Dictionary<int, double>> backwardVariables = Backward(signals[i], scaling);
+
+        //            for (int t = 0; t < signals[i].Length; t++)
+        //            {
+        //                Dictionary<int, double> symbolGamma = new Dictionary<int, double>();
+                        
+        //                scale = 0.0;
+
+        //                foreach (int j in forwardVariables[t].Keys)
+        //                {
+        //                    backwardVariables[t].TryGetValue(j, out score);
+        //                    score *= forwardVariables[t][j];
+
+        //                    symbolGamma.Add(j, score);
+        //                    scale += score;
+        //                }
+
+        //                if (scale != 0)
+        //                {
+        //                    foreach (int j in forwardVariables[t].Keys)
+        //                    {
+        //                        symbolGamma[j] /= scale;
+        //                    }
+        //                }
+
+        //                gamma[i].Add(t, symbolGamma);
+        //            }
+
+        //            for (int t = 0; t < (signals[i].Length - 1); t++)
+        //            {
+        //                Dictionary<int, Dictionary<int, double>> symbolEpsilon = new Dictionary<int, Dictionary<int, double>>();
+
+        //                scale = 0.0;
+
+        //                foreach (int j in forwardVariables[t].Keys)
+        //                {
+        //                    int[] validStates = backwardVariables[(t + 1)].Keys.Intersect(transitionsOut[j]).Intersect(emittents[signals[i][(t + 1)]]).ToArray();
+
+        //                    Dictionary<int, double> transitionEpsilon = new Dictionary<int, double>();
+
+        //                    foreach (int k in validStates)
+        //                    {
+        //                        score = (forwardVariables[t][j] * backwardVariables[(t + 1)][k] * emissionProbabilities[k, signals[i][(t + 1)]] * transitionProbabilities[j, k]);
+        //                        scale += score;
+
+        //                        transitionEpsilon.Add(k, score);
+        //                    }
+
+        //                    symbolEpsilon.Add(j, transitionEpsilon);
+        //                }
+
+        //                if (scale != 0)
+        //                {
+        //                    for (int j = 0; j < symbolEpsilon.Keys.Count; j++)
+        //                    {
+        //                        for (int k = 0; k < symbolEpsilon[symbolEpsilon.Keys.ElementAt(j)].Keys.Count; k++)
+        //                        {
+        //                            symbolEpsilon[symbolEpsilon.Keys.ElementAt(j)][symbolEpsilon[symbolEpsilon.Keys.ElementAt(j)].Keys.ElementAt(k)] /= scale;
+        //                        }
+        //                    }
+        //                }
+
+        //                epsilon[i].Add(t, symbolEpsilon);
+        //            }
+
+        //            likelihood += Math.Log(forwardVariables[(signals[i].Length - 1)].Values.Sum() * scaling[(signals[i].Length - 1)]);
+        //        }
+
+        //        likelihood /= signals.Length;
+
+        //        if (Math.Abs(likelihood - oldLikelihood) <= threshold)
+        //        {
+        //            stop = true;
+        //        }
+        //        else
+        //        {
+        //            oldLikelihood = likelihood;
+        //            likelihood = 0.0;
+
+        //            for (int i = 0; i < NumberOfStates; i++)
+        //            {
+        //                double sum = 0.0;
+
+        //                for (int j = 0; j < signals.Length; j++)
+        //                {
+        //                    if (gamma[j][0].TryGetValue(i, out score))
+        //                    {
+        //                        sum += score;
+        //                    }
+        //                }
+
+        //                initialDistribution[i] = (sum / signals.Length);
+        //            }
+
+        //            double[] gammaSum = new double[NumberOfStates];
+
+        //            for (int i = 0; i < NumberOfStates; i++)
+        //            {
+        //                for (int k = 0; k < signals.Length; k++)
+        //                {
+        //                    for (int l = 0; l < signals[k].Length; l++)
+        //                    {
+        //                        if (gamma[k][l].TryGetValue(i, out score))
+        //                        {
+        //                            gammaSum[i] += score;
+        //                        }
+        //                    }
+        //                }
+        //            }
+
+        //            for (int i = 0; i < NumberOfStates; i++)
+        //            {
+        //                foreach (int j in transitionsOut[i])
+        //                {
+        //                    double epsilonSum = 0.0;
+
+        //                    for (int k = 0; k < signals.Length; k++)
+        //                    {
+        //                        for (int l = 0; l < (signals[k].Length - 1); l++)
+        //                        {
+        //                            Dictionary<int, double> epsilonValues;
+
+        //                            if (epsilon[k][l].TryGetValue(i, out epsilonValues) && epsilonValues.TryGetValue(j, out score))
+        //                            {
+        //                                epsilonSum += score;
+        //                            }
+        //                        }
+        //                    }
+
+        //                    transitionProbabilities[i, j] = (epsilonSum / gammaSum[i]);
+        //                }
+        //            }
+
+        //            for (int i = 0; i < NumberOfStates; i++)
+        //            {
+        //                foreach (int j in emissions[i])
+        //                {
+        //                    double symbolSum = 0.0;
+
+        //                    for (int k = 0; k < signals.Length; k++)
+        //                    {
+        //                        for (int l = 0; l < signals[k].Length; l++)
+        //                        {
+        //                            if (signals[k][l] == j)
+        //                            {
+        //                                if (gamma[k][l].TryGetValue(i, out score))
+        //                                {
+        //                                    symbolSum += score;
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+
+        //                    emissionProbabilities[i, j] = (symbolSum / gammaSum[i]);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         public int[] Viterby(int[] signal, out double probability)
         {
@@ -620,7 +818,7 @@ namespace ModelLearning
                 }
             }
 
-            probability = minScore;
+            probability = (-minScore);
             optimalSequence[(signal.Length - 1)] = minState;
 
             //Backtracking
