@@ -14,12 +14,16 @@ namespace ModelLearning
         private double[] initialDistribution;
 
         private double[,] transitionProbabilities;
-        private Dictionary<int, List<int>> transitionsIn;
-        private Dictionary<int, List<int>> transitionsOut;
+        //private Dictionary<int, List<int>> transitionsIn;
+        //private Dictionary<int, List<int>> transitionsOut;
+        int[][] transitionsIn;
+        int[][] transitionsOut;
 
         private double[,] emissionProbabilities;
-        private Dictionary<int, List<int>> emissions;
-        private Dictionary<int, List<int>> emittents;
+        //private Dictionary<int, List<int>> emissions;
+        //private Dictionary<int, List<int>> emittents;
+        int[][] emissions;
+        int[][] emittents;
 
         public double[] InitialDistribution
         {
@@ -64,11 +68,15 @@ namespace ModelLearning
             NumberOfStates = numberOfStates;
             NumberOfSymbols = numberOfSymbols;
 
-            transitionsIn = Enumerable.Range(0, numberOfStates).ToDictionary(i => i, i => new List<int>());
-            transitionsOut = Enumerable.Range(0, numberOfStates).ToDictionary(i => i, i => new List<int>());
+            //transitionsIn = Enumerable.Range(0, numberOfStates).ToDictionary(i => i, i => new List<int>());
+            //transitionsOut = Enumerable.Range(0, numberOfStates).ToDictionary(i => i, i => new List<int>());
+            transitionsIn = new int[numberOfStates][];
+            transitionsOut = new int[numberOfStates][];
 
-            emissions = Enumerable.Range(0, numberOfStates).ToDictionary(i => i, i => new List<int>());
-            emittents = Enumerable.Range(0, numberOfSymbols).ToDictionary(i => i, i => new List<int>());
+            //emissions = Enumerable.Range(0, numberOfStates).ToDictionary(i => i, i => new List<int>());
+            //emittents = Enumerable.Range(0, numberOfSymbols).ToDictionary(i => i, i => new List<int>());
+            emissions = new int[numberOfStates][];
+            emittents = new int[NumberOfSymbols][];
         }
 
         public static SparseHiddenMarkovModel FromGraph(HMMGraph graph)
@@ -79,18 +87,34 @@ namespace ModelLearning
             model.transitionProbabilities = new double[graph.NumNodes, graph.NumNodes];
             model.emissionProbabilities = new double[graph.NumNodes, graph.NumSymbols];
 
+            List<int>[] inTrans = Enumerable.Range(0, graph.NumNodes).Select(_ => new List<int>()).ToArray();
+
             for (int i = 0; i < graph.NumNodes; i++)
             {
+                List<int> indexes = new List<int>();
+
                 foreach(Node node in graph.Nodes[i].Transitions.Keys)
                 {
                     int index = graph.Nodes.IndexOf(node);
+                    indexes.Add(index);
 
                     model.transitionProbabilities[i, index] = graph.Nodes[i].Transitions[node];
 
-                    model.transitionsIn[index].Add(i);
-                    model.transitionsOut[i].Add(index);
+                    inTrans[index].Add(i);
+
+                    //model.transitionsIn[index].Add(i);
+                    //model.transitionsOut[i].Add(index);
                 }
+
+                model.transitionsOut[i] = indexes.ToArray();
             }
+
+            for (int i = 0; i < graph.NumNodes; i++)
+            {
+                model.transitionsIn[i] = inTrans[i].ToArray();
+            }
+
+            List<int>[] symbolEmittents = Enumerable.Range(0, graph.NumSymbols).Select(_ => new List<int>()).ToArray();
 
             for (int i = 0; i < graph.NumNodes; i++)
             {
@@ -98,11 +122,19 @@ namespace ModelLearning
                 {
                     model.emissionProbabilities[i, j] = graph.Nodes[i].Emissions[j];
 
-                    model.emissions[i].Add(j);
-                    model.emittents[j].Add(i);
+                    //model.emissions[i].Add(j);
+                    //model.emittents[j].Add(i);
+                    symbolEmittents[j].Add(i);
                 }
+
+                model.emissions[i] = graph.Nodes[i].Emissions.Keys.ToArray();
             }
 
+            for (int i = 0; i < graph.NumSymbols; i++)
+            {
+                model.emittents[i] = symbolEmittents[i].ToArray();
+            }
+            
             return model;
         }
 
@@ -126,11 +158,14 @@ namespace ModelLearning
             }
 
             model.transitionProbabilities = new double[numberOfStates, numberOfStates];
-            model.transitionsIn = Enumerable.Range(0, numberOfStates).ToDictionary(i => i, i => Enumerable.Range(0, numberOfStates).ToList());
-            model.transitionsOut = Enumerable.Range(0, numberOfStates).ToDictionary(i => i, i => Enumerable.Range(0, numberOfStates).ToList());
+            //model.transitionsIn = Enumerable.Range(0, numberOfStates).ToDictionary(i => i, i => Enumerable.Range(0, numberOfStates).ToList());
+            //model.transitionsOut = Enumerable.Range(0, numberOfStates).ToDictionary(i => i, i => Enumerable.Range(0, numberOfStates).ToList());
 
             for (int i = 0; i < numberOfStates; i++ )
             {
+                model.transitionsIn[i] = Enumerable.Range(0, numberOfStates).ToArray();
+                model.transitionsOut[i] = Enumerable.Range(0, numberOfStates).ToArray();
+
                 weight = 0.0;
 
                 for (int j = 0; j < numberOfStates; j++)
@@ -147,11 +182,18 @@ namespace ModelLearning
             }
 
             model.emissionProbabilities = new double[numberOfStates, numberOfSymbols];
-            model.emissions = Enumerable.Range(0, numberOfStates).ToDictionary(i => i, i => Enumerable.Range(0, numberOfSymbols).ToList());
-            model.emittents = Enumerable.Range(0, numberOfSymbols).ToDictionary(i => i, i => Enumerable.Range(0, numberOfStates).ToList());
+            //model.emissions = Enumerable.Range(0, numberOfStates).ToDictionary(i => i, i => Enumerable.Range(0, numberOfSymbols).ToList());
+            //model.emittents = Enumerable.Range(0, numberOfSymbols).ToDictionary(i => i, i => Enumerable.Range(0, numberOfStates).ToList());
+
+            for (int i = 0; i < numberOfSymbols; i++)
+            {
+                model.emittents[i] = Enumerable.Range(0, numberOfStates).ToArray();
+            }
 
             for (int i = 0; i < numberOfStates; i++)
             {
+                model.emissions[i] = Enumerable.Range(0, numberOfSymbols).ToArray();
+
                 weight = 0.0;
 
                 for (int j = 0; j < numberOfSymbols; j++)
@@ -208,9 +250,9 @@ namespace ModelLearning
             return emissionProbabilities[state, symbol];
         }
 
-        private Dictionary<int, Dictionary<int, double>> Forward(int[] signal, out double[] scales)
+        private Dictionary<int, double>[] Forward(int[] signal, out double[] scales)
         {
-            Dictionary<int, Dictionary<int, double>> forwardVariables = new Dictionary<int, Dictionary<int, double>>();
+            Dictionary<int, double>[] forwardVariables = new Dictionary<int, double>[signal.Length];
             scales = new double[signal.Length];
 
             if (signal.Length == 0)
@@ -235,7 +277,7 @@ namespace ModelLearning
                 stateEmits[i] /= scales[0];
             }
 
-            forwardVariables.Add(0, stateEmits);
+            forwardVariables[0] = stateEmits;
 
             for (int t = 1; t < signal.Length; t++)
             {
@@ -266,15 +308,15 @@ namespace ModelLearning
                     stateEmits[j] /= scales[t];
                 }
 
-                forwardVariables.Add(t, stateEmits);
+                forwardVariables[t] = stateEmits;
             }
 
             return forwardVariables;
         }
 
-        private Dictionary<int, Dictionary<int, double>> Backward(int[] signal, double[] scales)
+        private Dictionary<int, double>[] Backward(int[] signal, double[] scales)
         {
-            Dictionary<int, Dictionary<int, double>> backwardVariables = new Dictionary<int, Dictionary<int, double>>();
+            Dictionary<int, double>[] backwardVariables = new Dictionary<int, double>[signal.Length];
 
             if (signal.Length == 0)
             {
@@ -288,7 +330,7 @@ namespace ModelLearning
                 stateEmits.Add(i, (1 / scales[(signal.Length - 1)]));
             }
 
-            backwardVariables.Add((signal.Length - 1), stateEmits);
+            backwardVariables[(signal.Length - 1)] = stateEmits;
 
             for (int t = (signal.Length - 2); t >= 0; t--)
             {
@@ -311,7 +353,7 @@ namespace ModelLearning
                     stateEmits.Add(i, (score / scales[t]));
                 }
 
-                backwardVariables.Add(t, stateEmits);
+                backwardVariables[t] = stateEmits;
             }
 
             return backwardVariables;
@@ -326,7 +368,7 @@ namespace ModelLearning
 
             double[] scales;
 
-            Dictionary<int, Dictionary<int, double>> forwardVariables = Forward(signal, out scales);
+            Dictionary<int, double>[] forwardVariables = Forward(signal, out scales);
 
             //return (forwardVariables[(signal.Length - 1)].Values.Sum() * scales[(signal.Length - 1)]);
 
@@ -368,7 +410,6 @@ namespace ModelLearning
 
             do // Until convergence or max iterations is reached
             {
-                Console.Write("*");
                 // For each sequence in the observations input
                 for (int i = 0; i < N; i++)
                 {
@@ -378,8 +419,8 @@ namespace ModelLearning
 
                     // 1st step - Calculating the forward probability and the
                     //            backward probability for each HMM state.
-                    Dictionary<int, Dictionary<int, double>> forwardVariables = Forward(signals[i], out scaling);
-                    Dictionary<int, Dictionary<int, double>> backwardVariables = Backward(signals[i], scaling);
+                    Dictionary<int, double>[] forwardVariables = Forward(signals[i], out scaling);
+                    Dictionary<int, double>[] backwardVariables = Backward(signals[i], scaling);
 
                     //double[,] fwd = new double[T, NumberOfStates];
                     //double[,] bwd = new double[T, NumberOfStates];

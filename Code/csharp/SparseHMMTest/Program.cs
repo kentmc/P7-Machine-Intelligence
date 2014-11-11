@@ -64,10 +64,13 @@ namespace SparseHMMTest
         {
             random = new Random();
 
-            int numberOfStates = 20;
-            int numberOfRuns = 20;
+            int numberOfStates = 8;
+            int numberOfSymbols = 2;
+            int numberOfRuns = 256;
 
-            double averageSpeedUp = 0;
+            int trainingSetSize = 1000;
+
+            double threshold = 0.001;
 
             //double sparseProbability = 0;
             //double probability = 0;
@@ -75,19 +78,19 @@ namespace SparseHMMTest
             long sparseTicks;
             long ticks;
 
+            double averageSpeedUp = 0;
+
             for (int i = 0; i < numberOfRuns; i++)
             {
                 Console.WriteLine("Run {0}:", (i + 1));
 
-                HMMGraph graph = CreateGraph(2, numberOfStates);
+                HMMGraph graph = CreateGraph(numberOfSymbols, numberOfStates);
 
                 SparseHiddenMarkovModel sparseHMM = SparseHiddenMarkovModel.FromGraph(graph);
                 HiddenMarkovModel hmm = ModelConverter.Graph2HMM(graph);
 
-                //int[] signal = Enumerable.Range(0, 10000).Select(_ => random.Next(2)).ToArray();
-                int[][] trainingSignals = Enumerable.Range(0, 1000).Select(_ => Enumerable.Range(0, 16).Select(__ => random.Next(2)).ToArray()).ToArray();
-
-                double threshold = 0.01;
+                //int[] signal = Enumerable.Range(0, 10000).Select(_ => random.Next(numberOfSymbols)).ToArray();
+                int[][] trainingSignals = Enumerable.Range(0, trainingSetSize).Select(_ => Enumerable.Range(0, 16).Select(__ => random.Next(numberOfSymbols)).ToArray()).ToArray();
 
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
