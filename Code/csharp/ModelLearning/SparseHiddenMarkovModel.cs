@@ -381,24 +381,24 @@ namespace ModelLearning
                     Dictionary<int, Dictionary<int, double>> forwardVariables = Forward(signals[i], out scaling);
                     Dictionary<int, Dictionary<int, double>> backwardVariables = Backward(signals[i], scaling);
 
-                    double[,] fwd = new double[T, NumberOfStates];
-                    double[,] bwd = new double[T, NumberOfStates];
+                    //double[,] fwd = new double[T, NumberOfStates];
+                    //double[,] bwd = new double[T, NumberOfStates];
 
-                    foreach (int t in forwardVariables.Keys)
-                    {
-                        foreach (int j in forwardVariables[t].Keys)
-                        {
-                            fwd[t, j] = forwardVariables[t][j];
-                        }
-                    }
+                    //foreach (int t in forwardVariables.Keys)
+                    //{
+                    //    foreach (int j in forwardVariables[t].Keys)
+                    //    {
+                    //        fwd[t, j] = forwardVariables[t][j];
+                    //    }
+                    //}
 
-                    foreach (int t in backwardVariables.Keys)
-                    {
-                        foreach (int j in backwardVariables[t].Keys)
-                        {
-                            bwd[t, j] = backwardVariables[t][j];
-                        }
-                    }
+                    //foreach (int t in backwardVariables.Keys)
+                    //{
+                    //    foreach (int j in backwardVariables[t].Keys)
+                    //    {
+                    //        bwd[t, j] = backwardVariables[t][j];
+                    //    }
+                    //}
 
                     // 2nd step - Determining the frequency of the transition-emission pair values
                     //            and dividing it by the probability of the entire string.

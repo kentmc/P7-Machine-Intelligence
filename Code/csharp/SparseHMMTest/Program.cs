@@ -11,13 +11,11 @@ namespace SparseHMMTest
 {
     class Program
     {
-        static void Main(string[] args)
+        private static Random random;
+
+        static HMMGraph CreateGraph(int numberOfSymbols, int numberOfStates)
         {
-            Random random = new Random();
-
-            int numberOfStates = 200;
-
-            HMMGraph graph = new HMMGraph(2);
+            HMMGraph graph = new HMMGraph(numberOfSymbols);
 
             double initialProbabilitySum = 0.0;
 
@@ -29,13 +27,18 @@ namespace SparseHMMTest
                 initialProbabilitySum += node.InitialProbability;
 
                 node.Emissions = new Dictionary<int, double>();
-                node.Emissions.Add(0, random.NextDouble());
-                node.Emissions.Add(1, random.NextDouble());
+
+                for (int j = 0; j < numberOfSymbols; j++)
+                {
+                    node.Emissions.Add(j, random.NextDouble());
+                }
 
                 double emissionSum = node.Emissions.Values.Sum();
 
-                node.Emissions[0] /= emissionSum;
-                node.Emissions[1] /= emissionSum;
+                for (int j = 0; j < numberOfSymbols; j++)
+                {
+                    node.Emissions[j] /= emissionSum;
+                }
 
                 graph.AddNode(node);
             }
@@ -44,7 +47,7 @@ namespace SparseHMMTest
             {
                 graph.Nodes[i].InitialProbability /= initialProbabilitySum;
 
-                graph.Nodes[i].Transitions = new Dictionary<Node,double>();
+                graph.Nodes[i].Transitions = new Dictionary<Node, double>();
                 graph.Nodes[i].Transitions.Add(graph.Nodes[((i + 1) % numberOfStates)], random.NextDouble());
                 graph.Nodes[i].Transitions.Add(graph.Nodes[((i + 2) % numberOfStates)], random.NextDouble());
 
@@ -54,57 +57,84 @@ namespace SparseHMMTest
                 graph.Nodes[i].Transitions[graph.Nodes[((i + 2) % numberOfStates)]] /= transitionSum;
             }
 
-            SparseHiddenMarkovModel sparseHMM = SparseHiddenMarkovModel.FromGraph(graph);
-            HiddenMarkovModel hmm = ModelConverter.Graph2HMM(graph);
+            return graph;
+        }
 
-            //int[] signal = new int[] { 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0 };
-            int[] signal = Enumerable.Range(0, 10000).Select(_ => random.Next(2)).ToArray();
-            int[][] trainingSignals = Enumerable.Range(0, 10).Select(_ => Enumerable.Range(0, 100).Select(__ => random.Next(2)).ToArray()).ToArray();
+        static void Main(string[] args)
+        {
+            random = new Random();
 
-            double sparseProbability;
-            double probability;
+            int numberOfStates = 20;
+            int numberOfRuns = 20;
 
-            double threshold = 1;
+            double averageSpeedUp = 0;
 
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
+            //double sparseProbability = 0;
+            //double probability = 0;
 
-            sparseHMM.Learn(trainingSignals, threshold);
-            //int[] sparseHSS = sparseHMM.Viterby(signal, out sparseProbability);
-            long sparseTicks = watch.ElapsedTicks;
+            long sparseTicks;
+            long ticks;
 
-            sparseProbability = sparseHMM.Evaluate(signal);
+            for (int i = 0; i < numberOfRuns; i++)
+            {
+                Console.WriteLine("Run {0}:", (i + 1));
 
-            watch.Restart();
+                HMMGraph graph = CreateGraph(2, numberOfStates);
 
-            hmm.Learn(trainingSignals, threshold);
-            //int[] hss = hmm.Decode(signal, true, out probability);
-            long ticks = watch.ElapsedTicks;
+                SparseHiddenMarkovModel sparseHMM = SparseHiddenMarkovModel.FromGraph(graph);
+                HiddenMarkovModel hmm = ModelConverter.Graph2HMM(graph);
 
-            probability = hmm.Evaluate(signal, true);
+                //int[] signal = Enumerable.Range(0, 10000).Select(_ => random.Next(2)).ToArray();
+                int[][] trainingSignals = Enumerable.Range(0, 1000).Select(_ => Enumerable.Range(0, 16).Select(__ => random.Next(2)).ToArray()).ToArray();
 
-            watch.Stop();
+                double threshold = 0.01;
 
-            Console.WriteLine(sparseProbability);
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
+
+                sparseHMM.Learn(trainingSignals, threshold);
+                //int[] sparseHSS = sparseHMM.Viterby(signal, out sparseProbability);
+                sparseTicks = watch.ElapsedTicks;
+
+                //sparseProbability = sparseHMM.Evaluate(signal);
+
+                watch.Restart();
+
+                hmm.Learn(trainingSignals, threshold);
+                //int[] hss = hmm.Decode(signal, true, out probability);
+                ticks = watch.ElapsedTicks;
+
+                //probability = hmm.Evaluate(signal, true);
+
+                watch.Stop();
+
+                averageSpeedUp += ((double)ticks / sparseTicks);
+
+                Console.WriteLine();
+            }
+
+            averageSpeedUp /= numberOfRuns;
+
+            //Console.WriteLine(sparseProbability);
             //for (int i = 0; i < sparseHSS.Length; i++)
             //{
             //    Console.Write(sparseHSS[i]);
             //}
             //Console.WriteLine();
-            Console.WriteLine(sparseTicks);
+            //Console.WriteLine(sparseTicks);
 
             Console.WriteLine();
 
-            Console.WriteLine(probability);
+            //Console.WriteLine(probability);
             //for (int i = 0; i < hss.Length; i++)
             //{
             //    Console.Write(hss[i]);
             //}
             //Console.WriteLine();
-            Console.WriteLine(ticks);
+            //Console.WriteLine(ticks);
 
             Console.WriteLine();
-            Console.WriteLine((double)ticks / sparseTicks);
+            Console.WriteLine(averageSpeedUp);
 
             Console.ReadKey();
         }
