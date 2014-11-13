@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 
 namespace ModelLearning {
-    class HMMGraph {
+    public class HMMGraph {
 
         public List<Node> Nodes;
         public int NumSymbols;
