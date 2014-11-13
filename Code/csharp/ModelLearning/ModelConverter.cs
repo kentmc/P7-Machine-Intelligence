@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Accord.Statistics.Models.Markov;
 
 namespace ModelLearning {
-    static class ModelConverter {
+    public static class ModelConverter {
         public static HMMGraph HMM2Graph(HiddenMarkovModel hmm){
             HMMGraph g = new HMMGraph(hmm.Symbols);
             Node[] nodes = new Node[hmm.States];
