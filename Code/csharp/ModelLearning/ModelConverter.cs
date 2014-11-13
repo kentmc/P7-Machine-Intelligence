@@ -28,7 +28,7 @@ namespace ModelLearning {
 
         /// <summary>
         /// Constructs a HMM from a HMMGraph.
-        /// The HMMGraph does not need to be normalized, but the HMM is guaranteed to be.
+        /// Remember to call the Normalize method on the HMMGraph if necessary
         /// </summary>
         /// <param name="g"></param>
         /// <returns></returns>

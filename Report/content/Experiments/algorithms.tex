@@ -8,9 +8,9 @@ Any algorithm introduced in the following may use the Baum Welch algorithm as a 
 To make a fair comparison between the algorithms described here and the Baum Welch algorithm, they all have two important input parameters, $n$ and $t$.
 $n$ is the maximum allowed nodes or states to be used, and $t$ is the minimum threshold allowed for any use of the Baum Welch algorithm.
 Changing the value of $n$ or $t$ could in turn improve an algorithm, and hence a fair comparison between algorithms requires fixed values for $n$ and $t$.
-By $BW_t(M, D)$ we denote the \gls{hmm} obtained after running Baum Welch on the \gls{hmm} $M$ using the training sequences $D$, and iterating as long as each iteration increase the likelihood by at least $t$.
+By $BW_t(M, D)$ we denote the \gls{hmm} obtained after running Baum Welch on the \gls{hmm} $M$ using the training sequences $D$, and iterating as long as each iteration increases the likelihood by at least $t$.
 By $BW^i(M, D)$ we denote the \gls{hmm} obtained after running $i$ iterations of Baum Welch on the \gls{hmm} $M$ using the training sequences $D$.
-If a \gls{hmm} is represented by a graph, we denote it $G$, and where the similar notations $BW_t(G, D)$ and $BW^i(G, D)$ are used.
+If a \gls{hmm} is represented by a graph, we denote it $G$, and the similar notations $BW_t(G, D)$ and $BW^i(G, D)$ are used.
 
 \input{./content/Experiments/Algorithms/greedyextend}
 \input{./content/Experiments/Algorithms/sparsebaumwelch}
