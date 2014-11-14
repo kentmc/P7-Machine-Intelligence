@@ -194,3 +194,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+/report/*.glo
+/report/*.glsdefs
+/report/report.xdy
