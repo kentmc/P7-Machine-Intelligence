@@ -8,18 +8,6 @@ using Accord.Statistics.Models.Markov;
 namespace ModelLearning {
     class Program {
         static void Main(string[] args) {
-
-            string states = "";
-            string transitions = "";
-            string sep = "";
-            for (int i = 1; i <= 48; i++) {
-                states += sep + DataSetAnalyser.CountStates(i);
-                transitions += sep + DataSetAnalyser.CountTransitions(i);
-                sep = ", ";
-            }
-            Console.Write(states + transitions);
-            var a = states = states + 2;
-
             double threshold = 0.001;
             int max_states = 20;
             List<Learner> learners = new List<Learner>() { 
