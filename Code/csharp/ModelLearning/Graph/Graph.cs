@@ -33,7 +33,8 @@ namespace ModelLearning {
             foreach (Node n in Nodes) {
                 if (sum == 0)
                     n.InitialProbability = 1.0 / Nodes.Count;
-                n.InitialProbability /= sum;
+                else
+                    n.InitialProbability /= sum;
             }
         }
         private void NormalizeEmissions() {

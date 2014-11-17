@@ -1,16 +1,30 @@
 \subsection{Algorithms}
-In this section a number of algorithms are described, which all try to learn the parameters of a \gls{hmm} given a set of training sequences $D$.
+In this section a number of algorithms are described, which all try to learn the parameters of a \gls{hmm} given a set of training sequences $D$, which contains a number of sequences over $s$ distinct symbols.
 In other words, each algorithm will try to find a model that makes the generation of the particular training sequences most likely.
 Since a \gls{hmm} can be represented by the use of either matrices or a graph like structure, any of the algorithms may output either a matrix or graph representation of a \gls{hmm}, denoted by $M$ or $G$ respectively.
 By $LL(M)$ or $LL(G)$ we denote the likelihood of the training sequences given the model.
 
-Any algorithm introduced in the following may use the Baum Welch algorithm as a subroutine. 
-To make a fair comparison between the algorithms described here and the Baum Welch algorithm, they all have two important input parameters, $n$ and $t$.
-$n$ is the maximum allowed nodes or states to be used, and $t$ is the minimum threshold allowed for any use of the Baum Welch algorithm.
-Changing the value of $n$ or $t$ could in turn improve an algorithm, and hence a fair comparison between algorithms requires fixed values for $n$ and $t$.
-By $BW_t(M, D)$ we denote the \gls{hmm} obtained after running Baum Welch on the \gls{hmm} $M$ using the training sequences $D$, and iterating as long as each iteration increase the likelihood by at least $t$.
+The algorithms proposed in this section have been divided into two types.
+The static algorithms start with a \gls{hmm} with a particular number of states which will never change.
+The dynamic algorithms start with a \gls{hmm} of just a single state, and will dynamically extend the number of states through a number of iterations. 
+For the static algorithms, $n$ denotes the number of states to be used.
+The dynamical algorithms will by $n$ denote a number of iterations $1, ..., n$, where each iteration extends the model by a single node.
+
+Since the Baum Welch algorithm is guaranteed to never worsen $LL(G)$ of any $G$, it is natural that the Baum Welch is used internally by many of the proposed algorithms.
+By $BW_t(M, D)$ we denote the \gls{hmm} obtained after running Baum Welch on the \gls{hmm} $M$ using the training sequences $D$, and iterating as long as each iteration increases the likelihood by at least $t$.
 By $BW^i(M, D)$ we denote the \gls{hmm} obtained after running $i$ iterations of Baum Welch on the \gls{hmm} $M$ using the training sequences $D$.
-If a \gls{hmm} is represented by a graph, we denote it $G$, and where the similar notations $BW_t(G, D)$ and $BW^i(G, D)$ are used.
+If a \gls{hmm} is represented by a graph, we denote it $G$, and the similar notations $BW_t(G, D)$ and $BW^i(G, D)$ are used.
+\Tree[.Algorithms
+		[.{Static size} 
+			{Baum Welch}
+            {Sparse Baum Welch}
+        ]
+       	[.{Dynamic size} 
+       		{Strict George}
+       		{George}
+       		{Random Extend}
+      	]
+     ]
 
 \input{./content/Experiments/Algorithms/greedyextend}
 \input{./content/Experiments/Algorithms/sparsebaumwelch}

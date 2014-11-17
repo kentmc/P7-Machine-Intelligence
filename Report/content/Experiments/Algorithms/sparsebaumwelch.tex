@@ -1,5 +1,5 @@
 \subsubsection{Sparse Baum Welch}
-This algorithm takes an input $(n, t, s, D)$ and creates a \gls{hmm} $M$ with $n$ states and $s$ symbols.
+This algorithm creates a \gls{hmm} $M$ with $n$ states and $s$ symbols.
 All parameters are initialized randomly but with the constraint that each state has exactly $\lceil log(n) \rceil$ outgoing transitions.
 Which transitions to discard are chosen randomly.
-Return $BW(M_t, D)$.
+Return $BW_t(M, D)$ or $BW^i(M, D)$, depending on what is requested.
