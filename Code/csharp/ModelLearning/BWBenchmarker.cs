@@ -60,45 +60,36 @@ namespace ModelLearning
 
             Tuple<SequenceData, SequenceData>[] data = Enumerable.Range(0, numberOfRuns).Select(_ => testData.RandomSplit(2.0 / 3.0)).ToArray();
 
-            for (int n = nMin; n <= nMax; n += stepSize)
-            {
-                Run(name, n, numberOfRuns, threshold, runScores, runTimes, runTicks, data);
-
-                if (runScores[n].Average() < bestScore)
-                {
-                    bestScore = runScores[n].Average();
-                    bestNumberOfStates = n;
-                }
-            }
-
-            int baseNumberOfStates = bestNumberOfStates;
-
-            //for (int n = 1; n < stepSize; n++)
-            //{
-            //    Run(name, (n + baseNumberOfStates), numberOfRuns, numberOfIterations, runScores, runTimes, runTicks, data);
-
-            //    if (runScores[(n + baseNumberOfStates)].Average() < bestScore)
-            //    {
-            //        bestScore = runScores[(n + baseNumberOfStates)].Average();
-            //        bestNumberOfStates = (n + baseNumberOfStates);
-            //    }
-            //}
-
             using (StreamWriter sw = new StreamWriter(String.Format("Benchmark_{0}.txt", name)))
             {
                 sw.WriteLine("Threshold: {0:00.00000000}", threshold);
                 sw.WriteLine();
 
-                foreach (int numberOfStates in runScores.Keys)
+                sw.Flush();
+
+                for (int n = nMin; n <= nMax; n += stepSize)
                 {
-                    sw.WriteLine("{0:000} states:", numberOfStates);
+                    Console.WriteLine("{0} states...", n);
+
+                    Run(name, n, numberOfRuns, threshold, runScores, runTimes, runTicks, data);
+
+                    if (runScores[n].Average() < bestScore)
+                    {
+                        bestScore = runScores[n].Average();
+                        bestNumberOfStates = n;
+                    }
+
+                    int baseNumberOfStates = bestNumberOfStates;
+
+                    sw.WriteLine("{0:000} states:", n);
 
                     for (int i = 0; i < numberOfRuns; i++)
                     {
-                        sw.WriteLine("Run {0:00}:\t{1:0000.0000000000}\t{2:000000}\t{3:0000000000000000}", i, runScores[numberOfStates][i], runTimes[numberOfStates][i], runTicks[numberOfStates][i]);
+                        sw.WriteLine("Run {0:00}:\t{1:0000.0000000000}\t{2:000000}\t{3:0000000000000000}", i, runScores[n][i], runTimes[n][i], runTicks[n][i]);
                     }
 
                     sw.WriteLine();
+                    sw.Flush();
                 }
 
                 sw.WriteLine("##########");
@@ -133,6 +124,8 @@ namespace ModelLearning
 
             for (int i = 0; i < numberOfRuns; i++)
             {
+                Console.WriteLine("run {0}...", i);
+
                 watch.Reset();
 
                 //Learner learner = new BaumWelchLearner(numberOfStates, threshold);
