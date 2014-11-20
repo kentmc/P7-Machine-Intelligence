@@ -61,6 +61,36 @@ namespace ModelLearning
             private set { _numberOfSymbols = value; }
         }
 
+        public double TransitionSparsity
+        {
+            get
+            {
+                double sparsity = 0.0;
+
+                for (int i = 0; i < NumberOfStates; i++)
+                {
+                    sparsity += ((double)transitionsOut[i].Length / NumberOfStates);
+                }
+
+                return (sparsity / NumberOfStates);
+            }
+        }
+
+        public double EmissionSparsity
+        {
+            get
+            {
+                double sparsity = 0.0;
+
+                for (int i = 0; i < NumberOfSymbols; i++)
+                {
+                    sparsity += ((double)emissions[i].Length / NumberOfSymbols);
+                }
+
+                return (sparsity / NumberOfSymbols);
+            }
+        }
+
         private SparseHiddenMarkovModel(int numberOfStates, int numberOfSymbols)
         {
             random = new Random();
@@ -359,7 +389,7 @@ namespace ModelLearning
             return backwardVariables;
         }
 
-        public double Evaluate(int[] signal)
+        public double Evaluate(int[] signal, bool logarithm = false)
         {
             if (signal.Length == 0)
             {
@@ -379,10 +409,10 @@ namespace ModelLearning
                 probability += Math.Log(scales[i]);
             }
 
-            return probability;
+            return ((logarithm) ? probability : Math.Exp(probability));
         }
 
-        public void Learn(int[][] signals, double threshold)
+        public void Learn(int[][] signals, double threshold, int maxIterations = 0)
         {
             int N = signals.Length;
             bool stop = false;
@@ -407,9 +437,12 @@ namespace ModelLearning
             double oldLikelihood = Double.MinValue;
             double newLikelihood = 0;
 
+            int iteration = 0;
 
             do // Until convergence or max iterations is reached
             {
+                iteration++;
+
                 // For each sequence in the observations input
                 for (int i = 0; i < N; i++)
                 {
@@ -520,11 +553,10 @@ namespace ModelLearning
 
 
                 // Check if the model has converged or we should stop
-                if (threshold > Math.Abs(newLikelihood - oldLikelihood))
+                if ((threshold > Math.Abs(newLikelihood - oldLikelihood)) || ((maxIterations != 0) && (iteration >= maxIterations)))
                 {
                     stop = true;
                 }
-
                 else
                 {
                     // 3. Continue with parameter re-estimation
@@ -841,7 +873,15 @@ namespace ModelLearning
                         }
                     }
 
-                    scores[t, j] = (minScore - Math.Log(emissionProbabilities[j, signal[t]]));
+                    if (minState == (-1))
+                    {
+                        scores[t, j] = minScore;
+                    }
+                    else
+                    {
+                        scores[t, j] = (minScore - Math.Log(emissionProbabilities[j, signal[t]]));
+                    }
+
                     parents[t, j] = minState;
                 }
             }
@@ -865,7 +905,14 @@ namespace ModelLearning
             //Backtracking
             for (int t = (signal.Length - 2); t >= 0; t--)
             {
-                optimalSequence[t] = parents[(t + 1), optimalSequence[(t + 1)]];
+                int parent;
+                if ((optimalSequence[(t + 1)] < 0) || ((parent = (parents[(t + 1), optimalSequence[(t + 1)]])) < 0))
+                {
+                    probability = 0.0;
+                    return null;
+                }
+
+                optimalSequence[t] = parent;
             }
 
             return optimalSequence.ToArray();

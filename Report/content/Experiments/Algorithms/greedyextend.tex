@@ -1,17 +1,19 @@
 \subsubsection{Greedy Extend}
-This algorithm takes an input $(n, t, s, D)$.
 Initially, a graph representation $G$ of a single state \gls{hmm} is created. The single node has initial probability 1, loops to itself with probability 1, and its emission probabilities for each of the $s$ symbols are chosen randomly and normalised.
 
 Through a number of iterations $i = 1, ..., n$, do the following:
 \begin{itemize}
-\item Repeat 10 times:
+\item Repeat $\alpha$ times:
 	\begin{itemize}
 	\item $G'$ = $(V(G) \cup \{y'\}, E(G))$, where $y'$ is a new node with a random initial probability in range $[0, 1]$ having random emission probabilities for all $s$ symbols, which sums to $1$.
 	\item Randomly choose a set of nodes $Y = \{y_1, y_2, ... , y_l\}$ from $V(G')$, where $l = \lceil \log |V(G')| \rceil$ and $\forall a,b: y_a \neq y_b$.
 	\item For each $y \in Y$, the transitions $(y, y')$ and $(y', y)$ are added to $E(G')$ with random transition probabilities.
 	\item Normalise $G'$.
-	\item If $LL(BM^{10}(G', D)) > LL(G)$, let $G =LL(BM^{10}(G', D))$.
+	\item If $LL(BW^{\beta}(G', D)) > LL(G)$, let $G = LL(BW^{\beta}(G', D))$.
 	\end{itemize}
 \end{itemize}
 
 Return $BW_t(G, D)$.
+
+The value $\alpha$ determines who many times in each iteration to look for an improvement of the model by adding a new node with random parameters.
+$\beta$ determines the number of iterations of the Baum Welch algorithm is needed before determining whether the added node was an improvement.

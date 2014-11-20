@@ -57,8 +57,8 @@ namespace ModelLearning.Learners
         {
             double loglikelihood = 0;
             for (int i = 0; i < evaluationData.Count; i++)
-                loglikelihood += Math.Log(hmm.Evaluate(evaluationData[i]));
-                //loglikelihood += hmm.Evaluate(evaluationData[i], true);
+                //loglikelihood += Math.Log(hmm.Evaluate(evaluationData[i]));
+                loglikelihood += hmm.Evaluate(evaluationData[i], true);
             return loglikelihood;
         }
 
