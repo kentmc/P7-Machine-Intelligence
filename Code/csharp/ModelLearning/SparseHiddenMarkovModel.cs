@@ -905,13 +905,14 @@ namespace ModelLearning
             //Backtracking
             for (int t = (signal.Length - 2); t >= 0; t--)
             {
-                if (optimalSequence[(t + 1)] == (-1))
+                int parent;
+                if ((optimalSequence[(t + 1)] < 0) || ((parent = (parents[(t + 1), optimalSequence[(t + 1)]])) < 0))
                 {
                     probability = 0.0;
                     return null;
                 }
 
-                optimalSequence[t] = parents[(t + 1), optimalSequence[(t + 1)]];
+                optimalSequence[t] = parent;
             }
 
             return optimalSequence.ToArray();

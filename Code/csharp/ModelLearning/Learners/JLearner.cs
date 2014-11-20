@@ -45,8 +45,6 @@ namespace ModelLearning.Learners
 
             do
             {
-                bool change = false;
-
                 if (temperature > 2)
                 {
                     HMMGraph graph = hmm.ToGraph();
@@ -55,14 +53,24 @@ namespace ModelLearning.Learners
                     if (hmm.TransitionSparsity != lastSparsity)
                     {
                         lastSparsity = hmm.TransitionSparsity;
-                        change = true;
+                        stagnation = Math.Max(1, (stagnation - 1));
+                    }
+                    else
+                    {
+                        stagnation++;
                     }
 
-                    int numberOfStatesToAdd = Math.Max(0, (int)Math.Min(hmm.NumberOfStates, Math.Ceiling(Math.Log(Math.Pow(Math.Log(newLikelihood - likelihood), (1 / stagnation)) / (Math.Sqrt(temperature) * threshold)))));
+                    //int numberOfStatesToAdd = Math.Max(0, (int)Math.Min(hmm.NumberOfStates, Math.Ceiling(Math.Log(Math.Pow(Math.Log(newLikelihood - likelihood), (1 / stagnation)) / (Math.Sqrt(temperature) * threshold)))));
+                    int numberOfStatesToAdd = (((stagnation / temperature) > threshold) ? 1 : 0);
                     foreach (int weakPoint in IdentifyWeakStates(validationData, numberOfStatesToAdd))
                     {
                         SplitState(graph, weakPoint);
-                        change = true;
+                        stagnation = 1;
+                    }
+
+                    if (numberOfStatesToAdd == 0)
+                    {
+                        stagnation *= 2;
                     }
 
                     hmm = SparseHiddenMarkovModel.FromGraph(graph);
@@ -70,28 +78,23 @@ namespace ModelLearning.Learners
                     WriteLine(String.Format("Added {0} states", numberOfStatesToAdd));
                 }
 
-                if (change)
-                {
-                    stagnation = Math.Max(1, (stagnation - 1));
-                }
-                else
-                {
-                    stagnation++;
-                }
-
-                temperature *= Math.Max(2, Math.Sqrt(hmm.NumberOfStates));
+                //temperature *= Math.Max(2, Math.Sqrt(hmm.NumberOfStates));
+                temperature *= Math.Max(2, stagnation);
                 epsilon = (1 / Math.Log(temperature));
 
-                double bwThreshold = Math.Pow(Math.Max(threshold, (1 / (-Math.Min((-1), Math.Log(Math.Min((1 - threshold), (1 / temperature)) / (1 - threshold)))))), stagnation);
+                //double bwThreshold = Math.Pow(Math.Max(threshold, (1 / (-Math.Min((-1), Math.Log(Math.Min((1 - threshold), (1 / temperature)) / (1 - threshold)))))), stagnation);
+                int bwIterations = Math.Max(1, (int)Math.Log(stagnation * temperature * threshold));
 
-                WriteLine(String.Format("Running Baum-Welch with threshold {0}...", bwThreshold));
+                //WriteLine(String.Format("Running Baum-Welch with threshold {0}...", bwThreshold));
+                WriteLine(String.Format("Running Baum-Welch with {0} iterations...", bwIterations));
 
-                hmm.Learn(trainingData.GetNonempty(), bwThreshold);
+                //hmm.Learn(trainingData.GetNonempty(), bwThreshold);
+                hmm.Learn(trainingData.GetNonempty(), 0.0, bwIterations);
 
                 likelihood = newLikelihood;
                 newLikelihood = 0.0;
 
-                foreach (int[] signal in validationData.GetNonempty())
+                foreach (int[] signal in trainingData.GetNonempty())
                 {
                     newLikelihood += hmm.Evaluate(signal, true);
                 }
@@ -104,7 +107,7 @@ namespace ModelLearning.Learners
                 WriteLine(String.Format("Log Likelihood: {0}", newLikelihood));
                 WriteLine(String.Empty);
             }
-            while (Math.Abs(newLikelihood - likelihood) > threshold);
+            while ((Math.Abs(newLikelihood - likelihood) / Math.Sqrt(temperature)) > threshold);
         }
 
         private IEnumerable<int> IdentifyWeakStates(SequenceData validationData, int numberOfStates = 1) //Using Viterby
@@ -118,6 +121,11 @@ namespace ModelLearning.Learners
                 int[] occurenceCount = new int[hmm.NumberOfStates];
 
                 int[] hiddenStateSequence = hmm.Viterby(signal, out probability);
+
+                if (hiddenStateSequence == null)
+                {
+                    continue;
+                }
 
                 for (int t = 0; t < signal.Length; t++)
                 {
