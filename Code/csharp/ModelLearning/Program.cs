@@ -18,40 +18,45 @@ namespace ModelLearning {
                 new Learners.JaegerLearner(max_states, threshold, 0.95)
             };
 
-            while (true) {
-                //Select number of runs
-                int num_runs = ShowInterfaceSelectNumRuns();
-                if (num_runs == -1)
-                    continue;
+            Console.WriteLine("Select Dataset:");
 
-                //select output file
-                string output_file = ShowInterfaceSelectOutputFile();
+            BWBenchmarker benchmarker = new BWBenchmarker(Int32.Parse(Console.ReadLine()));
+            benchmarker.Run();
 
-                //select learners
-                List<Learner> selected_learners = ShowInterfaceSelectLearners(learners);
-                if (selected_learners == null)
-                    continue;
+            //while (true) {
+            //    //Select number of runs
+            //    int num_runs = ShowInterfaceSelectNumRuns();
+            //    if (num_runs == -1)
+            //        continue;
 
-                //select datasets
-                List<int> selected_datasets = ShowInterfaceSelectDatasets(10);
-                if (selected_datasets == null)
-                    continue;
+            //    //select output file
+            //    string output_file = ShowInterfaceSelectOutputFile();
 
-                //Select verbosity
-                bool verbose = ShowInterfaceSelectYesNo("Show intermediate output from learners?");
-                foreach (Learner learner in learners)
-                    learner.SetVerbosity(verbose);
+            //    //select learners
+            //    List<Learner> selected_learners = ShowInterfaceSelectLearners(learners);
+            //    if (selected_learners == null)
+            //        continue;
 
-                //Run benchmarker
-                Console.WriteLine("\nStarting benchmarker");
-                Benchmarker.Run(selected_learners, selected_datasets, output_file, num_runs);
+            //    //select datasets
+            //    List<int> selected_datasets = ShowInterfaceSelectDatasets(10);
+            //    if (selected_datasets == null)
+            //        continue;
+
+            //    //Select verbosity
+            //    bool verbose = ShowInterfaceSelectYesNo("Show intermediate output from learners?");
+            //    foreach (Learner learner in learners)
+            //        learner.SetVerbosity(verbose);
+
+            //    //Run benchmarker
+            //    Console.WriteLine("\nStarting benchmarker");
+            //    Benchmarker.Run(selected_learners, selected_datasets, output_file, num_runs);
                 
-                Console.WriteLine("\nBenchmarking has finished with success!");
-                if (ShowInterfaceSelectYesNo("Do another bencmark?"))
-                    continue;
-                else
-                    break;
-            }
+            //    Console.WriteLine("\nBenchmarking has finished with success!");
+            //    if (ShowInterfaceSelectYesNo("Do another bencmark?"))
+            //        continue;
+            //    else
+            //        break;
+            //}
         }
 
         static string ShowInterfaceSelectOutputFile() {
