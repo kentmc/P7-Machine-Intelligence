@@ -191,6 +191,8 @@ namespace ModelLearning
 
                 watch.Stop();
 
+                Console.WriteLine();
+
                 //double score = PautomacEvaluator.Evaluate(learner, testData, solutionData);
 
                 sum = 0.0;
@@ -200,7 +202,15 @@ namespace ModelLearning
 
                 for (int j = 0; j < testSignals.Length; j++)
                 {
-                    results[j] = model.Evaluate(testSignals[j]);
+                    if (testSignals[j].Length == 0)
+                    {
+                        results[j] = 1;
+                    }
+                    else
+                    {
+                        results[j] = model.Evaluate(testSignals[j]);
+                    }
+
                     sum += results[j];
                 }
 
