@@ -18,10 +18,14 @@ namespace ModelLearning {
                 new Learners.JaegerLearner(max_states, threshold, 0.95)
             };
 
-            Console.WriteLine("Select Dataset:");
+            //Console.WriteLine("Select Dataset:");
+			//BWBenchmarker benchmarker = new BWBenchmarker(Int32.Parse(Console.ReadLine()));
 
-            BWBenchmarker benchmarker = new BWBenchmarker(Int32.Parse(Console.ReadLine()));
-            benchmarker.Run();
+			int[] datasetarray = new int[6] {38, 28, 23, 25, 16, 1};
+			foreach(int dataset in datasetarray){
+				BWBenchmarker benchmarker = new BWBenchmarker(dataset);
+				benchmarker.Run();
+			};
 
             //while (true) {
             //    //Select number of runs
