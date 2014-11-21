@@ -44,7 +44,7 @@ namespace ModelLearning {
 
 			foreach(int dataset in datasetarray){
 				BWBenchmarker benchmarker = new BWBenchmarker(dataset);
-				benchmarker.Run(name, numberOfRuns, thresh, nMin, nMax, stepSize);
+				benchmarker.Run(name, numberOfRuns, thresh, nMin, nMax, stepSize, dataset);
 			};
 
             //while (true) {
