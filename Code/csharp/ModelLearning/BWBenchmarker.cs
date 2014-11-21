@@ -33,8 +33,7 @@ namespace ModelLearning
 
 		public void Run(string name, int numberOfRuns, double threshold, int nMin, int nMax, int stepSize)
         {
-			string csvFileName = "BW" + "_Runs:" + numberOfRuns + "_Tresh:" + threshold +"_MinState:" + nMin 
-				+ "_MaxState:" + nMax + "_Stepsize:" + stepSize;
+			string csvFileName = String.Format ("BW_Runs:{0}_Tresh:{1}_Minstate:{2}_MaxState:{3}_StepSize:{4}", numberOfRuns, threshold, nMin, nMax, stepSize);
 
             Dictionary<int, double[]> runScores = new Dictionary<int, double[]>();
             Dictionary<int, double[]> runTimes = new Dictionary<int, double[]>();
@@ -45,7 +44,7 @@ namespace ModelLearning
 
             Tuple<SequenceData, SequenceData>[] data = Enumerable.Range(0, numberOfRuns).Select(_ => testData.RandomSplit(2.0 / 3.0)).ToArray();
 
-            
+ 
             using (StreamWriter csvSW = new StreamWriter(String.Format("{0}.csv", csvFileName)))
             {
                 using (StreamWriter sw = new StreamWriter(String.Format("Benchmark_{0}.txt", name))){
