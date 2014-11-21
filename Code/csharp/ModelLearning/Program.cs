@@ -21,10 +21,30 @@ namespace ModelLearning {
             //Console.WriteLine("Select Dataset:");
 			//BWBenchmarker benchmarker = new BWBenchmarker(Int32.Parse(Console.ReadLine()));
 
+			//hardcoded datasets to be run
 			int[] datasetarray = new int[6] {38, 28, 23, 25, 16, 1};
+
+			Console.WriteLine("Number of Runs:");
+			int numberOfRuns = Int32.Parse(Console.ReadLine());
+
+			Console.WriteLine("Threshold: 0.01 to whatevz");
+			double thresh = Double.Parse(Console.ReadLine());
+
+			Console.WriteLine("Minimum Number of States:");
+			int nMin = Int32.Parse(Console.ReadLine());
+
+			Console.WriteLine("Maximum Number of States:");
+			int nMax = Int32.Parse(Console.ReadLine());
+
+			Console.WriteLine("Step Size:");
+			int stepSize = Int32.Parse(Console.ReadLine());
+
+			Console.WriteLine("File Name:");
+			string name = Console.ReadLine();
+
 			foreach(int dataset in datasetarray){
 				BWBenchmarker benchmarker = new BWBenchmarker(dataset);
-				benchmarker.Run();
+				benchmarker.Run(name, numberOfRuns, thresh, nMin, nMax, stepSize);
 			};
 
             //while (true) {

@@ -25,33 +25,15 @@ namespace ModelLearning
         {
             this.dataset = dataset;
 
-            trainData = DataLoader.LoadSequences(String.Format(@"Data\{0}.pautomac.train", dataset));
-            testData = DataLoader.LoadSequences(String.Format(@"Data\{0}.pautomac.test", dataset));
+            trainData = DataLoader.LoadSequences(String.Format(@"Data/{0}.pautomac.train", dataset));
+            testData = DataLoader.LoadSequences(String.Format(@"Data/{0}.pautomac.test", dataset));
 
-            solutionData = DataLoader.LoadSolutions(String.Format(@"Data\{0}.pautomac_solution.txt", dataset));
+            solutionData = DataLoader.LoadSolutions(String.Format(@"Data/{0}.pautomac_solution.txt", dataset));
         }
 
-        public void Run()
+		public void Run(string name, int numberOfRuns, double threshold, int nMin, int nMax, int stepSize)
         {
-            Console.WriteLine("Number of Runs:");
-            int numberOfRuns = Int32.Parse(Console.ReadLine());
-
-            Console.WriteLine("Threshold: 0.01 - 0.000000000");
-            double threshold = Double.Parse(Console.ReadLine());
-
-            Console.WriteLine("Minimum Number of States:");
-            int nMin = Int32.Parse(Console.ReadLine());
-
-            Console.WriteLine("Maximum Number of States:");
-            int nMax = Int32.Parse(Console.ReadLine());
-
-            Console.WriteLine("Step Size:");
-            int stepSize = Int32.Parse(Console.ReadLine());
-
-			Console.WriteLine("Experiment ID:");
-			string name = Console.ReadLine();
-
-			string csvFileName = name + "_Runs:" + numberOfRuns + "_Tresh:" + threshold +"_MinState:" + nMin 
+			string csvFileName = "BW" + "_Runs:" + numberOfRuns + "_Tresh:" + threshold +"_MinState:" + nMin 
 				+ "_MaxState:" + nMax + "_Stepsize:" + stepSize;
 
             Dictionary<int, double[]> runScores = new Dictionary<int, double[]>();
