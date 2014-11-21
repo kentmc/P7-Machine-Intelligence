@@ -33,7 +33,7 @@ namespace ModelLearning
 
 		public void Run(string name, int numberOfRuns, double threshold, int nMin, int nMax, int stepSize)
         {
-			string csvFileName = String.Format ("BW_Runs:{0}_Tresh:{1}_Minstate:{2}_MaxState:{3}_StepSize:{4}", numberOfRuns, threshold, nMin, nMax, stepSize);
+			string csvFileName = String.Format("BW_Runs:{0}_Tresh:{1}_Minstate:{2}_MaxState:{3}_StepSize:{4}", numberOfRuns, threshold, nMin, nMax, stepSize);
 
             Dictionary<int, double[]> runScores = new Dictionary<int, double[]>();
             Dictionary<int, double[]> runTimes = new Dictionary<int, double[]>();
@@ -47,64 +47,34 @@ namespace ModelLearning
  
             using (StreamWriter csvSW = new StreamWriter(String.Format("{0}.csv", csvFileName)))
             {
-                using (StreamWriter sw = new StreamWriter(String.Format("Benchmark_{0}.txt", name))){
-                    sw.WriteLine("Threshold: {0:00.00000000}", threshold);
-                    sw.WriteLine();
-                    sw.Flush();
+                csvSW.WriteLine("Dataset,Model_States,Score,Time,");
+                csvSW.Flush();
+                
+                for (int n = nMin; n <= nMax; n += stepSize)
+                {
+                    Console.WriteLine("{0} states...", n);
 
-                    csvSW.WriteLine("Dataset,Model_States,Score,Time,");
+                    Run(name, n, numberOfRuns, threshold, runScores, runTimes, runTicks, data);
+
+                    if (runScores[n].Average() < bestScore)
+                    {
+                        bestScore = runScores[n].Average();
+                        bestNumberOfStates = n;
+                    }
+
+                    int baseNumberOfStates = bestNumberOfStates;
+				
+                    for (int i = 0; i < numberOfRuns; i++)
+                    {
+                        csvSW.WriteLine("{0},{1},{2},{3}", dataset, n, runScores[n][i], runTimes[n][i]);
+                    }
+
+                
+                    csvSW.WriteLine();
                     csvSW.Flush();
-                    
-                    for (int n = nMin; n <= nMax; n += stepSize)
-                    {
-                        Console.WriteLine("{0} states...", n);
-
-                        Run(name, n, numberOfRuns, threshold, runScores, runTimes, runTicks, data);
-
-                        if (runScores[n].Average() < bestScore)
-                        {
-                            bestScore = runScores[n].Average();
-                            bestNumberOfStates = n;
-                        }
-
-                        int baseNumberOfStates = bestNumberOfStates;
-
-                        sw.WriteLine("{0:000} states:", n);
-
-                        for (int i = 0; i < numberOfRuns; i++)
-                        {
-                            csvSW.WriteLine("{0},{1},{2},{3}", dataset, n, runScores[n][i], runTimes[n][i]);
-                            sw.WriteLine("Run {0:00}:\t{1:0000.0000000000}\t{2:000000}\t{3:0000000000000000}", i, runScores[n][i], runTimes[n][i], runTicks[n][i]);
-                        }
-
-                        sw.WriteLine();
-                        sw.Flush();
-
-                        csvSW.WriteLine();
-                        csvSW.Flush();
-                    }
-
-                    sw.WriteLine("##########");
-                    sw.WriteLine("SUMMARY");
-                    sw.WriteLine("##########");
-                    sw.WriteLine();
-
-                    foreach (int numberOfStates in runScores.Keys)
-                    {
-                        sw.WriteLine("{0:000} states:\t{1:0000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", numberOfStates, runScores[numberOfStates].Average(), Median(runScores[numberOfStates]),
-                            runTimes[numberOfStates].Average(), Median(runTimes[numberOfStates]));
-                    }
-
-                    sw.WriteLine();
-                    sw.WriteLine("##########");
-                    sw.WriteLine("BEST");
-                    sw.WriteLine("##########");
-                    sw.WriteLine();
-
-                    sw.WriteLine("{0:000} states:\t{1:0000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", bestNumberOfStates, runScores[bestNumberOfStates].Average(), Median(runScores[bestNumberOfStates]),
-                        runTimes[bestNumberOfStates].Average(), Median(runTimes[bestNumberOfStates]));
                 }
-            }
+
+        	}
         }
 
         private void Run(string name, int numberOfStates, int numberOfRuns, double threshold, Dictionary<int, double[]> runScores, Dictionary<int, double[]> runTimes, Dictionary<int, double[]> runTicks, Tuple<SequenceData, SequenceData>[] data)
