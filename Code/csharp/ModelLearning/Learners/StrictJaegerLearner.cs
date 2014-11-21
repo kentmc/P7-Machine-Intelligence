@@ -169,6 +169,11 @@ namespace ModelLearning.Learners
                 return bestHMM.Evaluate(sequence);
         }
 
+        public override void Initialise(LearnerParameters parameters, int iteration)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Save(StreamWriter outputWriter, StreamWriter csvWriter)
         {
             bestHMM.Save(outputWriter, csvWriter);

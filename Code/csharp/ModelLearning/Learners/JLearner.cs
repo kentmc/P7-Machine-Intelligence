@@ -208,6 +208,11 @@ namespace ModelLearning.Learners
             return "JLearner";
         }
 
+        public override void Initialise(LearnerParameters parameters, int iteration)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)
         {
             hmm.Save(outputWriter, csvWriter);

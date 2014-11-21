@@ -85,14 +85,16 @@ namespace ModelLearning
                         averageLearnerRunTimes.Add(learner, results[2]);
                         medianLearnerScores.Add(learner, results[3]);
 
-                        outputWriter.WriteLine("{0}:\t{1:0000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", bestLearner.Name().PadRight(learnerNamePadding), medianLearnerScores[bestLearner],
-                            averageLearnerScores[bestLearner], medianLearnerRuntimes[bestLearner], averageLearnerRunTimes[bestLearner]);
+                        outputWriter.WriteLine("{0}:\t{1:0000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", learner.Name().PadRight(learnerNamePadding), medianLearnerScores[learner],
+                            averageLearnerScores[learner], medianLearnerRuntimes[learner], averageLearnerRunTimes[learner]);
 
                         if ((bestLearner == null) || (medianLearnerScores[learner] > medianLearnerScores[bestLearner]))
                         {
                             bestLearner = learner;
                         }
                     }
+
+                    outputWriter.WriteLine();
 
                     outputWriter.WriteLine("BEST");
                     outputWriter.WriteLine();
@@ -105,7 +107,7 @@ namespace ModelLearning
 
         public IEnumerable<double> BenchmarkLearner(DataSet dataSet, Learner learner)
         {
-
+            throw new NotImplementedException();
         }
     }
 }

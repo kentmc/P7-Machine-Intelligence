@@ -17,6 +17,8 @@ namespace ModelLearning.Learners {
             return "UniformLearner";
         }
 
+        public override void Initialise(LearnerParameters parameters, int iteration) { }
+
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter) { }
     }
 }

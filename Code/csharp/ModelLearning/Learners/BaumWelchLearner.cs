@@ -10,8 +10,8 @@ namespace ModelLearning.Learners {
 
         private Random random = new Random();
         HiddenMarkovModel hmm;
-        readonly int states;
-        readonly double tolerance;
+        private int states;
+        private double tolerance;
 
         public BaumWelchLearner(int states, double tolerance) {
             this.states = states;
@@ -86,6 +86,12 @@ namespace ModelLearning.Learners {
 
         public override string Name() {
             return "Baum Welch Learner";
+        }
+
+        public override void Initialise(LearnerParameters parameters, int iteration)
+        {
+            tolerance = parameters.Threshold;
+            states = (parameters.MinimumNumberOfStates + (iteration * parameters.StateStepSize));
         }
 
         public override void Save(StreamWriter outputWriter, StreamWriter csvWriter)
