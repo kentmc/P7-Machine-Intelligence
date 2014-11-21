@@ -31,9 +31,9 @@ namespace ModelLearning
             solutionData = DataLoader.LoadSolutions(String.Format(@"Data/{0}.pautomac_solution.txt", dataset));
         }
 
-		public void Run(string name, int numberOfRuns, double threshold, int nMin, int nMax, int stepSize)
+		public void Run(string name, int numberOfRuns, double threshold, int nMin, int nMax, int stepSize, int datasetnum)
         {
-			string csvFileName = String.Format("BW_Runs-{0}_Tresh-{1}_Minstate-{2}_MaxState-{3}_StepSize-{4}", numberOfRuns, threshold, nMin, nMax, stepSize);
+			string csvFileName = String.Format("Dataset-{5}_Runs-{0}_Tresh-{1}_Minstate-{2}_MaxState-{3}_StepSize-{4}", numberOfRuns, threshold, nMin, nMax, stepSize, datasetnum);
 
             Dictionary<int, double[]> runScores = new Dictionary<int, double[]>();
             Dictionary<int, double[]> runTimes = new Dictionary<int, double[]>();
