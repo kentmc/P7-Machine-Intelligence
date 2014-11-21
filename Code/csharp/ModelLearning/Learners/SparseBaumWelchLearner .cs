@@ -71,5 +71,10 @@ namespace ModelLearning.Learners {
         public override string Name() {
             return "Sparse Baum Welch Learner";
         }
+
+        public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

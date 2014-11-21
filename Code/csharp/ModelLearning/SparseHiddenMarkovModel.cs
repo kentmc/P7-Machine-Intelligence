@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -916,6 +917,86 @@ namespace ModelLearning
             }
 
             return optimalSequence.ToArray();
+        }
+
+        public void Save(StreamWriter outputWriter, StreamWriter csvWriter)
+        {
+            //User output
+            outputWriter.WriteLine("Number of States: {0}", NumberOfStates);
+            outputWriter.WriteLine("Number of Symbols: {0}", NumberOfSymbols);
+            outputWriter.WriteLine("Transition Sparsity: {0}", TransitionSparsity);
+            outputWriter.WriteLine("Emission Sparsity: {0}", EmissionSparsity);
+            outputWriter.WriteLine();
+
+            outputWriter.WriteLine("Initial Distribution:");
+            for (int i = 0; i < NumberOfStates; i++)
+            {
+                outputWriter.Write("{0:0.0000}\t", InitialProbability(i));
+            }
+            outputWriter.WriteLine();
+            outputWriter.WriteLine();
+
+            outputWriter.WriteLine("Transitions:");
+            for (int i = 0; i < NumberOfStates; i++)
+            {
+                for (int j = 0; j < NumberOfStates; j++)
+                {
+                    outputWriter.Write("{0:0.0000}\t", TransitionProbability(i, j));
+                }
+
+                outputWriter.WriteLine();
+            }
+            outputWriter.WriteLine();
+
+            outputWriter.WriteLine("Emissions");
+            for (int i = 0; i < NumberOfStates; i++)
+            {
+                for (int j = 0; j < NumberOfSymbols; j++)
+                {
+                    outputWriter.Write("{0:0.0000}\t", EmissionProbability(i, j));
+                }
+
+                outputWriter.WriteLine();
+            }
+
+            //CSV output
+            string stateString = String.Join(",", Enumerable.Range(0, NumberOfStates));
+            csvWriter.WriteLine("State,{0},", stateString);
+
+            csvWriter.Write("Initial,");
+
+            for (int i = 0; i < NumberOfStates; i++)
+            {
+                csvWriter.Write("{0},", InitialProbability(i));
+            }
+
+            csvWriter.WriteLine();
+
+            csvWriter.WriteLine("Transitions,{0},", stateString);
+            for (int i = 0; i < NumberOfStates; i++)
+            {
+                csvWriter.Write("{0},", i);
+
+                for (int j = 0; j < NumberOfStates; j++)
+                {
+                    csvWriter.Write("{0},", TransitionProbability(j, i));
+                }
+
+                csvWriter.WriteLine();
+            }
+
+            csvWriter.WriteLine("Emissions,{0},", stateString);
+            for (int i = 0; i < NumberOfSymbols; i++)
+            {
+                csvWriter.Write("{0},", i);
+
+                for (int j = 0; j < NumberOfStates; j++)
+                {
+                    csvWriter.Write("{0},", EmissionProbability(j, i));
+                }
+
+                csvWriter.WriteLine();
+            }
         }
     }
 }

@@ -175,5 +175,10 @@ namespace ModelLearning.Learners
             else
                 return bestHMM.Evaluate(sequence);
         }
+
+        public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)
+        {
+            bestHMM.Save(outputWriter, csvWriter);
+        }
     }
 }

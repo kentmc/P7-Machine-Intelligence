@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -22,5 +23,9 @@ namespace ModelLearning {
             if (verbose)
                 Console.WriteLine(str);
         }
+
+        public abstract void Initialise(LearnerParameters parameters, int iteration);
+
+        public abstract void Save(StreamWriter outputWriter, StreamWriter csvWriter);
     }
 }

@@ -207,5 +207,10 @@ namespace ModelLearning.Learners
         {
             return "JLearner";
         }
+
+        public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)
+        {
+            hmm.Save(outputWriter, csvWriter);
+        }
     }
 }
