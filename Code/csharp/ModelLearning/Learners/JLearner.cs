@@ -12,11 +12,6 @@ namespace ModelLearning.Learners
 
         private double threshold;
 
-        public JLearner(double threshold)
-        {
-            this.threshold = threshold;
-        }
-
         public override double CalculateProbability(int[] sequence)
         {
             if (sequence.Length == 0)
@@ -61,7 +56,8 @@ namespace ModelLearning.Learners
                     }
 
                     //int numberOfStatesToAdd = Math.Max(0, (int)Math.Min(hmm.NumberOfStates, Math.Ceiling(Math.Log(Math.Pow(Math.Log(newLikelihood - likelihood), (1 / stagnation)) / (Math.Sqrt(temperature) * threshold)))));
-                    int numberOfStatesToAdd = (((stagnation / temperature) > threshold) ? 1 : 0);
+                    //int numberOfStatesToAdd = (((stagnation / temperature) > threshold) ? 1 : 0);
+                    int numberOfStatesToAdd = 1;
                     foreach (int weakPoint in IdentifyWeakStates(validationData, numberOfStatesToAdd))
                     {
                         SplitState(graph, weakPoint);
@@ -78,8 +74,8 @@ namespace ModelLearning.Learners
                     WriteLine(String.Format("Added {0} states", numberOfStatesToAdd));
                 }
 
-                //temperature *= Math.Max(2, Math.Sqrt(hmm.NumberOfStates));
-                temperature *= Math.Max(2, stagnation);
+                temperature *= Math.Max(2, Math.Sqrt(hmm.NumberOfStates));
+                //temperature *= Math.Max(2, stagnation);
                 epsilon = (1 / Math.Log(temperature));
 
                 //double bwThreshold = Math.Pow(Math.Max(threshold, (1 / (-Math.Min((-1), Math.Log(Math.Min((1 - threshold), (1 / temperature)) / (1 - threshold)))))), stagnation);
@@ -168,25 +164,25 @@ namespace ModelLearning.Learners
             {
                 if (node.Transitions.ContainsKey(graph.Nodes[state]))
                 {
-                    //node.SetTransition(newNode, node.Transitions[graph.Nodes[state]]);
-                    node.SetTransition(newNode, random.NextDouble());
+                    node.SetTransition(newNode, node.Transitions[graph.Nodes[state]]);
+                    //node.SetTransition(newNode, random.NextDouble());
                 }
             }
 
             foreach (Node node in graph.Nodes[state].Transitions.Keys)
             {
-                //newNode.SetTransition(node, graph.Nodes[state].Transitions[node]);
-                newNode.SetTransition(node, random.NextDouble());
+                newNode.SetTransition(node, graph.Nodes[state].Transitions[node]);
+                //newNode.SetTransition(node, random.NextDouble());
             }
 
             foreach (int symbol in graph.Nodes[state].Emissions.Keys)
             {
-                //newNode.SetEmission(symbol, graph.Nodes[state].Emissions[symbol]);
-                newNode.SetEmission(symbol, random.NextDouble());
+                newNode.SetEmission(symbol, graph.Nodes[state].Emissions[symbol]);
+                //newNode.SetEmission(symbol, random.NextDouble());
             }
 
-            //newNode.InitialProbability = graph.Nodes[state].InitialProbability;
-            newNode.InitialProbability = random.NextDouble();
+            newNode.InitialProbability = graph.Nodes[state].InitialProbability;
+            //newNode.InitialProbability = random.NextDouble();
 
             graph.Nodes.Add(newNode);
 
@@ -210,7 +206,7 @@ namespace ModelLearning.Learners
 
         public override void Initialise(LearnerParameters parameters, int iteration)
         {
-            throw new NotImplementedException();
+            threshold = (parameters.MinimumThreshold + (iteration * parameters.ThresholdStepSize));
         }
 
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)

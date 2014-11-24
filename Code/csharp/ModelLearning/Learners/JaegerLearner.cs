@@ -13,19 +13,11 @@ namespace ModelLearning.Learners
         //private HiddenMarkovModel bestHMM;
 
         private double epsilon;
+        private double threshold;
 
-        //settings
-        private int maxStates;
-        private double baumwelchThreshold;
-
-
-        public JaegerLearner(int maxStates, double baumwelchThreshold, double precision)
+        public JaegerLearner()
         {
-            this.maxStates = maxStates;
-            this.baumwelchThreshold = baumwelchThreshold;
             random = new Random();
-
-            epsilon = (1 - precision);
         }
 
         private HMMGraph Random2NodeGraph(int num_symbols) {
@@ -70,9 +62,12 @@ namespace ModelLearning.Learners
             //bestHMM = ModelConverter.Graph2HMM(graph);
 
             //bestHMM.Learn(trainingData, baumwelchThreshold);
-            bestHMM.Learn(trainingData.GetNonempty(), baumwelchThreshold);
+            bestHMM.Learn(trainingData.GetNonempty(), 32);
 
-            while (bestHMM.NumberOfStates < maxStates)
+            double likelihood = Double.MinValue;
+            double newLikelihood = 0;
+
+            while (Math.Abs(likelihood - newLikelihood) > threshold)
             //while (bestHMM.States < maxStates)
             {
                 WriteLine("Taking one more iteration");
@@ -119,9 +114,12 @@ namespace ModelLearning.Learners
 
                 WriteLine("Running BaumWelch");
                 //bestHMM.Learn(trainingData, baumwelchThreshold);
-                bestHMM.Learn(trainingData.GetNonempty(), baumwelchThreshold);
+                bestHMM.Learn(trainingData.GetNonempty(), 32);
 
-                WriteLine("Log Likelihood: " + LogLikelihood(bestHMM, validationData));
+                likelihood = newLikelihood;
+                newLikelihood = LogLikelihood(bestHMM, validationData);
+
+                WriteLine("Log Likelihood: " + newLikelihood);
             }
         }
 
@@ -178,11 +176,18 @@ namespace ModelLearning.Learners
 
         public override void Initialise(LearnerParameters parameters, int iteration)
         {
-            throw new NotImplementedException();
+            threshold = (parameters.MinimumThreshold + (iteration * parameters.ThresholdStepSize));
+
+            epsilon = (double)parameters.AdditionalParameters["epsilon"];
         }
 
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)
         {
+            outputWriter.WriteLine("Number of States: {0}", bestHMM.NumberOfStates);
+            outputWriter.WriteLine("Number of Symbols: {0}", bestHMM.NumberOfSymbols);
+            outputWriter.WriteLine("Epsilon: {0}", epsilon);
+            outputWriter.WriteLine();
+
             bestHMM.Save(outputWriter, csvWriter);
         }
     }

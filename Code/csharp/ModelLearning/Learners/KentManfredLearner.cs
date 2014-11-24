@@ -8,15 +8,16 @@ namespace ModelLearning.Learners {
     class KentManfredLearner : Learner {
 
         private Random ran;
-        private HiddenMarkovModel bestHmm;
+        private SparseHiddenMarkovModel bestHMM;
         private double bestLikelihood;
+        private int alpha;
+        private int beta;
 
         //settings
         private double threshold;
 
-        public KentManfredLearner(double threshold) {
-            ran = new Random();     
-            this.threshold = threshold;
+        public KentManfredLearner() {
+            ran = new Random();
         }
 
         private HMMGraph RandomSingleNodeGraph(int num_symbols) {
@@ -34,18 +35,18 @@ namespace ModelLearning.Learners {
 
         public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
             HMMGraph graph = RandomSingleNodeGraph(trainingData.NumSymbols);
-            bestHmm = ModelConverter.Graph2HMM(graph);
-            bestLikelihood = bestHmm.Evaluate(trainingData.GetAll(), true);
+            bestHMM = SparseHiddenMarkovModel.FromGraph(graph);
+            bestLikelihood = bestHMM.Evaluate(trainingData.GetAll(), true);
             double ll_increase = threshold;
             while(ll_increase >= threshold){
                 double last_ll = bestLikelihood;
-                WriteLine("Number of states: " + bestHmm.States);
-                HiddenMarkovModel current_best_hmm = null;
-                for (int i = 0; i < 10; i++) {
-                    graph = ModelConverter.HMM2Graph(bestHmm);
+                WriteLine("Number of states: " + bestHMM.NumberOfStates);
+                SparseHiddenMarkovModel current_best_hmm = null;
+                for (int i = 0; i < alpha; i++) {
+                    graph = bestHMM.ToGraph();
                     RandomlyExtendGraphSparsely(graph);
-                    HiddenMarkovModel hmm = ModelConverter.Graph2HMM(graph);
-                    hmm.Learn(testData.GetNonempty(), 10); //Run the BaumWelch algorithm
+                    SparseHiddenMarkovModel hmm = SparseHiddenMarkovModel.FromGraph(graph);
+                    hmm.Learn(testData.GetNonempty(), beta); //Run the BaumWelch algorithm
                     double likelihood = hmm.Evaluate(trainingData.GetAll(), true);
                     if (likelihood > bestLikelihood) {
                         bestLikelihood = likelihood;
@@ -57,7 +58,7 @@ namespace ModelLearning.Learners {
                     }
                 }
                 if (current_best_hmm != null){
-                    bestHmm = current_best_hmm;
+                    bestHMM = current_best_hmm;
                     WriteLine("Likelihood increased to " + bestLikelihood);
                 }
                 else
@@ -65,7 +66,7 @@ namespace ModelLearning.Learners {
                 ll_increase = bestLikelihood - last_ll;
             }
             WriteLine("Runs Baum Welch last time with the right threshold");
-            bestHmm.Learn(trainingData.GetNonempty(), threshold);
+            bestHMM.Learn(trainingData.GetNonempty(), threshold);
         }
 
 
@@ -124,17 +125,24 @@ namespace ModelLearning.Learners {
             if (sequence.Length == 0)
                 return 1.0;
             else
-                return bestHmm.Evaluate(sequence);
+                return bestHMM.Evaluate(sequence);
         }
 
-        public override void Initialise(LearnerParameters parameters, int iteration)
-        {
-            throw new NotImplementedException();
+        public abstract void Initialise(LearnerParameters parameters, int iteration) {
+            alpha = (int)parameters.AdditionalParameters["alpha"];
+            beta = (int)parameters.AdditionalParameters["beta"];
+            threshold = parameters.MinimumThreshold + iteration * parameters.ThresholdStepSize;
         }
 
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)
         {
-            throw new NotImplementedException();
+            outputWriter.WriteLine("Number of States: {0}", bestHMM.NumberOfStates);
+            outputWriter.WriteLine("Number of Symbols: {0}", bestHMM.NumberOfSymbols);
+            outputWriter.WriteLine("Alpha: {0}", alpha);
+            outputWriter.WriteLine("Beta: {0}", alpha);
+            outputWriter.WriteLine();
+
+            bestHMM.Save(outputWriter, csvWriter);
         }
 
     }

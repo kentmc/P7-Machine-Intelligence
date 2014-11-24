@@ -14,7 +14,7 @@ namespace ModelLearning.Learners {
         }
 
         public override string Name() {
-            return "UniformLearner";
+            return "Uniform Learner";
         }
 
         public override void Initialise(LearnerParameters parameters, int iteration) { }

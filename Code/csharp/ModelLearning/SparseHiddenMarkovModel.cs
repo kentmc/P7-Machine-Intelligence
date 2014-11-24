@@ -390,6 +390,19 @@ namespace ModelLearning
             return backwardVariables;
         }
 
+        /// <summary>
+        /// Returns the log likelihood that the model have generated the given data
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="logarithm">whether the likelihood should be returned as a loglikelihood or just a likelihood</param>
+        /// <returns></returns>
+        public double Evaluate(int[][] observations, bool logarithm) {
+            double loglikelihood = 0;
+            for (int i = 0; i < observations.Length; i++)
+                loglikelihood += Evaluate(observations[i], true);
+            return logarithm ? loglikelihood : Math.Exp(loglikelihood);
+        }
+
         public double Evaluate(int[] signal, bool logarithm = false)
         {
             if (signal.Length == 0)

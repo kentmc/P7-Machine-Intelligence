@@ -21,10 +21,10 @@ namespace ModelLearning
         {
             Number = number;
 
-            unsortedData = DataLoader.LoadSequences(String.Format(@"Data\{0}.pautomac.train", Number));
-            TestData = DataLoader.LoadSequences(String.Format(@"Data\{0}.pautomac.test", Number));
+            unsortedData = DataLoader.LoadSequences(String.Format(@"Data/{0}.pautomac.train", Number));
+            TestData = DataLoader.LoadSequences(String.Format(@"Data/{0}.pautomac.test", Number));
 
-            SolutionData = DataLoader.LoadSolutions(String.Format(@"Data\{0}.pautomac_solution.txt", Number));
+            SolutionData = DataLoader.LoadSolutions(String.Format(@"Data/{0}.pautomac_solution.txt", Number));
         }
 
         public void SplitData(double ratio)
