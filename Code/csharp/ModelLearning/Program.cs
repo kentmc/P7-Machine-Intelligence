@@ -11,7 +11,7 @@ namespace ModelLearning {
             double threshold = 0.001;
             int max_states = 20;
             List<Learner> learners = new List<Learner>() { 
-                new Learners.KentManfredLearner(max_states, threshold),
+                new Learners.KentManfredLearner(threshold),
                 new Learners.BaumWelchLearner(max_states, threshold),
                 new Learners.SparseBaumWelchLearner(max_states, threshold),
                 new Learners.StrictJaegerLearner(max_states, threshold),
