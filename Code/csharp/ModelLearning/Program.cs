@@ -10,77 +10,99 @@ namespace ModelLearning {
         static void Main(string[] args) {
             double threshold = 0.001;
             int max_states = 20;
-            List<Learner> learners = new List<Learner>() { 
+            List<Learner> learners = new List<Learner>() {
+                new Learners.UniformLearner(),
+                new Learners.BaumWelchLearner(),
                 new Learners.KentManfredLearner(max_states, threshold),
-                new Learners.BaumWelchLearner(max_states, threshold),
                 new Learners.SparseBaumWelchLearner(max_states, threshold),
-                new Learners.StrictJaegerLearner(max_states, threshold),
-                new Learners.JaegerLearner(max_states, threshold, 0.95)
+                new Learners.JaegerLearner(),
+                new Learners.JLearner()
             };
 
             //Console.WriteLine("Select Dataset:");
 			//BWBenchmarker benchmarker = new BWBenchmarker(Int32.Parse(Console.ReadLine()));
 
 			//hardcoded datasets to be run
-			int[] datasetarray = new int[6] {38, 28, 23, 25, 16, 1};
+            //int[] datasetarray = new int[6] {38, 28, 23, 25, 16, 1};
 
-			Console.WriteLine("Number of Runs:");
-			int numberOfRuns = Int32.Parse(Console.ReadLine());
+            //Console.WriteLine("Number of Runs:");
+            //int numberOfRuns = Int32.Parse(Console.ReadLine());
 
-			Console.WriteLine("Threshold: 0.01 to whatevz");
-			double thresh = Double.Parse(Console.ReadLine());
+            //Console.WriteLine("Threshold: 0.01 to whatevz");
+            //double thresh = Double.Parse(Console.ReadLine());
 
-			Console.WriteLine("Minimum Number of States:");
-			int nMin = Int32.Parse(Console.ReadLine());
+            //Console.WriteLine("Minimum Number of States:");
+            //int nMin = Int32.Parse(Console.ReadLine());
 
-			Console.WriteLine("Maximum Number of States:");
-			int nMax = Int32.Parse(Console.ReadLine());
+            //Console.WriteLine("Maximum Number of States:");
+            //int nMax = Int32.Parse(Console.ReadLine());
 
-			Console.WriteLine("Step Size:");
-			int stepSize = Int32.Parse(Console.ReadLine());
+            //Console.WriteLine("Step Size:");
+            //int stepSize = Int32.Parse(Console.ReadLine());
 
-			Console.WriteLine("File Name:");
-			string name = Console.ReadLine();
+            //Console.WriteLine("File Name:");
+            //string name = Console.ReadLine();
 
-			foreach(int dataset in datasetarray){
-				BWBenchmarker benchmarker = new BWBenchmarker(dataset);
-				benchmarker.Run(name, numberOfRuns, thresh, nMin, nMax, stepSize);
-			};
+            //foreach(int dataset in datasetarray){
+            //    BWBenchmarker benchmarker = new BWBenchmarker(dataset);
+            //    benchmarker.Run(name, numberOfRuns, thresh, nMin, nMax, stepSize);
+            //};
 
-            //while (true) {
-            //    //Select number of runs
-            //    int num_runs = ShowInterfaceSelectNumRuns();
-            //    if (num_runs == -1)
-            //        continue;
+            while (true)
+            {
+                //Select number of runs
+                int num_runs = ShowInterfaceSelectNumRuns();
+                if (num_runs == -1)
+                    continue;
 
-            //    //select output file
-            //    string output_file = ShowInterfaceSelectOutputFile();
+                //select output file
+                //string output_file = ShowInterfaceSelectOutputFile();
+                string benchmarkName = SelectBenchmarkName();
 
-            //    //select learners
-            //    List<Learner> selected_learners = ShowInterfaceSelectLearners(learners);
-            //    if (selected_learners == null)
-            //        continue;
+                //select learners
+                List<Learner> selected_learners = ShowInterfaceSelectLearners(learners);
+                if (selected_learners == null)
+                    continue;
 
-            //    //select datasets
-            //    List<int> selected_datasets = ShowInterfaceSelectDatasets(10);
-            //    if (selected_datasets == null)
-            //        continue;
+                //select datasets
+                List<int> selected_datasets = ShowInterfaceSelectDatasets(48);
+                if (selected_datasets == null)
+                    continue;
 
-            //    //Select verbosity
-            //    bool verbose = ShowInterfaceSelectYesNo("Show intermediate output from learners?");
-            //    foreach (Learner learner in learners)
-            //        learner.SetVerbosity(verbose);
+                //Select verbosity
+                bool verbose = ShowInterfaceSelectYesNo("Show intermediate output from learners?");
+                foreach (Learner learner in learners)
+                    learner.SetVerbosity(verbose);
 
-            //    //Run benchmarker
-            //    Console.WriteLine("\nStarting benchmarker");
-            //    Benchmarker.Run(selected_learners, selected_datasets, output_file, num_runs);
-                
-            //    Console.WriteLine("\nBenchmarking has finished with success!");
-            //    if (ShowInterfaceSelectYesNo("Do another bencmark?"))
-            //        continue;
-            //    else
-            //        break;
-            //}
+                Benchmark benchmark = new Benchmark(benchmarkName, selected_learners, selected_datasets, num_runs);
+                benchmark.Run();
+
+                //Run benchmarker
+                //Console.WriteLine("\nStarting benchmarker");
+                //Benchmarker.Run(selected_learners, selected_datasets, output_file, num_runs);
+
+                Console.WriteLine("\nBenchmarking has finished with success!");
+                if (ShowInterfaceSelectYesNo("Do another bencmark?"))
+                    continue;
+                else
+                    break;
+            }
+        }
+
+        private static string SelectBenchmarkName()
+        {
+            DateTime dateTime = DateTime.Now;
+            string defaultName = dateTime.ToString("HH-mm_dd-MM-yyyy");
+
+            Console.WriteLine("Select Benchmark Name (Default: '{0}'):", defaultName);
+            string name = Console.ReadLine();
+
+            if (String.IsNullOrEmpty(name))
+            {
+                name = defaultName;
+            }
+
+            return name;
         }
 
         static string ShowInterfaceSelectOutputFile() {

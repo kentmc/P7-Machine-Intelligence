@@ -7,8 +7,6 @@ namespace ModelLearning
 {
     class LearnerParameters
     {
-        public double Threshold { get; private set; }
-
         public double MinimumThreshold { get; private set; }
 
         public double MaximumThreshold { get; private set; }
@@ -23,16 +21,58 @@ namespace ModelLearning
 
         public int StateStepSize { get; private set; }
 
+        public Dictionary<string, object> AdditionalParameters { get; private set; }
+
         public LearnerParameters(string learner)
         {
+            AdditionalParameters = new Dictionary<string, object>();
+
             switch (learner.ToLowerInvariant())
             {
                 case "baum welch learner":
                     {
-                        Console.WriteLine("Configure Baum Welch Learner:");
+                        Console.WriteLine("Configure Baum-Welch Learner:");
                         Console.Write("Convergence threshold: ");
-                        Threshold = Double.Parse(Console.ReadLine());
+                        AdditionalParameters.Add("threshold", Double.Parse(Console.ReadLine()));
 
+                        goto case "DEF_STATES";
+                    }
+                case "jaeger learner":
+                    {
+                        Console.WriteLine("Configure Greedy State Splitting Learner:");
+                        Console.Write("Epsilon: ");
+                        AdditionalParameters.Add("epsilon", Double.Parse(Console.ReadLine()));
+
+                        goto case "DEF_THRESHOLD";
+                    }
+                case "jlearner":
+                    {
+                        Console.WriteLine("Configure JLearner:");
+
+                        goto case "DEF_THRESHOLD";
+                    }
+                case "kentmanfredlearner":
+                    {
+                        Console.WriteLine("Configure Greedy Extend Learner:");
+
+                        goto case "DEF_THRESHOLD";
+                    }
+                case "sparse baum welch learner":
+                    {
+                        Console.WriteLine("Configure Sparse Baum-Welch Learner:");
+                        Console.Write("Convergence threshold: ");
+                        AdditionalParameters.Add("threshold", Double.Parse(Console.ReadLine()));
+
+                        goto case "DEF_STATES";
+                    }
+                case "uniform learner":
+                    {
+                        Console.WriteLine("Uniform Learner needs no configuration.");
+
+                        break;
+                    }
+                case "DEF_STATES":
+                    {
                         Console.Write("Minimum Number of States: ");
                         MinimumNumberOfStates = Int32.Parse(Console.ReadLine());
 
@@ -41,11 +81,19 @@ namespace ModelLearning
 
                         Console.Write("Step Size: ");
                         StateStepSize = Int32.Parse(Console.ReadLine());
+
                         break;
                     }
-                case "uniform learner":
+                case "DEF_THRESHOLD":
                     {
-                        Console.WriteLine("Uniform Learner needs no configuration.");
+                        Console.Write("Minimum Threshold: ");
+                        MinimumThreshold = Double.Parse(Console.ReadLine());
+
+                        Console.Write("Maximum Threshold: ");
+                        MaximumThreshold = Double.Parse(Console.ReadLine());
+
+                        Console.Write("Step Size: ");
+                        ThresholdStepSize = Double.Parse(Console.ReadLine());
 
                         break;
                     }
