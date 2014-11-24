@@ -23,6 +23,7 @@ namespace ModelLearning {
 			//BWBenchmarker benchmarker = new BWBenchmarker(Int32.Parse(Console.ReadLine()));
 
 			//hardcoded datasets to be run
+
             //int[] datasetarray = new int[6] {38, 28, 23, 25, 16, 1};
 
             //Console.WriteLine("Number of Runs:");
@@ -82,7 +83,7 @@ namespace ModelLearning {
                 //Benchmarker.Run(selected_learners, selected_datasets, output_file, num_runs);
 
                 Console.WriteLine("\nBenchmarking has finished with success!");
-                if (ShowInterfaceSelectYesNo("Do another bencmark?"))
+                if (ShowInterfaceSelectYesNo("Do another benchmark?"))
                     continue;
                 else
                     break;
