@@ -78,19 +78,19 @@ namespace ModelLearning.Learners
                 //temperature *= Math.Max(2, stagnation);
                 epsilon = (1 / Math.Log(temperature));
 
-                //double bwThreshold = Math.Pow(Math.Max(threshold, (1 / (-Math.Min((-1), Math.Log(Math.Min((1 - threshold), (1 / temperature)) / (1 - threshold)))))), stagnation);
-                int bwIterations = Math.Max(1, (int)Math.Log(stagnation * temperature * threshold));
+                double bwThreshold = Math.Pow(Math.Max(threshold, (1 / (-Math.Min((-1), Math.Log(Math.Min((1 - threshold), (1 / temperature)) / (1 - threshold)))))), stagnation);
+                //int bwIterations = Math.Max(1, (int)Math.Log(stagnation * temperature * threshold));
 
-                //WriteLine(String.Format("Running Baum-Welch with threshold {0}...", bwThreshold));
-                WriteLine(String.Format("Running Baum-Welch with {0} iterations...", bwIterations));
+                WriteLine(String.Format("Running Baum-Welch with threshold {0}...", bwThreshold));
+                //WriteLine(String.Format("Running Baum-Welch with {0} iterations...", bwIterations));
 
-                //hmm.Learn(trainingData.GetNonempty(), bwThreshold);
-                hmm.Learn(trainingData.GetNonempty(), 0.0, bwIterations);
+                hmm.Learn(trainingData.GetNonempty(), bwThreshold);
+                //hmm.Learn(trainingData.GetNonempty(), 0.0, bwIterations);
 
                 likelihood = newLikelihood;
                 newLikelihood = 0.0;
 
-                foreach (int[] signal in trainingData.GetNonempty())
+                foreach (int[] signal in validationData.GetNonempty())
                 {
                     newLikelihood += hmm.Evaluate(signal, true);
                 }
@@ -103,7 +103,7 @@ namespace ModelLearning.Learners
                 WriteLine(String.Format("Log Likelihood: {0}", newLikelihood));
                 WriteLine(String.Empty);
             }
-            while ((Math.Abs(newLikelihood - likelihood) / Math.Sqrt(temperature)) > threshold);
+            while ((Math.Abs(newLikelihood - likelihood) * Math.Pow(epsilon, 2)) > threshold);
         }
 
         private IEnumerable<int> IdentifyWeakStates(SequenceData validationData, int numberOfStates = 1) //Using Viterby
@@ -164,25 +164,25 @@ namespace ModelLearning.Learners
             {
                 if (node.Transitions.ContainsKey(graph.Nodes[state]))
                 {
-                    node.SetTransition(newNode, node.Transitions[graph.Nodes[state]]);
-                    //node.SetTransition(newNode, random.NextDouble());
+                    //node.SetTransition(newNode, node.Transitions[graph.Nodes[state]]);
+                    node.SetTransition(newNode, random.NextDouble());
                 }
             }
 
             foreach (Node node in graph.Nodes[state].Transitions.Keys)
             {
-                newNode.SetTransition(node, graph.Nodes[state].Transitions[node]);
-                //newNode.SetTransition(node, random.NextDouble());
+                //newNode.SetTransition(node, graph.Nodes[state].Transitions[node]);
+                newNode.SetTransition(node, random.NextDouble());
             }
 
             foreach (int symbol in graph.Nodes[state].Emissions.Keys)
             {
-                newNode.SetEmission(symbol, graph.Nodes[state].Emissions[symbol]);
-                //newNode.SetEmission(symbol, random.NextDouble());
+                //newNode.SetEmission(symbol, graph.Nodes[state].Emissions[symbol]);
+                newNode.SetEmission(symbol, random.NextDouble());
             }
 
-            newNode.InitialProbability = graph.Nodes[state].InitialProbability;
-            //newNode.InitialProbability = random.NextDouble();
+            //newNode.InitialProbability = graph.Nodes[state].InitialProbability;
+            newNode.InitialProbability = random.NextDouble();
 
             graph.Nodes.Add(newNode);
 

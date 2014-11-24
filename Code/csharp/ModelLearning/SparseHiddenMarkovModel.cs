@@ -83,12 +83,12 @@ namespace ModelLearning
             {
                 double sparsity = 0.0;
 
-                for (int i = 0; i < NumberOfSymbols; i++)
+                for (int i = 0; i < NumberOfStates; i++)
                 {
                     sparsity += ((double)emissions[i].Length / NumberOfSymbols);
                 }
 
-                return (sparsity / NumberOfSymbols);
+                return (sparsity / NumberOfStates);
             }
         }
 

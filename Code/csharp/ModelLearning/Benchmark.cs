@@ -97,7 +97,7 @@ namespace ModelLearning
                     csvWriter.WriteLine("{0},{1},{2},{3},{4},", learner.Name(), medianLearnerScores[learner], averageLearnerScores[learner], medianLearnerRuntimes[learner],
                         averageLearnerRuntimes[learner]);
 
-                    if ((bestLearner == null) || (medianLearnerScores[learner] > medianLearnerScores[bestLearner]))
+                    if ((bestLearner == null) || (medianLearnerScores[learner] < medianLearnerScores[bestLearner]))
                     {
                         bestLearner = learner;
                     }
@@ -126,9 +126,9 @@ namespace ModelLearning
 
             LearnerParameters parameters = learners[learner];
 
-            using (StreamWriter outputWriter = new StreamWriter(String.Format(@"Benchmark_{0}/DataSet_{1}/{0}.txt", Name, dataSet.Number, learner.Name().ToLowerInvariant().Replace(' ', '_'))),
-                                csvSummaryWriter = new StreamWriter(String.Format(@"Benchmark_{0}/DataSet_{1}/{0}_SUMMARY.csv", Name, dataSet.Number, learner.Name().ToLowerInvariant().Replace(' ', '_'))),
-                                csvResultWriter = new StreamWriter(String.Format(@"Benchmark_{0}/DataSet_{1}/{0}_RESULTS.csv", Name, dataSet.Number, learner.Name().ToLowerInvariant().Replace(' ', '_'))))
+            using (StreamWriter outputWriter = new StreamWriter(String.Format(@"Benchmark_{0}/DataSet_{1}/{2}.txt", Name, dataSet.Number, learner.Name().ToLowerInvariant().Replace(' ', '_'))),
+                                csvSummaryWriter = new StreamWriter(String.Format(@"Benchmark_{0}/DataSet_{1}/{2}_SUMMARY.csv", Name, dataSet.Number, learner.Name().ToLowerInvariant().Replace(' ', '_'))),
+                                csvResultWriter = new StreamWriter(String.Format(@"Benchmark_{0}/DataSet_{1}/{2}_RESULTS.csv", Name, dataSet.Number, learner.Name().ToLowerInvariant().Replace(' ', '_'))))
             {
                 outputWriter.WriteLine("DataSet {0}", dataSet.Number);
                 outputWriter.WriteLine("Learner: {0}", learner.Name());
@@ -154,7 +154,7 @@ namespace ModelLearning
                     parameterAverageRuntimes.Add(i, results[2]);
                     parameterMedianRuntimes.Add(i, results[3]);
 
-                    if ((bestIteration < 0) || (parameterMedianScores[bestIteration] < parameterMedianScores[i]))
+                    if ((bestIteration < 0) || (parameterMedianScores[bestIteration] > parameterMedianScores[i]))
                     {
                         bestIteration = i;
                     }
@@ -180,6 +180,7 @@ namespace ModelLearning
                     outputWriter.WriteLine("{0}:\t{1:0000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", IterationName(parameters, iteration), parameterMedianScores[iteration],
                         parameterAverageScores[iteration], parameterMedianRuntimes[iteration], parameterAverageRuntimes[iteration]);
                 }
+                outputWriter.WriteLine();
 
                 outputWriter.WriteLine("BEST");
                 outputWriter.WriteLine();
@@ -261,13 +262,15 @@ namespace ModelLearning
             yield return Median(runTimes);
         }
 
-        private double Median(double[] collection)
+        private double Median(IEnumerable<double> collection)
         {
-            double median = collection[(collection.Length / 2)];
+            double[] orderedCollection = collection.OrderBy(i => i).ToArray();
 
-            if ((collection.Length % 2) == 0)
+            double median = orderedCollection[(orderedCollection.Length / 2)];
+
+            if ((orderedCollection.Length % 2) == 0)
             {
-                median = ((median + collection[((collection.Length / 2) - 1)]) / 2);
+                median = ((median + orderedCollection[((orderedCollection.Length / 2) - 1)]) / 2);
             }
 
             return median;

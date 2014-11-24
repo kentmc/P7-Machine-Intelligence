@@ -8,13 +8,11 @@ using Accord.Statistics.Models.Markov;
 namespace ModelLearning {
     class Program {
         static void Main(string[] args) {
-            double threshold = 0.001;
-            int max_states = 20;
             List<Learner> learners = new List<Learner>() {
                 new Learners.UniformLearner(),
                 new Learners.BaumWelchLearner(),
-                new Learners.KentManfredLearner(max_states, threshold),
-                new Learners.SparseBaumWelchLearner(max_states, threshold),
+                //new Learners.KentManfredLearner(max_states, threshold),
+                //new Learners.SparseBaumWelchLearner(max_states, threshold),
                 new Learners.JaegerLearner(),
                 new Learners.JLearner()
             };
