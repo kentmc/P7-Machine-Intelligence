@@ -17,9 +17,7 @@ namespace ModelLearning.Learners {
         /// </summary>
         /// <param name="states"></param>
         /// <param name="tolerance"></param>
-        public SparseBaumWelchLearner(int states, double tolerance) {
-            this.tolerance = tolerance;
-            this.states = states;
+        public SparseBaumWelchLearner() {
             ran = new Random();
         }
 

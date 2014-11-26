@@ -128,7 +128,7 @@ namespace ModelLearning.Learners {
                 return bestHMM.Evaluate(sequence);
         }
 
-        public abstract void Initialise(LearnerParameters parameters, int iteration) {
+        public override void Initialise(LearnerParameters parameters, int iteration) {
             alpha = (int)parameters.AdditionalParameters["alpha"];
             beta = (int)parameters.AdditionalParameters["beta"];
             threshold = parameters.MinimumThreshold + iteration * parameters.ThresholdStepSize;
