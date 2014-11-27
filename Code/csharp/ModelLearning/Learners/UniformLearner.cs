@@ -6,8 +6,8 @@ using System.Text;
 namespace ModelLearning.Learners {
     class UniformLearner : Learner {
 
-        public override double CalculateProbability(int[] sequence) {
-            return 1.0;
+        public override double CalculateProbability(int[] sequence, bool logarithm = false) {
+            return (logarithm ? 0.0 : 1.0);
         }
 
         public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {

@@ -76,7 +76,9 @@ namespace ModelLearning
                 foreach (Learner learner in learners)
                     learner.SetVerbosity(verbose);
 
-                Benchmark benchmark = new Benchmark(benchmarkName, selected_learners, selected_datasets, num_runs);
+                bool useTestData = ShowInterfaceSelectYesNo("Use PautomaC test data?");
+
+                Benchmark benchmark = new Benchmark(benchmarkName, selected_learners, selected_datasets, num_runs, useTestData);
                 benchmark.Run();
 
                 //Run benchmarker

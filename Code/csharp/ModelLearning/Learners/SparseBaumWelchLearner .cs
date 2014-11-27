@@ -21,11 +21,11 @@ namespace ModelLearning.Learners {
             ran = new Random();
         }
 
-        public override double CalculateProbability(int[] sequence) {
+        public override double CalculateProbability(int[] sequence, bool logarithm = false) {
             if (sequence.Length == 0)
-                return 1.0;
+                return (logarithm ? 1.0 : 0.0);
             else
-                return hmm.Evaluate(sequence);
+                return hmm.Evaluate(sequence, logarithm);
         }
 
         public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
@@ -56,7 +56,7 @@ namespace ModelLearning.Learners {
         public override void Initialise(LearnerParameters parameters, int iteration)
         {
             tolerance = (double)parameters.AdditionalParameters["threshold"];
-            states = (parameters.MinimumNumberOfStates + (iteration * parameters.StateStepSize));
+            states = (int)(parameters.Minimum + (iteration * parameters.StepSize));
         }
 
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)

@@ -13,7 +13,7 @@ namespace ModelLearning {
             verbose = val;
         }
 
-        public abstract double CalculateProbability(int[] sequence);
+        public abstract double CalculateProbability(int[] sequence, bool logarithm = false);
 
         public abstract void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData);
 

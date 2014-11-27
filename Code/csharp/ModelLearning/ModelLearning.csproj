@@ -62,6 +62,7 @@
     <Compile Include="Learner.cs" />
     <Compile Include="LearnerParameters.cs" />
     <Compile Include="Learners\JLearner.cs" />
+    <Compile Include="Learners\PadawanLearner.cs" />
     <Compile Include="Learners\SparseBaumWelchLearner .cs" />
     <Compile Include="Learners\BaumWelchLearner.cs" />
     <Compile Include="Learners\JaegerLearner.cs" />
