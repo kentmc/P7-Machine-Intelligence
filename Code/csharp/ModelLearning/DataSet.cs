@@ -15,21 +15,23 @@ namespace ModelLearning
 
         public double[] SolutionData { get; private set; }
 
-        private SequenceData unsortedData;
+        private SequenceData pautomacTrainingData;
 
         public DataSet(int number)
         {
             Number = number;
 
-            unsortedData = DataLoader.LoadSequences(String.Format(@"Data/{0}.pautomac.train", Number));
+            pautomacTrainingData = DataLoader.LoadSequences(String.Format(@"Data/{0}.pautomac.train", Number));
             TestData = DataLoader.LoadSequences(String.Format(@"Data/{0}.pautomac.test", Number));
 
             SolutionData = DataLoader.LoadSolutions(String.Format(@"Data/{0}.pautomac_solution.txt", Number));
         }
 
-        public void SplitData(double ratio)
+        public void SplitData(double ratio, int run)
         {
-            Tuple<SequenceData, SequenceData> dataSplit = unsortedData.RandomSplit(ratio);
+
+            //shuffle according to Run and Dataset ID
+            Tuple<SequenceData, SequenceData> dataSplit = pautomacTrainingData.RandomSplit(ratio, run * 100 + Number);
 
             TrainingData = dataSplit.Item1;
             ValidationData = dataSplit.Item2;

@@ -62,11 +62,11 @@ namespace ModelLearning {
             return non_empty_sequences;
         }
 
-        public Tuple<SequenceData, SequenceData> RandomSplit(double ratio) {
+        public Tuple<SequenceData, SequenceData> RandomSplit(double ratio, int random_seed) {
             SequenceData part1 = new SequenceData(NumSymbols);
             SequenceData part2 = new SequenceData(NumSymbols);
             List<int[]> shuffled = sequence_list.Select(e => e).ToList();
-            Utilities.Shuffle(shuffled, 13764997);
+            Utilities.Shuffle(shuffled, random_seed);
             int size_part1 = (int)(shuffled.Count * ratio);
             for (int i = 0; i < shuffled.Count; i++) {
                 if (i < size_part1)
