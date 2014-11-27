@@ -224,7 +224,7 @@ namespace ModelLearning
 
                 watch.Reset();
 
-                dataSet.SplitData(2.0 / 3.0);
+                dataSet.SplitData(2.0 / 3.0, i);
 
                 watch.Start();
 
