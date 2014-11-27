@@ -66,7 +66,7 @@ namespace ModelLearning {
             SequenceData part1 = new SequenceData(NumSymbols);
             SequenceData part2 = new SequenceData(NumSymbols);
             List<int[]> shuffled = sequence_list.Select(e => e).ToList();
-            Utilities.Shuffle(shuffled);
+            Utilities.Shuffle(shuffled, 13764997);
             int size_part1 = (int)(shuffled.Count * ratio);
             for (int i = 0; i < shuffled.Count; i++) {
                 if (i < size_part1)

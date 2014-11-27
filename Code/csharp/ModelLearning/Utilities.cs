@@ -5,13 +5,14 @@ using System.Text;
 
 namespace ModelLearning {
     static class Utilities {
-        /// <summary>
+       /// <summary>
         /// Shuffle any (I)List with an extension method based on the Fisher-Yates shuffle :
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
-        public static void Shuffle<T>(IList<T> list) {
-            Random rng = new Random();
+       /// </summary>
+       /// <typeparam name="T"></typeparam>
+       /// <param name="list">List so shuffle</param>
+       /// <param name="seed">Seed to use (default: -1 is system time specific seed)</param>
+        public static void Shuffle<T>(IList<T> list, int seed = -1) {
+            Random rng = seed == -1 ? new Random() : new Random(seed);
             int n = list.Count;
             while (n > 1) {
                 n--;
