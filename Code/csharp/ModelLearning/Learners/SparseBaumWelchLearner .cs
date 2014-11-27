@@ -7,9 +7,9 @@ using Accord.Statistics.Models.Markov;
 namespace ModelLearning.Learners {
     class SparseBaumWelchLearner : Learner {
 
-        HiddenMarkovModel hmm;
-        readonly double tolerance;
-        readonly int states;
+        SparseHiddenMarkovModel hmm;
+        double tolerance;
+        int states;
         Random ran;
 
         /// <summary>
@@ -17,9 +17,7 @@ namespace ModelLearning.Learners {
         /// </summary>
         /// <param name="states"></param>
         /// <param name="tolerance"></param>
-        public SparseBaumWelchLearner(int states, double tolerance) {
-            this.tolerance = tolerance;
-            this.states = states;
+        public SparseBaumWelchLearner() {
             ran = new Random();
         }
 
@@ -64,12 +62,26 @@ namespace ModelLearning.Learners {
             Utilities.Shuffle(shuffled);
 
             graph.Normalize();
-            hmm = ModelConverter.Graph2HMM(graph);
+            hmm = SparseHiddenMarkovModel.FromGraph(graph);
             hmm.Learn(trainingData.GetNonempty(), tolerance);
         }
 
         public override string Name() {
             return "Sparse Baum Welch Learner";
+        }
+
+        public override void Initialise(LearnerParameters parameters, int iteration)
+        {
+            tolerance = (double)parameters.AdditionalParameters["threshold"];
+            states = (parameters.MinimumNumberOfStates + (iteration * parameters.StateStepSize));
+        }
+
+        public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)
+        {
+            outputWriter.WriteLine("States: {0}", hmm.NumberOfStates);
+            outputWriter.WriteLine("Symbols: {0}", hmm.NumberOfSymbols);
+            outputWriter.WriteLine("Threshold: {0}", tolerance);
+            hmm.Save(outputWriter, csvWriter);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace ModelLearning {
         }
 
         /// <summary>
-        /// Returns a deep copy of all sequences
+        /// Returns all sequences
         /// </summary>
         /// <returns></returns>
         public int[][] GetAll() {
