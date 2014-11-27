@@ -121,17 +121,18 @@ namespace ModelLearning.Learners {
             return "KentManfredLearner";
         }
 
-        public override double CalculateProbability(int[] sequence) {
+        public override double CalculateProbability(int[] sequence, bool logarithm = false)
+        {
             if (sequence.Length == 0)
-                return 1.0;
+                return (logarithm ? 0.0 : 1.0);
             else
-                return bestHMM.Evaluate(sequence);
+                return bestHMM.Evaluate(sequence, logarithm);
         }
 
         public override void Initialise(LearnerParameters parameters, int iteration) {
             alpha = (int)parameters.AdditionalParameters["alpha"];
             beta = (int)parameters.AdditionalParameters["beta"];
-            threshold = parameters.MinimumThreshold + iteration * parameters.ThresholdStepSize;
+            threshold = parameters.Minimum + iteration * parameters.StepSize;
         }
 
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)

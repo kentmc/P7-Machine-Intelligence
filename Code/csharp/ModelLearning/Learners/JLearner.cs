@@ -12,15 +12,15 @@ namespace ModelLearning.Learners
 
         private double threshold;
 
-        public override double CalculateProbability(int[] sequence)
+        public override double CalculateProbability(int[] sequence, bool logarithm = false)
         {
             if (sequence.Length == 0)
             {
-                return 1.0;
+                return (logarithm ? 0.0 : 1.0);
             }
             else
             {
-                return hmm.Evaluate(sequence);
+                return hmm.Evaluate(sequence, logarithm);
             }
         }
 
@@ -206,7 +206,7 @@ namespace ModelLearning.Learners
 
         public override void Initialise(LearnerParameters parameters, int iteration)
         {
-            threshold = (parameters.MinimumThreshold + (iteration * parameters.ThresholdStepSize));
+            threshold = (parameters.Minimum + (iteration * parameters.StepSize));
         }
 
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)

@@ -7,19 +7,14 @@ namespace ModelLearning
 {
     class LearnerParameters
     {
-        public double MinimumThreshold { get; private set; }
+        public bool RunningParameterDecimal { get; private set; }
+        public string RunningParameterName { get; private set; }
 
-        public double MaximumThreshold { get; private set; }
+        public double Minimum{ get; private set; }
 
-        public double ThresholdStepSize { get; private set; }
+        public double Maximum { get; private set; }
 
-        public int NumberOfStates { get; private set; }
-
-        public int MinimumNumberOfStates { get; private set; }
-
-        public int MaximumNumberOfStates { get; private set; }
-
-        public int StateStepSize { get; private set; }
+        public double StepSize { get; private set; }
 
         public Dictionary<string, object> AdditionalParameters { get; private set; }
 
@@ -31,25 +26,33 @@ namespace ModelLearning
             {
                 case "baum welch learner":
                     {
+                        RunningParameterDecimal = false;
+                        RunningParameterName = "States";
+
                         Console.WriteLine("Configure Baum-Welch Learner:");
                         Console.Write("Convergence threshold: ");
                         AdditionalParameters.Add("threshold", Double.Parse(Console.ReadLine()));
 
-                        goto case "DEF_STATES";
+                        Console.WriteLine("Number of States:");
+                        goto case "DEF_RUNNING_PARAM";
                     }
-                case "jaeger learner":
+                case "greedy state splitter":
                     {
-                        Console.WriteLine("Configure Greedy State Splitting Learner:");
-                        Console.Write("Epsilon: ");
-                        AdditionalParameters.Add("epsilon", Double.Parse(Console.ReadLine()));
+                        RunningParameterDecimal = true;
+                        RunningParameterName = "Epsilon";
 
-                        goto case "DEF_THRESHOLD";
+                        Console.WriteLine("Configure Greedy State Splitting Learner:");
+                        Console.Write("Convergence Threshold: ");
+                        AdditionalParameters.Add("threshold", Double.Parse(Console.ReadLine()));
+
+                        Console.WriteLine("Define Epsilon Range:");
+                        goto case "DEF_RUNNING_PARAM";
                     }
                 case "jlearner":
                     {
                         Console.WriteLine("Configure JLearner:");
 
-                        goto case "DEF_THRESHOLD";
+                        goto case "DEF_RUNNING_PARAM";
                     }
                 case "kentmanfredlearner":
                     {
@@ -61,15 +64,19 @@ namespace ModelLearning
                         Console.Write("Beta: ");
                         AdditionalParameters.Add("beta", Double.Parse(Console.ReadLine()));
 
-                        goto case "DEF_THRESHOLD";
+                        goto case "DEF_RUNNING_PARAM";
                     }
                 case "sparse baum welch learner":
                     {
+                        RunningParameterDecimal = false;
+                        RunningParameterName = "States";
+
                         Console.WriteLine("Configure Sparse Baum-Welch Learner:");
                         Console.Write("Convergence threshold: ");
                         AdditionalParameters.Add("threshold", Double.Parse(Console.ReadLine()));
 
-                        goto case "DEF_STATES";
+                        Console.WriteLine("Number of States:");
+                        goto case "DEF_RUNNING_PARAM";
                     }
                 case "uniform learner":
                     {
@@ -77,29 +84,16 @@ namespace ModelLearning
 
                         break;
                     }
-                case "DEF_STATES":
+                case "DEF_RUNNING_PARAM":
                     {
-                        Console.Write("Minimum Number of States: ");
-                        MinimumNumberOfStates = Int32.Parse(Console.ReadLine());
+                        Console.Write("Minimum: ");
+                        Minimum = Double.Parse(Console.ReadLine());
 
-                        Console.Write("Maximum Number of States: ");
-                        MaximumNumberOfStates = Int32.Parse(Console.ReadLine());
+                        Console.Write("Maximum: ");
+                        Maximum = Double.Parse(Console.ReadLine());
 
                         Console.Write("Step Size: ");
-                        StateStepSize = Int32.Parse(Console.ReadLine());
-
-                        break;
-                    }
-                case "DEF_THRESHOLD":
-                    {
-                        Console.Write("Minimum Threshold: ");
-                        MinimumThreshold = Double.Parse(Console.ReadLine());
-
-                        Console.Write("Maximum Threshold: ");
-                        MaximumThreshold = Double.Parse(Console.ReadLine());
-
-                        Console.Write("Step Size: ");
-                        ThresholdStepSize = Double.Parse(Console.ReadLine());
+                        StepSize = Double.Parse(Console.ReadLine());
 
                         break;
                     }
