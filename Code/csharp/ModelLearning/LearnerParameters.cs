@@ -54,17 +54,19 @@ namespace ModelLearning
 
                         goto case "DEF_RUNNING_PARAM";
                     }
-                case "kentmanfredlearner":
+                case "greedyextendlearner":
                     {
                         Console.WriteLine("Configure Greedy Extend Learner:");
 
-                        Console.Write("Alpha: ");
-                        AdditionalParameters.Add("alpha", Double.Parse(Console.ReadLine()));
+                        Console.Write("Final BW threshold:");
+                        AdditionalParameters.Add("finalBWThreshold", Double.Parse(Console.ReadLine()));
 
-                        Console.Write("Beta: ");
-                        AdditionalParameters.Add("beta", Double.Parse(Console.ReadLine()));
+                        Console.Write("Max expand attempts:");
+                        AdditionalParameters.Add("maxExpandAttempts", int.Parse(Console.ReadLine()));
 
-                        goto case "DEF_RUNNING_PARAM";
+                        Console.Write("Maximum number of states:");
+                        AdditionalParameters.Add("maxStates", Int32.Parse(Console.ReadLine()));
+                        break;
                     }
                 case "sparse baum welch learner":
                     {

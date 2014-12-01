@@ -5,19 +5,26 @@ using System.Text;
 using Accord.Statistics.Models.Markov;
 
 namespace ModelLearning.Learners {
-    class KentManfredLearner : Learner {
+    class GreedyExtendLearner : Learner {
 
         private Random ran;
-        private SparseHiddenMarkovModel bestHMM;
+        private HiddenMarkovModel bestHMM;
         private double bestLikelihood;
-        private int alpha;
-        private int beta;
+        private int maxExpandAttempts;
+        private double finalBWThreshold;
+        private System.IO.StreamWriter intermediateOutputFile;
+        private string intermediateOutputFileName;
+        private int run = 0;
 
         //settings
-        private double threshold;
+        private int maxStates;
 
-        public KentManfredLearner() {
+        public GreedyExtendLearner() {
             ran = new Random();
+        }
+
+        public void SetIntermediateOutputFile(string fileName) {
+            intermediateOutputFileName = fileName;
         }
 
         private HMMGraph RandomSingleNodeGraph(int num_symbols) {
@@ -34,41 +41,51 @@ namespace ModelLearning.Learners {
         }
 
         public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
+            intermediateOutputFile = new System.IO.StreamWriter(intermediateOutputFileName + (run++) + ".csv");
+            intermediateOutputFile.WriteLine("States, Likelihood");
+
             HMMGraph graph = RandomSingleNodeGraph(trainingData.NumSymbols);
-            bestHMM = SparseHiddenMarkovModel.FromGraph(graph);
+            bestHMM = ModelConverter.Graph2HMM(graph);
             bestLikelihood = bestHMM.Evaluate(trainingData.GetAll(), true);
-            double ll_increase = threshold;
-            while(ll_increase >= threshold){
+            while (bestHMM.States < maxStates){
                 double last_ll = bestLikelihood;
-                WriteLine("Number of states: " + bestHMM.NumberOfStates);
-                SparseHiddenMarkovModel current_best_hmm = null;
-                for (int i = 0; i < alpha; i++) {
-                    graph = bestHMM.ToGraph();
+                WriteLine("Number of states: " + bestHMM.States);
+                for (int i = 0; i < maxExpandAttempts; i++) { //number of times to try adding a random node
+                    graph = ModelConverter.HMM2Graph(bestHMM);
                     RandomlyExtendGraphSparsely(graph);
-                    SparseHiddenMarkovModel hmm = SparseHiddenMarkovModel.FromGraph(graph);
-                    hmm.Learn(testData.GetNonempty(), beta); //Run the BaumWelch algorithm
+                    HiddenMarkovModel hmm = ModelConverter.Graph2HMM(graph);
+                    hmm.Learn(testData.GetNonempty(), 1); //Run the BaumWelch algorithm
                     double likelihood = hmm.Evaluate(trainingData.GetAll(), true);
                     if (likelihood > bestLikelihood) {
                         bestLikelihood = likelihood;
-                        current_best_hmm = hmm;
+                        bestHMM = hmm;
                         WriteLine("+");
+                        break;
                     }
                     else {
                         WriteLine("-");
                     }
                 }
-                if (current_best_hmm != null){
-                    bestHMM = current_best_hmm;
-                    WriteLine("Likelihood increased to " + bestLikelihood);
+                if (last_ll == bestLikelihood) { //nothing improved, so stop
+                    WriteLine("Likelihood not increased for " + maxExpandAttempts + " attempts");
+                    break;
                 }
-                else
-                    WriteLine("Likelihood stays the same");
-                ll_increase = bestLikelihood - last_ll;
+                else {
+                    WriteLine("Likelihood increased to: " + bestLikelihood);
+                    OutputIntermediate();
+                }
             }
-            WriteLine("Runs Baum Welch last time with the right threshold");
-            bestHMM.Learn(trainingData.GetNonempty(), threshold);
+            WriteLine("Runs Baum Welch last time with the final threshold");
+            bestHMM.Learn(trainingData.GetNonempty(), finalBWThreshold);
+            bestLikelihood = bestHMM.Evaluate(validationData.GetAll(), true);
+            WriteLine("Final likelihood: " + bestLikelihood);
+
+            intermediateOutputFile.Close();
         }
 
+        private void OutputIntermediate() {
+            intermediateOutputFile.WriteLine(bestHMM.States + ", " + bestLikelihood);
+        }
 
         /// <summary>
         /// Extends the graph by adding a new node with random transitions, emissions and initial prabability.
@@ -118,7 +135,7 @@ namespace ModelLearning.Learners {
         }
 
         public override string Name() {
-            return "KentManfredLearner";
+            return "GreedyExtendLearner";
         }
 
         public override double CalculateProbability(int[] sequence, bool logarithm = false)
@@ -130,20 +147,22 @@ namespace ModelLearning.Learners {
         }
 
         public override void Initialise(LearnerParameters parameters, int iteration) {
-            alpha = (int)parameters.AdditionalParameters["alpha"];
-            beta = (int)parameters.AdditionalParameters["beta"];
-            threshold = parameters.Minimum + iteration * parameters.StepSize;
+            maxStates = (int)parameters.AdditionalParameters["maxStates"];
+            maxExpandAttempts = (int)parameters.AdditionalParameters["maxExpandAttempts"];
+            finalBWThreshold = (double)parameters.AdditionalParameters["finalBWThreshold"];
         }
 
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)
         {
-            outputWriter.WriteLine("Number of States: {0}", bestHMM.NumberOfStates);
-            outputWriter.WriteLine("Number of Symbols: {0}", bestHMM.NumberOfSymbols);
-            outputWriter.WriteLine("Alpha: {0}", alpha);
-            outputWriter.WriteLine("Beta: {0}", alpha);
+            outputWriter.WriteLine("Number of States: {0}", bestHMM.States);
+            outputWriter.WriteLine("Number of Symbols: {0}", bestHMM.States);
+            outputWriter.WriteLine("Max expand attempts: {0}", maxExpandAttempts);
+            outputWriter.WriteLine("Final BW threshold: {0}", finalBWThreshold);
+            outputWriter.WriteLine("Max states: {0}", maxStates);
+            outputWriter.WriteLine("Log likelihood {0}", bestLikelihood);
             outputWriter.WriteLine();
 
-            bestHMM.Save(outputWriter, csvWriter);
+            //bestHMM.Save(outputWriter, csvWriter);
         }
 
     }

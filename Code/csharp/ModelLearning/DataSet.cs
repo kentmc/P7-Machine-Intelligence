@@ -29,7 +29,6 @@ namespace ModelLearning
 
         public void SplitData(double ratio, int run)
         {
-
             //shuffle according to Run and Dataset ID
             Tuple<SequenceData, SequenceData> dataSplit = pautomacTrainingData.RandomSplit(ratio, run * 100 + Number);
 

@@ -121,6 +121,12 @@ namespace ModelLearning
         {
             Console.WriteLine("Benchmarking Learner {0}...", learner.Name());
 
+            //This sets up a file for intermediate output during learning
+            if (learner is Learners.GreedyExtendLearner) {
+                string intermediateOutputFileName = String.Format(@"Benchmark_{0}/DataSet_{1}/{2}", Name, dataSet.Number, "intermediate");
+                ((Learners.GreedyExtendLearner)learner).SetIntermediateOutputFile(intermediateOutputFileName);
+            }
+
             Dictionary<int, double> parameterAverageScores = new Dictionary<int, double>();
             Dictionary<int, double> parameterMedianScores = new Dictionary<int, double>();
             Dictionary<int, double> parameterAverageRuntimes = new Dictionary<int, double>();

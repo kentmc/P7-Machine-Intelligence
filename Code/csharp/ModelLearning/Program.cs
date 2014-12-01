@@ -14,7 +14,7 @@ namespace ModelLearning
             List<Learner> learners = new List<Learner>() {
                 new Learners.UniformLearner(),
                 new Learners.BaumWelchLearner(),
-                new Learners.KentManfredLearner(),
+                new Learners.GreedyExtendLearner(),
                 new Learners.SparseBaumWelchLearner(),
                 new Learners.JaegerLearner(),
                 new Learners.JLearner()
