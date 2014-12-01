@@ -58,16 +58,16 @@ namespace ModelLearning {
             for (int r = 0; r < num_runs; r++) {
                 Console.Write("\nRun " + (r+1) + " / " + num_runs);
                 //Split training data randomly into train and validation sets
-                Tuple<SequenceData, SequenceData> split = trainData.RandomSplit(0.6666666);
-                trainData = split.Item1;
-                SequenceData validationData = split.Item2;
+                //Tuple<SequenceData, SequenceData> split = trainData.RandomSplit(0.6666666);
+                //trainData = split.Item1;
+                //SequenceData validationData = split.Item2;
 
                 foreach (Learner learner in learners) {
                     Console.WriteLine("\nEvaluating learner " + learner.Name());
                     //Track how much time learning takes for the particular Learner
                     Stopwatch sw = new Stopwatch();
                     sw.Start();
-                    learner.Learn(trainData, validationData, testData);
+                    //learner.Learn(trainData, validationData, testData);
                     sw.Stop();
 
                     //Save score achieved and time spent

@@ -13,16 +13,12 @@ namespace ModelLearning.Learners {
         private int states;
         private double tolerance;
 
-        public BaumWelchLearner(int states, double tolerance) {
-            this.states = states;
-            this.tolerance = tolerance;
-        }
-
-        public override double CalculateProbability(int[] sequence) {
+        public override double CalculateProbability(int[] sequence, bool logarithm = false)
+        {
             if (sequence.Length == 0)
-                return 1.0;
+                return (logarithm ? 0.0 : 1.0);
             else
-                return hmm.Evaluate(sequence);
+                return hmm.Evaluate(sequence, logarithm);
         }
 
         public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
@@ -90,13 +86,12 @@ namespace ModelLearning.Learners {
 
         public override void Initialise(LearnerParameters parameters, int iteration)
         {
-            tolerance = parameters.Threshold;
-            states = (parameters.MinimumNumberOfStates + (iteration * parameters.StateStepSize));
+            tolerance = (double)parameters.AdditionalParameters["threshold"];
+            states = (int)(parameters.Minimum + (iteration * parameters.StepSize));
         }
 
         public override void Save(StreamWriter outputWriter, StreamWriter csvWriter)
         {
-            outputWriter.WriteLine(Name());
             outputWriter.WriteLine("Number of States: {0}", states);
             outputWriter.WriteLine("Number of Symbols: {0}", hmm.Symbols);
             outputWriter.WriteLine("Threshold: {0}", tolerance);

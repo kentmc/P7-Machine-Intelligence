@@ -12,20 +12,15 @@ namespace ModelLearning.Learners
 
         private double threshold;
 
-        public JLearner(double threshold)
-        {
-            this.threshold = threshold;
-        }
-
-        public override double CalculateProbability(int[] sequence)
+        public override double CalculateProbability(int[] sequence, bool logarithm = false)
         {
             if (sequence.Length == 0)
             {
-                return 1.0;
+                return (logarithm ? 0.0 : 1.0);
             }
             else
             {
-                return hmm.Evaluate(sequence);
+                return hmm.Evaluate(sequence, logarithm);
             }
         }
 
@@ -61,7 +56,8 @@ namespace ModelLearning.Learners
                     }
 
                     //int numberOfStatesToAdd = Math.Max(0, (int)Math.Min(hmm.NumberOfStates, Math.Ceiling(Math.Log(Math.Pow(Math.Log(newLikelihood - likelihood), (1 / stagnation)) / (Math.Sqrt(temperature) * threshold)))));
-                    int numberOfStatesToAdd = (((stagnation / temperature) > threshold) ? 1 : 0);
+                    //int numberOfStatesToAdd = (((stagnation / temperature) > threshold) ? 1 : 0);
+                    int numberOfStatesToAdd = 1;
                     foreach (int weakPoint in IdentifyWeakStates(validationData, numberOfStatesToAdd))
                     {
                         SplitState(graph, weakPoint);
@@ -78,23 +74,23 @@ namespace ModelLearning.Learners
                     WriteLine(String.Format("Added {0} states", numberOfStatesToAdd));
                 }
 
-                //temperature *= Math.Max(2, Math.Sqrt(hmm.NumberOfStates));
-                temperature *= Math.Max(2, stagnation);
+                temperature *= Math.Max(2, Math.Sqrt(hmm.NumberOfStates));
+                //temperature *= Math.Max(2, stagnation);
                 epsilon = (1 / Math.Log(temperature));
 
-                //double bwThreshold = Math.Pow(Math.Max(threshold, (1 / (-Math.Min((-1), Math.Log(Math.Min((1 - threshold), (1 / temperature)) / (1 - threshold)))))), stagnation);
-                int bwIterations = Math.Max(1, (int)Math.Log(stagnation * temperature * threshold));
+                double bwThreshold = Math.Pow(Math.Max(threshold, (1 / (-Math.Min((-1), Math.Log(Math.Min((1 - threshold), (1 / temperature)) / (1 - threshold)))))), stagnation);
+                //int bwIterations = Math.Max(1, (int)Math.Log(stagnation * temperature * threshold));
 
-                //WriteLine(String.Format("Running Baum-Welch with threshold {0}...", bwThreshold));
-                WriteLine(String.Format("Running Baum-Welch with {0} iterations...", bwIterations));
+                WriteLine(String.Format("Running Baum-Welch with threshold {0}...", bwThreshold));
+                //WriteLine(String.Format("Running Baum-Welch with {0} iterations...", bwIterations));
 
-                //hmm.Learn(trainingData.GetNonempty(), bwThreshold);
-                hmm.Learn(trainingData.GetNonempty(), 0.0, bwIterations);
+                hmm.Learn(trainingData.GetNonempty(), bwThreshold);
+                //hmm.Learn(trainingData.GetNonempty(), 0.0, bwIterations);
 
                 likelihood = newLikelihood;
                 newLikelihood = 0.0;
 
-                foreach (int[] signal in trainingData.GetNonempty())
+                foreach (int[] signal in validationData.GetNonempty())
                 {
                     newLikelihood += hmm.Evaluate(signal, true);
                 }
@@ -107,7 +103,7 @@ namespace ModelLearning.Learners
                 WriteLine(String.Format("Log Likelihood: {0}", newLikelihood));
                 WriteLine(String.Empty);
             }
-            while ((Math.Abs(newLikelihood - likelihood) / Math.Sqrt(temperature)) > threshold);
+            while ((Math.Abs(newLikelihood - likelihood) * Math.Pow(epsilon, 2)) > threshold);
         }
 
         private IEnumerable<int> IdentifyWeakStates(SequenceData validationData, int numberOfStates = 1) //Using Viterby
@@ -210,7 +206,7 @@ namespace ModelLearning.Learners
 
         public override void Initialise(LearnerParameters parameters, int iteration)
         {
-            throw new NotImplementedException();
+            threshold = (parameters.Minimum + (iteration * parameters.StepSize));
         }
 
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)

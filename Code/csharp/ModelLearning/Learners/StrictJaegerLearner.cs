@@ -162,11 +162,12 @@ namespace ModelLearning.Learners
             return "Strict Jaeger Learner";
         }
 
-        public override double CalculateProbability(int[] sequence) {
+        public override double CalculateProbability(int[] sequence, bool logarithm = false)
+        {
             if (sequence.Length == 0)
-                return 1.0;
+                return (logarithm ? 0.0 : 1.0);
             else
-                return bestHMM.Evaluate(sequence);
+                return bestHMM.Evaluate(sequence, logarithm);
         }
 
         public override void Initialise(LearnerParameters parameters, int iteration)

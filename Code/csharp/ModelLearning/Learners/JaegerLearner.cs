@@ -13,19 +13,11 @@ namespace ModelLearning.Learners
         //private HiddenMarkovModel bestHMM;
 
         private double epsilon;
+        private double threshold;
 
-        //settings
-        private int maxStates;
-        private double baumwelchThreshold;
-
-
-        public JaegerLearner(int maxStates, double baumwelchThreshold, double precision)
+        public JaegerLearner()
         {
-            this.maxStates = maxStates;
-            this.baumwelchThreshold = baumwelchThreshold;
             random = new Random();
-
-            epsilon = (1 - precision);
         }
 
         private HMMGraph Random2NodeGraph(int num_symbols) {
@@ -70,9 +62,12 @@ namespace ModelLearning.Learners
             //bestHMM = ModelConverter.Graph2HMM(graph);
 
             //bestHMM.Learn(trainingData, baumwelchThreshold);
-            bestHMM.Learn(trainingData.GetNonempty(), baumwelchThreshold);
+            bestHMM.Learn(trainingData.GetNonempty(), 4);
 
-            while (bestHMM.NumberOfStates < maxStates)
+            double likelihood = Double.MinValue;
+            double newLikelihood = 0;
+
+            while (Math.Abs(likelihood - newLikelihood) > threshold)
             //while (bestHMM.States < maxStates)
             {
                 WriteLine("Taking one more iteration");
@@ -119,9 +114,13 @@ namespace ModelLearning.Learners
 
                 WriteLine("Running BaumWelch");
                 //bestHMM.Learn(trainingData, baumwelchThreshold);
-                bestHMM.Learn(trainingData.GetNonempty(), baumwelchThreshold);
+                bestHMM.Learn(trainingData.GetNonempty(), 4);
 
-                WriteLine("Log Likelihood: " + LogLikelihood(bestHMM, validationData));
+                likelihood = newLikelihood;
+                newLikelihood = LogLikelihood(bestHMM, validationData);
+
+                WriteLine("Sparsity: " + bestHMM.TransitionSparsity);
+                WriteLine("Log Likelihood: " + newLikelihood);
             }
         }
 
@@ -165,24 +164,35 @@ namespace ModelLearning.Learners
             graph.Normalize();
         }
 
-        public override string Name() {
-            return "Jaeger Learner";
+        public override string Name()
+        {
+            return "Greedy State Splitter";
         }
 
-        public override double CalculateProbability(int[] sequence) {
+        public override double CalculateProbability(int[] sequence, bool logarithm = false)
+        {
             if (sequence.Length == 0)
-                return 1.0;
+                return (logarithm ? 0.0 : 1.0);
             else
-                return bestHMM.Evaluate(sequence);
+                return bestHMM.Evaluate(sequence, logarithm);
         }
 
         public override void Initialise(LearnerParameters parameters, int iteration)
         {
-            throw new NotImplementedException();
+            //threshold = (parameters.MinimumThreshold + (iteration * parameters.ThresholdStepSize));
+
+            //epsilon = (double)parameters.AdditionalParameters["epsilon"];
+
+            epsilon = (parameters.Minimum + (iteration * parameters.StepSize));
+
+            threshold = (double)parameters.AdditionalParameters["threshold"];
         }
 
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)
         {
+            outputWriter.WriteLine("Epsilon: {0}", epsilon);
+            outputWriter.WriteLine();
+
             bestHMM.Save(outputWriter, csvWriter);
         }
     }

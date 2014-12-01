@@ -7,9 +7,9 @@ using Accord.Statistics.Models.Markov;
 namespace ModelLearning.Learners {
     class SparseBaumWelchLearner : Learner {
 
-        HiddenMarkovModel hmm;
-        readonly double tolerance;
-        readonly int states;
+        SparseHiddenMarkovModel hmm;
+        double tolerance;
+        int states;
         Random ran;
 
         /// <summary>
@@ -17,34 +17,15 @@ namespace ModelLearning.Learners {
         /// </summary>
         /// <param name="states"></param>
         /// <param name="tolerance"></param>
-        public SparseBaumWelchLearner(int states, double tolerance) {
-            this.tolerance = tolerance;
-            this.states = states;
+        public SparseBaumWelchLearner() {
             ran = new Random();
         }
 
-        public override double CalculateProbability(int[] sequence) {
+        public override double CalculateProbability(int[] sequence, bool logarithm = false) {
             if (sequence.Length == 0)
-                return 1.0;
+                return (logarithm ? 1.0 : 0.0);
             else
-                return hmm.Evaluate(sequence);
-        }
-
-        /// <summary>
-        /// Shuffle any (I)List with an extension method based on the Fisher-Yates shuffle :
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
-        public void Shuffle<T>(IList<T> list) {
-            Random rng = new Random();
-            int n = list.Count;
-            while (n > 1) {
-                n--;
-                int k = rng.Next(n + 1);
-                T value = list[k];
-                list[k] = list[n];
-                list[n] = value;
-            }
+                return hmm.Evaluate(sequence, logarithm);
         }
 
         public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
@@ -64,7 +45,7 @@ namespace ModelLearning.Learners {
             Utilities.Shuffle(shuffled);
 
             graph.Normalize();
-            hmm = ModelConverter.Graph2HMM(graph);
+            hmm = SparseHiddenMarkovModel.FromGraph(graph);
             hmm.Learn(trainingData.GetNonempty(), tolerance);
         }
 
@@ -74,12 +55,16 @@ namespace ModelLearning.Learners {
 
         public override void Initialise(LearnerParameters parameters, int iteration)
         {
-            throw new NotImplementedException();
+            tolerance = (double)parameters.AdditionalParameters["threshold"];
+            states = (int)(parameters.Minimum + (iteration * parameters.StepSize));
         }
 
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)
         {
-            throw new NotImplementedException();
+            outputWriter.WriteLine("States: {0}", hmm.NumberOfStates);
+            outputWriter.WriteLine("Symbols: {0}", hmm.NumberOfSymbols);
+            outputWriter.WriteLine("Threshold: {0}", tolerance);
+            hmm.Save(outputWriter, csvWriter);
         }
     }
 }
