@@ -1,0 +1,49 @@
+\section{Other Probabilistic Models}
+\subsection{Markov models}
+
+\subsection{n-Gram}
+The n-Gram model is used to learn probabilities of observing symbol $s$ at timepoint $t$; $s_t$, given the $t-1$ prior symbols. For instance a 3-gram, or trigram, the probability of producing symbol n will look like: 
+\begin{description}
+\item $Pr(s_t | s_t-2, s_t-1)$. 
+\end{description}
+And determining the probability for an observed sequence can then be defined by:
+\begin{description}
+\item $$Pr(s_1, s_2 \dots s_n) = \prod_{t = 1}^{n} Pr(s_t | s_{t-2}, s_{t-1})$$ \cite{Notesw4705}
+\end{description}
+According to \cite{pautomacTR}, whether n-grams can be consistently outperformed by PFA, HMM or DPFA models for prediction tasks, is still an open problem. n-grams are less powerful than the before mentioned models, however the n-gram’s structure and parameters are easier to compute, which often gives an effective model in practice.
+
+\subsection{Markov Chain}
+Markov chains resembles n-grams, as the probability of observing a symbol s at timepoint $t$, $s_t$, is based upon the previous $t-1$ observations $Pr(s_t | s_0, \dots ,s_{t-1})$. However the Markov assumption says that observation $s_t$ is independent from all other observations, except the the single previous observation $s_t-1$:
+$$Pr(s_t | s_0, \dots ,s_{t-1}) = Pr(s_t | s_{t-1})$$
+This independence assumption stem from the notion that variables after timepoint $t$ can be ignored and variables before timepoint $t-1$ can be eliminated by matrix multiplication, or some variable elimination procedure. \cite{poole2010artificial}
+
+\subsection{Probabilistic Suffix Trees}
+\subsection{Deterministic Probabilistic Finite Automata}
+\subsection{Probabilistic Residual Finite State Automata}
+
+%\subsection{Probabilistic Finite Automata}
+%The \gls{pfa} is a non-deterministic automata with probability modification added to it. The \gls{nfa} consist of:
+%\begin{itemize}
+%\item A finite set of states $Q$
+%\item A finite set of input symbols $\sigma$
+%\item A transition function $\f Q  \cprod \sigma \arrow P(Q)$
+%\item And a set of accepting states $F$
+%\end{itemize}
+%
+%The NFA’s transition function \f is a probabilistic one and every node have a probability of both starting and accepting the input. The starting and accepting probability is given by an initial and final distribution over the state space. \cite{1966some}
+
+
+\subsection{Hidden Markov Model}
+The hidden Markov model is a special case of the Markov chain model. The HMM models the state transition probabilities just like the Markov chain, but it also models O, which is the set of observation probabilities for each state. In comparison, the Markov chain simply designated a symbol to a single state.
+Just like the Markov chain, the state at time t only depends on the previous state at time $t-1$: $Pr(s_t | s_{t-1})$
+And the observation at time t only depends on state $s_t$:
+\begin{description}
+\item $Pr(o_t | s_t)$
+\end{description}
+
+
+Introducing this second layer of probability, simply allows for the model to learn more complex systems, for instance a system where states produce more than one observable symbol. \cite{poole2010artificial}
+
+\subsection{Multiplicity Automata}
+
+
