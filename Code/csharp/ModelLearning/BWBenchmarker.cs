@@ -42,7 +42,7 @@ namespace ModelLearning
             int bestNumberOfStates = 0;
             double bestScore = Double.MaxValue;
 
-            Tuple<SequenceData, SequenceData>[] data = Enumerable.Range(0, numberOfRuns).Select(_ => testData.RandomSplit(2.0 / 3.0)).ToArray();
+            //Tuple<SequenceData, SequenceData>[] data = Enumerable.Range(0, numberOfRuns).Select(_ => testData.RandomSplit(2.0 / 3.0)).ToArray();
 
  
             using (StreamWriter csvSW = new StreamWriter(String.Format("{0}.csv", csvFileName)))
@@ -60,7 +60,7 @@ namespace ModelLearning
                     {
                         Console.WriteLine("{0} states...", n);
 
-                        Run(name, n, numberOfRuns, threshold, runScores, runTimes, runTicks, data);
+                        //Run(name, n, numberOfRuns, threshold, runScores, runTimes, runTicks, data);
 
                         if (runScores[n].Average() < bestScore)
                         {

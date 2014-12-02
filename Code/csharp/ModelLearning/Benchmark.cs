@@ -15,9 +15,11 @@ namespace ModelLearning
 
         private int numberOfRuns;
 
+        private bool useTestData;
+
         public string Name { get; private set; }
 
-        public Benchmark(string name, IEnumerable<Learner> learners, IEnumerable<int> dataSets, int numberOfRuns)
+        public Benchmark(string name, IEnumerable<Learner> learners, IEnumerable<int> dataSets, int numberOfRuns, bool useTestData = false)
         {
             Name = name;
 
@@ -26,6 +28,8 @@ namespace ModelLearning
             this.numberOfRuns = numberOfRuns;
 
             this.learners = new Dictionary<Learner, LearnerParameters>();
+
+            this.useTestData = useTestData;
 
             foreach (Learner learner in learners)
             {
@@ -37,6 +41,12 @@ namespace ModelLearning
 
         public void Run()
         {
+            DirectoryInfo dir = new DirectoryInfo(String.Format("Benchmark_{0}", Name));
+            if (!dir.Exists)
+            {
+                dir.Create();
+            }
+
             for (int i = 0; i < dataSets.Length; i++)
             {
                 BenchmarkDataset(dataSets[i]);
@@ -52,13 +62,7 @@ namespace ModelLearning
             Dictionary<Learner, double> averageLearnerRuntimes = new Dictionary<Learner, double>();
             Dictionary<Learner, double> medianLearnerRuntimes = new Dictionary<Learner, double>();
 
-            DirectoryInfo dir = new DirectoryInfo(String.Format("Benchmark_{0}", Name));
-            if (!dir.Exists)
-            {
-                dir.Create();
-            }
-
-            dir = new DirectoryInfo(String.Format(@"Benchmark_{0}/DataSet_{1}", Name, dataSet.Number));
+            DirectoryInfo dir = new DirectoryInfo(String.Format(@"Benchmark_{0}/DataSet_{1}", Name, dataSet.Number));
             if (!dir.Exists)
             {
                 dir.Create();
@@ -91,7 +95,7 @@ namespace ModelLearning
                     averageLearnerRuntimes.Add(learner, results[2]);
                     medianLearnerRuntimes.Add(learner, results[3]);
 
-                    outputWriter.WriteLine("{0}:\t{1:0000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", learner.Name().PadRight(learnerNamePadding), medianLearnerScores[learner],
+                    outputWriter.WriteLine("{0}:\t{1:00000000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", learner.Name().PadRight(learnerNamePadding), medianLearnerScores[learner],
                         averageLearnerScores[learner], medianLearnerRuntimes[learner], averageLearnerRuntimes[learner]);
 
                     csvWriter.WriteLine("{0},{1},{2},{3},{4},", learner.Name(), medianLearnerScores[learner], averageLearnerScores[learner], medianLearnerRuntimes[learner],
@@ -108,7 +112,7 @@ namespace ModelLearning
                 outputWriter.WriteLine("BEST");
                 outputWriter.WriteLine();
 
-                outputWriter.WriteLine("{0}:\t{1:0000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", bestLearner.Name().PadRight(learnerNamePadding), medianLearnerScores[bestLearner],
+                outputWriter.WriteLine("{0}:\t{1:00000000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", bestLearner.Name().PadRight(learnerNamePadding), medianLearnerScores[bestLearner],
                     averageLearnerScores[bestLearner], medianLearnerRuntimes[bestLearner], averageLearnerRuntimes[bestLearner]);
             }
         }
@@ -116,6 +120,12 @@ namespace ModelLearning
         public IEnumerable<double> BenchmarkLearner(DataSet dataSet, Learner learner)
         {
             Console.WriteLine("Benchmarking Learner {0}...", learner.Name());
+
+            //This sets up a file for intermediate output during learning
+            if (learner is Learners.GreedyExtendLearner) {
+                string intermediateOutputFileName = String.Format(@"Benchmark_{0}/DataSet_{1}/{2}", Name, dataSet.Number, "intermediate");
+                ((Learners.GreedyExtendLearner)learner).SetIntermediateOutputFile(intermediateOutputFileName);
+            }
 
             Dictionary<int, double> parameterAverageScores = new Dictionary<int, double>();
             Dictionary<int, double> parameterMedianScores = new Dictionary<int, double>();
@@ -137,8 +147,7 @@ namespace ModelLearning
                 csvSummaryWriter.WriteLine("Iteration,Median Score,Average Score,Median Time,Average Time,");
                 csvResultWriter.WriteLine("Iteration,Run,Score,Time,Ticks,");
 
-                for (int i = 0; ((parameters.MinimumNumberOfStates + (i * parameters.StateStepSize)) <= parameters.MaximumNumberOfStates) &&
-                    ((parameters.MinimumThreshold + (i * parameters.ThresholdStepSize)) <= parameters.MaximumThreshold); i++)
+                for (int i = 0; ((parameters.Minimum + (i * parameters.StepSize)) <= parameters.Maximum); i++)
                 {
                     Console.WriteLine("Benchmarking Model with {0}...", IterationName(parameters, i));
 
@@ -164,7 +173,7 @@ namespace ModelLearning
 
                     outputWriter.WriteLine();
 
-                    if ((parameters.ThresholdStepSize == 0) && (parameters.StateStepSize == 0))
+                    if (parameters.StepSize == 0)
                     {
                         break;
                     }
@@ -177,7 +186,7 @@ namespace ModelLearning
 
                 foreach (int iteration in parameterMedianScores.Keys)
                 {
-                    outputWriter.WriteLine("{0}:\t{1:0000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", IterationName(parameters, iteration), parameterMedianScores[iteration],
+                    outputWriter.WriteLine("{0}:\t{1:00000000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", IterationName(parameters, iteration), parameterMedianScores[iteration],
                         parameterAverageScores[iteration], parameterMedianRuntimes[iteration], parameterAverageRuntimes[iteration]);
                 }
                 outputWriter.WriteLine();
@@ -185,7 +194,7 @@ namespace ModelLearning
                 outputWriter.WriteLine("BEST");
                 outputWriter.WriteLine();
 
-                outputWriter.WriteLine("{0}:\t{1:0000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", IterationName(parameters, bestIteration), parameterMedianScores[bestIteration],
+                outputWriter.WriteLine("{0}:\t{1:00000000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", IterationName(parameters, bestIteration), parameterMedianScores[bestIteration],
                     parameterAverageScores[bestIteration], parameterMedianRuntimes[bestIteration], parameterAverageRuntimes[bestIteration]);
             }
 
@@ -197,17 +206,12 @@ namespace ModelLearning
 
         private string IterationName(LearnerParameters parameters, int iteration)
         {
-            if (parameters.StateStepSize == 0)
+            if (parameters.StepSize == 0)
             {
-                if (parameters.ThresholdStepSize == 0)
-                {
-                    return "Static Setting";
-                }
-
-                return String.Format("Threshold {0:00.000000}", (parameters.MinimumThreshold + (iteration * parameters.ThresholdStepSize)));
+                return "Static Setting";
             }
 
-            return String.Format("{0:000} States", (parameters.MinimumNumberOfStates + (iteration * parameters.StateStepSize)));
+            return String.Format("{0}: {1}", parameters.RunningParameterName, (parameters.Minimum + (iteration * parameters.StepSize)).ToString(parameters.RunningParameterDecimal ? "00.000000" : "000"));
         }
 
         public IEnumerable<double> RunLearner(DataSet dataSet, Learner learner, StreamWriter outputWriter, StreamWriter csvWriter, int iteration)
@@ -224,7 +228,7 @@ namespace ModelLearning
 
                 watch.Reset();
 
-                dataSet.SplitData(2.0 / 3.0);
+                dataSet.SplitData(2.0 / 3.0, i);
 
                 watch.Start();
 
@@ -232,13 +236,25 @@ namespace ModelLearning
 
                 watch.Stop();
 
-                double score = PautomacEvaluator.Evaluate(learner, dataSet.TestData, dataSet.SolutionData);
+                double score = 0.0;
+
+                if (useTestData)
+                {
+                    score = PautomacEvaluator.Evaluate(learner, dataSet.TestData, dataSet.SolutionData);
+                }
+                else
+                {
+                    foreach (int[] signal in dataSet.ValidationData.GetAll())
+                    {
+                        score -= learner.CalculateProbability(signal, true);
+                    }
+                }
 
                 runScores[i] = score;
                 runTimes[i] = (watch.ElapsedMilliseconds / 1000.0);
                 runTicks[i] = watch.ElapsedTicks;
 
-                outputWriter.WriteLine("Run {0:00}:\t{1:0000.0000000000}\t{2:000000}\t{3:0000000000000000}", (i + 1), runScores[i], runTimes[i], runTicks[i]);
+                outputWriter.WriteLine("Run {0:00}:\t{1:00000000.0000000000}\t{2:000000}\t{3:0000000000000000}", (i + 1), runScores[i], runTimes[i], runTicks[i]);
                 outputWriter.Flush();
 
                 csvWriter.WriteLine("{0},{1},{2},{3},{4},", iteration, i, runScores[i], runTimes[i], runTicks[i]);
@@ -249,7 +265,8 @@ namespace ModelLearning
                 {
                     modelWriter.WriteLine("DataSet {0}", dataSet.Number);
                     modelWriter.WriteLine("Learner: {0}", learner.Name());
-                    modelWriter.WriteLine("PautomaC Score: {0:0000.0000000000}", score);
+                    modelWriter.WriteLine("{0}: {1:0000.0000000000}", (useTestData ? "PautomaC Score" : "Log Likelihood"), score);
+
                     modelWriter.WriteLine();
 
                     learner.Save(modelWriter, modelCSVWriter);
