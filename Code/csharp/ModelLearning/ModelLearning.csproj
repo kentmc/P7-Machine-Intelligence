@@ -59,7 +59,7 @@
     <Compile Include="DataSetAnalyser.cs" />
     <Compile Include="Graph\Edge.cs" />
     <Compile Include="Graph\Graph.cs" />
-    <Compile Include="BaumWelchLowMemory.cs" />
+    <Compile Include="Accord.Statistics\Models\Markov\Discrete\HiddenMarkovModelLowMemory.cs" />
     <Compile Include="Learner.cs" />
     <Compile Include="LearnerParameters.cs" />
     <Compile Include="Learners\JLearner.cs" />
@@ -68,7 +68,6 @@
     <Compile Include="Learners\BaumWelchLearner.cs" />
     <Compile Include="Learners\JaegerLearner.cs" />
     <Compile Include="Learners\UniformLearner.cs" />
-    <Compile Include="Learners\PadawanLearner.cs" />
     <Compile Include="Learners\GreedyExtendLearner.cs" />
     <Compile Include="ModelConverter.cs" />
     <Compile Include="Graph\Node.cs" />
