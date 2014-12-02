@@ -59,6 +59,7 @@
     <Compile Include="DataSetAnalyser.cs" />
     <Compile Include="Graph\Edge.cs" />
     <Compile Include="Graph\Graph.cs" />
+    <Compile Include="BaumWelchLowMemory.cs" />
     <Compile Include="Learner.cs" />
     <Compile Include="LearnerParameters.cs" />
     <Compile Include="Learners\JLearner.cs" />

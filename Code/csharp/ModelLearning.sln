@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelLearning", "ModelLearning\ModelLearning.csproj", "{4420F2D7-3BC2-4D11-B59A-4C3668770775}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparseHMMTest", "SparseHMMTest\SparseHMMTest.csproj", "{C44A2D73-D20A-41C6-8B33-1139DD2AC78B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaumWelchTests", "UnitTestProject1\BaumWelchTests.csproj", "{7E44DD95-E96C-48A8-A7E8-B39360017846}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4420F2D7-3BC2-4D11-B59A-4C3668770775} = {4420F2D7-3BC2-4D11-B59A-4C3668770775}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +31,12 @@ Global
 		{C44A2D73-D20A-41C6-8B33-1139DD2AC78B}.Release 3.5|Any CPU.Build.0 = Release|Any CPU
 		{C44A2D73-D20A-41C6-8B33-1139DD2AC78B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C44A2D73-D20A-41C6-8B33-1139DD2AC78B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E44DD95-E96C-48A8-A7E8-B39360017846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E44DD95-E96C-48A8-A7E8-B39360017846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E44DD95-E96C-48A8-A7E8-B39360017846}.Release 3.5|Any CPU.ActiveCfg = Release|Any CPU
+		{7E44DD95-E96C-48A8-A7E8-B39360017846}.Release 3.5|Any CPU.Build.0 = Release|Any CPU
+		{7E44DD95-E96C-48A8-A7E8-B39360017846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E44DD95-E96C-48A8-A7E8-B39360017846}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
