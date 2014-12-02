@@ -5,74 +5,60 @@ using Accord.Statistics.Models.Markov;
 
 namespace ModelLearning.Learners {
  
-	public class PadawanLearner : Learner {
-		private const double EMPTY_SEQUENCE_PROBABILITY = 1.0;
-		private const double TRANSITION_UNIFORMITY_THRESHOLD = 0.0;
-		private const double EMISSION_UNIFORMITY_THRESHOLD = 0.0;
-		private HiddenMarkovModel hmm;
+  public class PadawanLearner : Learner {
+      private const double EMPTY_SEQUENCE_PROBABILITY = 1.0;
+      private const double TRANSITION_UNIFORMITY_THRESHOLD = 0.0;
+      private const double EMISSION_UNIFORMITY_THRESHOLD = 0.0;
+      private HiddenMarkovModel hmm;
 
-		public override string Name() {
-			return "Padawan Learner";
-		}
+      public override string Name() {
+        return "Padawan Learner";
+      }
 
-		public override double CalculateProbability(int[] sequence) {
+      public override double CalculateProbability(int[] sequence) {
 
-	          	if (sequence.Length == 0) {
-                		return EMPTY_SEQUENCE_PROBABILITY;
-            		else
-        			return hmm.Evaluate(sequence);	
-			}
-		}	
-
-       		public override void Learn(SequenceData trainingData, 
+          if (sequence.Length == 0) {
+              return EMPTY_SEQUENCE_PROBABILITY;
+          } else {
+              return hmm.Evaluate(sequence);	
+          }
+      }	
+       		
+      public override void Learn(SequenceData trainingData, 
 				SequenceData validationData, SequenceData testData) {
 	
+           // 1. convert to hmm to graph model.
 
-			// 1. convert to hmm to graph model.
+	   // 2. find argmax gamma
 
-			// 2. find argmax gamma
+	   // 3. split node if transition or emission probs are above uniformity threshold. 
 
-			// 3. split node if transition or emission probs are above uniformity threshold. 
+	   // 4. assign new probs and normalize.
 
-			// 4. assign new probs and normalize.
+	   // 5. convert graph model back to hmm
 
-			// 5. convert graph model back to hmm
+	   // 6. relearn model using BW.
 
-			// 6. relearn model using BW.
+          throw new NotImplementedException();
+      }
 
-			throw new NotImplementedException();
-		}
-
-
-		private void runBW() {
-			
+      private void runBW() {
 
 
+      }
 
-		}
-
-
-
-
-
-
-
-
-
-
-        	public override void Initialise(LearnerParameters parameters, 
+      public override void Initialise(LearnerParameters parameters, 
 				int iteration) {
 
-			throw new NotImplementedException();
-	
-		}
 
-        	public override void Save(StreamWriter outputWriter, StreamWriter csvWriter) {
+          throw new NotImplementedException();
+      }
+
+      public override void Save(StreamWriter outputWriter, StreamWriter csvWriter) {
+
 
 			throw new NotImplementedException();
-	
-		}
- 
-	}
+      }
+  }
 }
 
