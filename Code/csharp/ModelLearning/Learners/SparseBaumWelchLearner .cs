@@ -7,7 +7,7 @@ using Accord.Statistics.Models.Markov;
 namespace ModelLearning.Learners {
     class SparseBaumWelchLearner : Learner {
 
-        SparseHiddenMarkovModel hmm;
+		HiddenMarkovModel hmm;  //SparseHiddenMarkovModel hmm;
         double tolerance;
         int states;
         Random ran;
@@ -17,7 +17,8 @@ namespace ModelLearning.Learners {
         /// </summary>
         /// <param name="states"></param>
         /// <param name="tolerance"></param>
-        public SparseBaumWelchLearner() {
+        //public SparseBaumWelchLearner() {
+		public SparseBaumWelchLearner() {
             ran = new Random();
         }
 
@@ -45,7 +46,7 @@ namespace ModelLearning.Learners {
             Utilities.Shuffle(shuffled);
 
             graph.Normalize();
-            hmm = SparseHiddenMarkovModel.FromGraph(graph);
+			hmm = ModelConverter.Graph2HMM(graph); //hmm = SparseHiddenMarkovModel.FromGraph(graph);
             hmm.Learn(trainingData.GetNonempty(), tolerance);
         }
 
@@ -61,10 +62,10 @@ namespace ModelLearning.Learners {
 
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)
         {
-            outputWriter.WriteLine("States: {0}", hmm.NumberOfStates);
-            outputWriter.WriteLine("Symbols: {0}", hmm.NumberOfSymbols);
+            outputWriter.WriteLine("States: {0}", hmm.States);
+            outputWriter.WriteLine("Symbols: {0}", hmm.Symbols);
             outputWriter.WriteLine("Threshold: {0}", tolerance);
-            hmm.Save(outputWriter, csvWriter);
+            //hmm.Save(outputWriter, csvWriter);
         }
     }
 }
