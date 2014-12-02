@@ -47,7 +47,7 @@ namespace ModelLearning.Learners {
 
             graph.Normalize();
 			hmm = ModelConverter.Graph2HMM(graph); //hmm = SparseHiddenMarkovModel.FromGraph(graph);
-            hmm.Learn(trainingData.GetNonempty(), tolerance);
+            hmm.Learn(trainingData.GetNonempty(), tolerance, true);
         }
 
         public override string Name() {
