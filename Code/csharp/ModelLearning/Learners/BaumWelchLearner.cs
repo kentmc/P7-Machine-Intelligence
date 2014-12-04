@@ -22,7 +22,7 @@ namespace ModelLearning.Learners {
         }
 
         public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
-            trainingData.AddSequences(validationData);
+            //trainingData.AddSequences(validationData);
 
             double[] initialProbabilities = new double[states];
 
@@ -77,7 +77,7 @@ namespace ModelLearning.Learners {
 
             //hmm = new HiddenMarkovModel(trainingData.NumSymbols, states);
             hmm = new HiddenMarkovModel(transitionMatrix, emissionMatrix, initialProbabilities);
-            hmm.Learn(trainingData.GetNonempty(), tolerance, true);
+            hmm.Learn(trainingData.GetNonempty(), tolerance, validationData.GetNonempty());
         }
 
         public override string Name() {

@@ -33,7 +33,7 @@ namespace UnitTestProject1 {
             hmm.Learn(observations, 20);
 
             HiddenMarkovModel hmmLM = new HiddenMarkovModel(Clone(A), Clone(B), Clone(pi));
-            hmmLM.Learn(observations, 20, true);
+            hmmLM.Learn(observations, 20);
 
             for (int i = 0; i < hmm.Probabilities.Length; i++)
                 Assert.AreEqual(hmm.Probabilities[i], hmmLM.Probabilities[i]);
@@ -52,7 +52,7 @@ namespace UnitTestProject1 {
             hmm.Learn(observations, 1);
 
             hmmLM = new HiddenMarkovModel(Clone(A), Clone(B), Clone(pi));
-            hmmLM.Learn(observations, 1, true);
+            hmmLM.Learn(observations, 1);
 
             for (int i = 0; i < hmm.Probabilities.Length; i++)
                 Assert.AreEqual(hmm.Probabilities[i], hmmLM.Probabilities[i]);
@@ -71,7 +71,7 @@ namespace UnitTestProject1 {
             hmm.Learn(observations, 0.1);
 
             hmmLM = new HiddenMarkovModel(Clone(A), Clone(B), Clone(pi));
-            hmmLM.Learn(observations, 0.1, true);
+            hmmLM.Learn(observations, 0.1);
 
             for (int i = 0; i < hmm.Probabilities.Length; i++)
                 Assert.AreEqual(hmm.Probabilities[i], hmmLM.Probabilities[i]);
