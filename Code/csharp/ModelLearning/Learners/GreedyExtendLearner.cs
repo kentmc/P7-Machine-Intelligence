@@ -54,7 +54,7 @@ namespace ModelLearning.Learners {
                     graph = ModelConverter.HMM2Graph(bestHMM);
                     RandomlyExtendGraphSparsely(graph);
                     HiddenMarkovModel hmm = ModelConverter.Graph2HMM(graph);
-                    hmm.Learn(testData.GetNonempty(), 1, true); //Run the BaumWelch algorithm
+                    //hmm.Learn(testData.GetNonempty(), 10, true); //Run the BaumWelch algorithm
                     double likelihood = hmm.Evaluate(trainingData.GetAll(), true);
                     if (likelihood > bestLikelihood) {
                         bestLikelihood = likelihood;
@@ -79,7 +79,7 @@ namespace ModelLearning.Learners {
             bestHMM.Learn(trainingData.GetNonempty(), finalBWThreshold, true);
             bestLikelihood = bestHMM.Evaluate(validationData.GetAll(), true);
             WriteLine("Final likelihood: " + bestLikelihood);
-
+            OutputIntermediate();
             intermediateOutputFile.Close();
         }
 

@@ -32,8 +32,27 @@ namespace UnitTestProject1 {
             HiddenMarkovModel hmm = new HiddenMarkovModel(Clone(A), Clone(B), Clone(pi));
             hmm.Learn(observations, 20);
 
-            HiddenMarkovModelLowMemory hmmLM = new HiddenMarkovModelLowMemory(Clone(A), Clone(B), Clone(pi));
-            hmmLM.Learn(observations, 20);
+            HiddenMarkovModel hmmLM = new HiddenMarkovModel(Clone(A), Clone(B), Clone(pi));
+            hmmLM.Learn(observations, 20, true);
+
+            for (int i = 0; i < hmm.Probabilities.Length; i++)
+                Assert.AreEqual(hmm.Probabilities[i], hmmLM.Probabilities[i]);
+
+            for (int i = 0; i < hmm.Transitions.GetLength(0); i++)
+                for (int p = 0; p < hmm.Transitions.GetLength(1); p++)
+                    Assert.AreEqual(hmm.Transitions[i, p], hmmLM.Transitions[i, p]);
+
+            for (int i = 0; i < hmm.Emissions.GetLength(0); i++)
+                for (int p = 0; p < hmm.Emissions.GetLength(1); p++)
+                    Assert.AreEqual(hmm.Emissions[i, p], hmmLM.Emissions[i, p]);
+
+            //Run BW with 1 iteration
+
+            hmm = new HiddenMarkovModel(Clone(A), Clone(B), Clone(pi));
+            hmm.Learn(observations, 1);
+
+            hmmLM = new HiddenMarkovModel(Clone(A), Clone(B), Clone(pi));
+            hmmLM.Learn(observations, 1, true);
 
             for (int i = 0; i < hmm.Probabilities.Length; i++)
                 Assert.AreEqual(hmm.Probabilities[i], hmmLM.Probabilities[i]);
@@ -51,8 +70,8 @@ namespace UnitTestProject1 {
             hmm = new HiddenMarkovModel(Clone(A), Clone(B), Clone(pi));
             hmm.Learn(observations, 0.1);
 
-            hmmLM = new HiddenMarkovModelLowMemory(Clone(A), Clone(B), Clone(pi));
-            hmmLM.Learn(observations, 0.1);
+            hmmLM = new HiddenMarkovModel(Clone(A), Clone(B), Clone(pi));
+            hmmLM.Learn(observations, 0.1, true);
 
             for (int i = 0; i < hmm.Probabilities.Length; i++)
                 Assert.AreEqual(hmm.Probabilities[i], hmmLM.Probabilities[i]);
