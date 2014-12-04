@@ -28,15 +28,21 @@ namespace ModelLearning.Learners {
        		
 		public override void Learn(SequenceData trainingData, 
 				SequenceData validationData, SequenceData testData) {
-	
+
+
+			int[] O; // observed sequences.
+
 			// 1. convert to hmm to graph model.
 
 			HMMGraph hmmGraph = ModelConverter.HMM2Graph(hmm);				
 
 			// 2. find argmax gamma
 
+			
+			
 
 	   		// 3. split node if transition or emission probs are above uniformity threshold. 
+
 
 	   		// 4. assign new probs and normalize.
 
@@ -54,8 +60,58 @@ namespace ModelLearning.Learners {
           	throw new NotImplementedException();
       	}
 
-      	private void runBW() {
+		private double ComputeGamma(Node n, HMMGraph G, int, t, int[] O) {
 
+			double likelihood = 0;
+
+			foreach(Node x in G.Nodes) {
+				likelihood += ComputeBackWard(x, G, 0, O);
+			}
+
+			return (ComputeForward(n,G,t,O) * ComputeBackWard(n, G, t, O)) / likelihood; 
+		}
+
+		private double ComputeForward(Node n, HMMGraph G, int t, int[] O) {
+
+			if(t==0) {
+
+				return n.InitialProbability * n.Emissions[O[t]];
+			} else {
+
+				double sum = 0;
+
+				foreach(Node ni in G.Nodes) {
+					sum += ComputeForward(ni, G, t-1, O) * ni.Transitions[n];
+				}
+
+				return sum * n.Emissions[O[t]];
+			}
+		}
+
+		private double ComputeBackWard(Node n, HMMGraph G, int t, int[] O) {
+
+			if(t==O.length) {
+
+				return 1.0;
+
+			} else {
+
+				double sum = 0;
+				foreach(Node ni in G.Nodes) {
+
+					sum += n.Transitions[ni] * ni.Emissions[O[t+1]] * ComputeBackward(ni, G, t+1, O);
+				}
+
+				return sum;
+			}	
+		}
+
+
+
+
+      	private void RunBW() {
+
+			throw new NotImplementedException();
       	}
 
       	public override void Initialise(LearnerParameters parameters, 
