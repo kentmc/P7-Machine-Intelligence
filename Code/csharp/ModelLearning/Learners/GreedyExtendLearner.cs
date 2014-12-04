@@ -76,7 +76,7 @@ namespace ModelLearning.Learners {
                 }
             }
             WriteLine("Runs Baum Welch last time with the final threshold");
-            bestHMM.Learn(trainingData.GetNonempty(), finalBWThreshold, true);
+            bestHMM.Learn(trainingData.GetNonempty(), finalBWThreshold, trainingData.GetNonempty());
             bestLikelihood = bestHMM.Evaluate(validationData.GetAll(), true);
             WriteLine("Final likelihood: " + bestLikelihood);
             OutputIntermediate();

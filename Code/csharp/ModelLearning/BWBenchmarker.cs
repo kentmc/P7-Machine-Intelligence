@@ -181,7 +181,7 @@ namespace ModelLearning
 
                 watch.Start();
 
-                model.Learn(data[i].Item1.GetNonempty(), threshold);
+                //model.Learn(data[i].Item1.GetNonempty(), threshold);
 
                 watch.Stop();
 

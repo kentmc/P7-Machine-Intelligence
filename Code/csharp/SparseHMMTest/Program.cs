@@ -82,8 +82,8 @@ namespace SparseHMMTest
 
             //double threshold = 0.001;
 
-            //double sparseProbability = 0;
-            //double probability = 0;
+            double sparseProbability = 0;
+            double probability = 0;
 
             long sparseTicks = 0;
             long ticks = 0;
@@ -99,7 +99,7 @@ namespace SparseHMMTest
                 SparseHiddenMarkovModel sparseHMM = SparseHiddenMarkovModel.FromGraph(graph);
                 HiddenMarkovModel hmm = ModelConverter.Graph2HMM(graph);
 
-                //int[] signal = Enumerable.Range(0, 10000).Select(_ => random.Next(numberOfSymbols)).ToArray();
+                int[] signal = Enumerable.Range(0, 1000).Select(_ => random.Next(numberOfSymbols)).ToArray();
                 int[][] trainingSignals = Enumerable.Range(0, trainingSetSize).Select(_ => Enumerable.Range(0, signalLength).Select(__ => random.Next(numberOfSymbols)).ToArray()).ToArray();
 
                 Stopwatch watch = new Stopwatch();
@@ -109,7 +109,7 @@ namespace SparseHMMTest
                 //int[] sparseHSS = sparseHMM.Viterby(signal, out sparseProbability);
                 sparseTicks = watch.ElapsedTicks;
 
-                //sparseProbability = sparseHMM.Evaluate(signal);
+                sparseProbability = sparseHMM.Evaluate(signal, true);
 
                 watch.Restart();
 
@@ -117,7 +117,7 @@ namespace SparseHMMTest
                 //int[] hss = hmm.Decode(signal, true, out probability);
                 ticks = watch.ElapsedTicks;
 
-                //probability = hmm.Evaluate(signal, true);
+                probability = hmm.Evaluate(signal, true);
 
                 watch.Stop();
 
@@ -128,7 +128,7 @@ namespace SparseHMMTest
 
             averageSpeedUp /= numberOfRuns;
 
-            //Console.WriteLine(sparseProbability);
+            Console.WriteLine(sparseProbability);
             //for (int i = 0; i < sparseHSS.Length; i++)
             //{
             //    Console.Write(sparseHSS[i]);
@@ -138,7 +138,7 @@ namespace SparseHMMTest
 
             Console.WriteLine();
 
-            //Console.WriteLine(probability);
+            Console.WriteLine(probability);
             //for (int i = 0; i < hss.Length; i++)
             //{
             //    Console.Write(hss[i]);
