@@ -4,13 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Accord.Statistics.Models.Markov;
+using System.Threading;
+using System.Globalization;
 
 namespace ModelLearning
 {
     class Program
     {
+
         static void Main(string[] args)
         {
+			//Modify local system language, so the program will output dots instead of commas for 1.000th seperation
+			System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+			customCulture.NumberFormat.NumberDecimalSeparator = ".";
+
+			System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
+
             List<Learner> learners = new List<Learner>() {
                 new Learners.UniformLearner(),
                 new Learners.BaumWelchLearner(),
