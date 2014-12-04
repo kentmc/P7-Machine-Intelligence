@@ -41,7 +41,8 @@ namespace ModelLearning.Learners {
 
 			//Node qPrime = hmmGraph.Nodes.Max(x => ComputeGamma(x, hmmGraph, O));	
 
-	   		// 3. split node if transition or emission probs are above uniformity threshold. 
+	   		// 3. split node if transition or emission probs 
+			// are above uniformity threshold. 
 
 
 	   		// 4. assign new probs and normalize.

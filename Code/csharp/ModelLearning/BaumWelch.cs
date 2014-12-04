@@ -1,46 +1,88 @@
 using System;
 using System.Linq;
 using System.IO;
-using Accord.Statistics.Models.Markov;
 
 namespace ModelLearning {
 
-	public static class BaumWelch {
+	public class BaumWelch {
+		HMMGraph graph;
 
+		public HMMGraph Learn(HMMGraph hmm, int[] [] Observations) {
 
+			Initialize(hmm);
 
-		public HMMGraph Learn(HMMGraph hmm) {
+			foreach(int[] O in Observations) {
 
-			
-			// Initialize
-			// compute gamma
-			// compute ksi
-			// reestimate model
+				ReInitialize();
+
+				reestimateInitialProbs(O);
+				reestimateTransitions(O);
+				reestimateEmissions(O);
+			}
+
+			return graph;
 		}
 
-		private void Initialize() {
+		private void ReInitialize() {
 
 			// reset dynProg 
 		}
 
-		private double reestimateInitialProbs() {
+		private void reestimateInitialProbs(int[] O) {
 
+
+			foreach(Node n in graph.Nodes) {
+				
+				n.InitialProbability = ComputeGamma(n, graph, 0, O); 	
+			}
 		}
 
-		private double reestimateTransitions() {
+		private void reestimateTransitions(int[] O) {
 
+			foreach(Node na in graph.Nodes) {
+
+				foreach(Node nb in graph.Nodes) {
+
+					double ksi = 0;
+					double gamma = 0;
+					for(int t=0; t<O.Length; t++) {
+				
+						ksi += ComputeKsi(na, nb, graph, t,O);
+						gamma += ComputeGamma(na, graph, t, O);
+					}
+					na.SetTransition(nb, ksi / gamma);
+				}
+			}
 		}
 
-		private double reestimateEmissions() {
+		private void reestimateEmissions(int[] O) {
 
+			foreach(Node n in graph.Nodes) {
+
+				Dictionary<int,double> gammaobs;
+				double gamma = 0;
+
+				for(int t=0;t<O.Length;t++) {
+
+					double current = ComputeGamma(n,graph,t,O);
+					gammaobs[O[t]] += current; 
+					gamma += current; 
+				}	
+				
+				foreach(int i in gammaobs.Keys) {
+
+					n.SetEmissions[i] = gammaobs[i] / gamma;
+				}
 		}
 
-		public static double ComputeKsi(Node na, Node nb, HMMGraph G, int t, int[] O) {
+		private double ComputeKsi(Node na, Node nb, HMMGraph G, 
+				int t, int[] O) {
 
-			return ComputeForward(na, G, t, O) * na.Transitions[nb] * nb.Emissions[O[t+1]] * ComputeBackward(nb,G,t+1,O);	
+			return ComputeForward(na, G, t, O) * na.Transitions[nb] 
+				* nb.Emissions[O[t+1]] * ComputeBackward(nb,G,t+1,O);	
 		}
 
-		public static double ComputeGamma(Node n, HMMGraph G, int[] O) {
+		private double ComputeGamma(Node n, HMMGraph G, int[] O) {
 
 			double sum = 0;
 			for(int t=0; t<O.Length; t++) {
@@ -50,12 +92,13 @@ namespace ModelLearning {
 			return sum;
 		}
 
-		public static double ComputeGamma(Node n, HMMGraph G, int t, int[] O) {
+		private double ComputeGamma(Node n, HMMGraph G, int t, int[] O) {
 
-			return (ComputeForward(n,G,t,O) * ComputeBackward(n, G, t, O)) / ComputeLikelihood(G,O); 
+			return (ComputeForward(n,G,t,O) * ComputeBackward(n, G, t, O)) 
+				/ ComputeLikelihood(G,O); 
 		}
 
-		public static double ComputeLikelihood(HMMGraph G, int[] O) {
+		private double ComputeLikelihood(HMMGraph G, int[] O) {
 
 			double likelihood = 0;
 
@@ -66,7 +109,7 @@ namespace ModelLearning {
 			return likelihood;
 		}
 
-		public static double ComputeForward(Node n, HMMGraph G, int t, int[] O) {
+		private double ComputeForward(Node n, HMMGraph G, int t, int[] O) {
 
 			if(t==0) {
 
@@ -83,7 +126,7 @@ namespace ModelLearning {
 			}
 		}
 
-		public static double ComputeBackward(Node n, HMMGraph G, int t, int[] O) {
+		private double ComputeBackward(Node n, HMMGraph G, int t, int[] O) {
 
 			if(t==O.Length) {
 
@@ -94,7 +137,8 @@ namespace ModelLearning {
 				double sum = 0;
 				foreach(Node ni in G.Nodes) {
 
-					sum += n.Transitions[ni] * ni.Emissions[O[t+1]] * ComputeBackward(ni, G, t+1, O);
+					sum += n.Transitions[ni] * ni.Emissions[O[t+1]] 
+						* ComputeBackward(ni, G, t+1, O);
 				}
 
 				return sum;
