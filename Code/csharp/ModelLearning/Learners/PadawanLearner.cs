@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.IO;
 using Accord.Statistics.Models.Markov;
+using ModelLearning; 
 
 namespace ModelLearning.Learners {
  
@@ -38,8 +39,7 @@ namespace ModelLearning.Learners {
 
 			// 2. find argmax gamma
 
-			
-			
+			//Node qPrime = hmmGraph.Nodes.Max(x => ComputeGamma(x, hmmGraph, O));	
 
 	   		// 3. split node if transition or emission probs are above uniformity threshold. 
 
@@ -60,60 +60,6 @@ namespace ModelLearning.Learners {
           	throw new NotImplementedException();
       	}
 
-		private double ComputeGamma(Node n, HMMGraph G, int t, int[] O) {
-
-			return (ComputeForward(n,G,t,O) * ComputeBackward(n, G, t, O)) / ComputeLikelihood(G,O); 
-		}
-
-		private double ComputeLikelihood(HMMGraph G, int[] O) {
-
-			double likelihood = 0;
-
-			foreach(Node x in G.Nodes) {
-				likelihood += x.InitialProbability * ComputeBackward(x, G, 0, O);
-			}
-		
-			return likelihood;
-		}
-
-		private double ComputeForward(Node n, HMMGraph G, int t, int[] O) {
-
-			if(t==0) {
-
-				return n.InitialProbability * n.Emissions[O[t]];
-			} else {
-
-				double sum = 0;
-
-				foreach(Node ni in G.Nodes) {
-					sum += ComputeForward(ni, G, t-1, O) * ni.Transitions[n];
-				}
-
-				return sum * n.Emissions[O[t]];
-			}
-		}
-
-		private double ComputeBackward(Node n, HMMGraph G, int t, int[] O) {
-
-			if(t==O.Length) {
-
-				return 1.0;
-
-			} else {
-
-				double sum = 0;
-				foreach(Node ni in G.Nodes) {
-
-					sum += n.Transitions[ni] * ni.Emissions[O[t+1]] * ComputeBackward(ni, G, t+1, O);
-				}
-
-				return sum;
-			}	
-		}
-
-
-
-
       	private void RunBW() {
 
 			throw new NotImplementedException();
@@ -131,5 +77,6 @@ namespace ModelLearning.Learners {
 			throw new NotImplementedException();
       	}
   	}
+
 }
 
