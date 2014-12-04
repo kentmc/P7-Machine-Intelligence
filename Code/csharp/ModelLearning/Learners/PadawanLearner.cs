@@ -60,15 +60,20 @@ namespace ModelLearning.Learners {
           	throw new NotImplementedException();
       	}
 
-		private double ComputeGamma(Node n, HMMGraph G, int, t, int[] O) {
+		private double ComputeGamma(Node n, HMMGraph G, int t, int[] O) {
+
+			return (ComputeForward(n,G,t,O) * ComputeBackward(n, G, t, O)) / ComputeLikelihood(G,O); 
+		}
+
+		private double ComputeLikelihood(HMMGraph G, int[] O) {
 
 			double likelihood = 0;
 
 			foreach(Node x in G.Nodes) {
-				likelihood += ComputeBackWard(x, G, 0, O);
+				likelihood += x.InitialProbability * ComputeBackward(x, G, 0, O);
 			}
-
-			return (ComputeForward(n,G,t,O) * ComputeBackWard(n, G, t, O)) / likelihood; 
+		
+			return likelihood;
 		}
 
 		private double ComputeForward(Node n, HMMGraph G, int t, int[] O) {
@@ -88,9 +93,9 @@ namespace ModelLearning.Learners {
 			}
 		}
 
-		private double ComputeBackWard(Node n, HMMGraph G, int t, int[] O) {
+		private double ComputeBackward(Node n, HMMGraph G, int t, int[] O) {
 
-			if(t==O.length) {
+			if(t==O.Length) {
 
 				return 1.0;
 
