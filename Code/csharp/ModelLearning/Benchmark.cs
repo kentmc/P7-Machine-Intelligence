@@ -19,11 +19,11 @@ namespace ModelLearning
 
         public string Name { get; private set; }
 
-        public Benchmark(string name, IEnumerable<Learner> learners, IEnumerable<int> dataSets, int numberOfRuns, bool useTestData = false)
+        public Benchmark(string name, IEnumerable<Learner> learners, IEnumerable<int> dataSets, int trainingSetSize, int numberOfRuns, bool useTestData = false)
         {
             Name = name;
 
-            this.dataSets = dataSets.Select(num => new DataSet(num)).ToArray();
+            this.dataSets = dataSets.Select(num => new DataSet(num, trainingSetSize)).ToArray();
 
             this.numberOfRuns = numberOfRuns;
 
@@ -71,6 +71,9 @@ namespace ModelLearning
             using (StreamWriter outputWriter = new StreamWriter(String.Format(@"Benchmark_{0}/DataSet_{1}/SUMMARY.txt", Name, dataSet.Number)),
                                 csvWriter = new StreamWriter(String.Format(@"Benchmark_{0}/DataSet_{1}/SUMMARY.csv", Name, dataSet.Number)))
             {
+                outputWriter.AutoFlush = true;
+                csvWriter.AutoFlush = true;
+
                 int learnerNamePadding = learners.Keys.Select(l => l.Name().Length).Max();
 
                 outputWriter.WriteLine("DataSet {0}", dataSet.Number);
@@ -140,6 +143,10 @@ namespace ModelLearning
                                 csvSummaryWriter = new StreamWriter(String.Format(@"Benchmark_{0}/DataSet_{1}/{2}_SUMMARY.csv", Name, dataSet.Number, learner.Name().ToLowerInvariant().Replace(' ', '_'))),
                                 csvResultWriter = new StreamWriter(String.Format(@"Benchmark_{0}/DataSet_{1}/{2}_RESULTS.csv", Name, dataSet.Number, learner.Name().ToLowerInvariant().Replace(' ', '_'))))
             {
+                outputWriter.AutoFlush = true;
+                csvSummaryWriter.AutoFlush = true;
+                csvResultWriter.AutoFlush = true;
+
                 outputWriter.WriteLine("DataSet {0}", dataSet.Number);
                 outputWriter.WriteLine("Learner: {0}", learner.Name());
                 outputWriter.WriteLine();
@@ -263,6 +270,9 @@ namespace ModelLearning
                 using (StreamWriter modelWriter = new StreamWriter(String.Format(@"Benchmark_{0}/DataSet_{1}/Models_{2}/Iter{3}_Run{4}.txt", Name, dataSet.Number, learner.Name().ToLowerInvariant().Replace(' ', '_'), iteration, i)),
                                     modelCSVWriter = new StreamWriter(String.Format(@"Benchmark_{0}/DataSet_{1}/Models_{2}/Iter{3}_Run{4}.csv", Name, dataSet.Number, learner.Name().ToLowerInvariant().Replace(' ', '_'), iteration, i)))
                 {
+                    modelWriter.AutoFlush = true;
+                    modelCSVWriter.AutoFlush = true;
+
                     modelWriter.WriteLine("DataSet {0}", dataSet.Number);
                     modelWriter.WriteLine("Learner: {0}", learner.Name());
                     modelWriter.WriteLine("{0}: {1:0000.0000000000}", (useTestData ? "PautomaC Score" : "Log Likelihood"), score);

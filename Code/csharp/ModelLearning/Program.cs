@@ -80,6 +80,8 @@ namespace ModelLearning
                 if (selected_datasets == null)
                     continue;
 
+                int trainingSetSize = SelectTrainingSetSize();
+
                 //Select verbosity
                 bool verbose = ShowInterfaceSelectYesNo("Show intermediate output from learners?");
                 foreach (Learner learner in learners)
@@ -87,7 +89,7 @@ namespace ModelLearning
 
                 bool useTestData = ShowInterfaceSelectYesNo("Use PautomaC test data?");
 
-                Benchmark benchmark = new Benchmark(benchmarkName, selected_learners, selected_datasets, num_runs, useTestData);
+                Benchmark benchmark = new Benchmark(benchmarkName, selected_learners, selected_datasets, trainingSetSize, num_runs, useTestData);
                 benchmark.Run();
 
                 //Run benchmarker
@@ -138,6 +140,17 @@ namespace ModelLearning
                 return runs;
         }
 
+        static int SelectTrainingSetSize()
+        {
+            Console.WriteLine("\nSelect the size of the training set: (default: 10000)");
+            int trainingSetSize;
+            if (!Int32.TryParse(Console.ReadLine(), out trainingSetSize))
+                return 10000;
+            if (trainingSetSize <= 0)
+                return 10000;
+            else
+                return trainingSetSize;
+        }
 
         static List<int> ShowInterfaceSelectDatasets(int num_datasets)
         {

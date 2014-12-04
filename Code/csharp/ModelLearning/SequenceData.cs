@@ -51,6 +51,14 @@ namespace ModelLearning {
             }
         }
 
+        public void AddSequences(IEnumerable<int[]> sequences)
+        {
+            foreach(int[] sequence in sequences)
+            {
+                AddSequence(sequence);
+            }
+        }
+
         public void AddSequences(SequenceData sequenceData) {
             for (int i = 0; i < sequenceData.Count; i++)
                 sequence_list.Add(sequenceData[i]);
@@ -79,6 +87,21 @@ namespace ModelLearning {
             return new Tuple<SequenceData, SequenceData>(part1, part2);
         }
 
-        
+        public Tuple<SequenceData, SequenceData> RandomSplit(int trainingDataSize, int validationDataSize, int randomSeed)
+        {
+            SequenceData trainingData = new SequenceData(NumSymbols);
+            SequenceData validaitonData = new SequenceData(NumSymbols);
+
+            List<int[]> shuffled = sequence_list.ToList();
+            Utilities.Shuffle(shuffled, randomSeed);
+
+            trainingData.AddSequences(sequence_list.Take(trainingDataSize));
+            validaitonData.AddSequences(sequence_list.Skip(trainingDataSize).Take(validationDataSize));
+
+            trainingData.SaveAddedSequences();
+            validaitonData.SaveAddedSequences();
+
+            return new Tuple<SequenceData, SequenceData>(trainingData, validaitonData);
+        }
     }
 }
