@@ -1,11 +1,29 @@
 \section{Datasets}
 Pautomac delivered 48 datasets, which given this project's time constraint is too many, so a dataset selection method has to be devised. We want to understand how the presented algorithms handle the different known variations, of the model that originally created the datasets. There are three variables; the amount of states, a density percentage and the observable symbol alphabet size.
 
-There is not obvious pattern in which Pautomac produced these datasets, which can easily be seen when plotting the datasets in a coordinate system:
+There is no obvious pattern in which Pautomac produced these datasets, which can easily be seen when plotting the datasets in a coordinate system:
 
 \todo{show the figure}
 
-We know the range of all the variables, which should be covered to some extend by the given datasets. For instance, states range from 6 to 73, if we want to find a reasonable cover for the state variable, we want something close to 10, 20, 30, 40, 50, 60 and 70, where the overall deviation from
+The range of the three variables is known, where we want to isolate each variable, to determine how the presented algorithms behave. There will be no optimal set of datasets, for isolating one variable, but by calculating the euclidean distance between a preselected point and all datasets, it is possible to select the best-case.
+
+The preselected point has to be found in an exploratory fashion. A natural first step is to determine the two static values based on a dense cluster in their two-dimensional space. Having determined a plot for the two static values, only the variable value points has to determined, so that it covers the range of the third axis. For instance, selecting the datasets for the state range, we used the above figure, selected point x/y and calculated the state range from 10 to 70 with a step size of 10. For each step the best dataset choice were simply the one closest to the plot.
+
+In the end only four datasets were chosen for the state range, 1, 6, 23 and 41, as some dataset were the best choice for multiple plots. This process were applied for all the variables:
+
+\begin{itemize}
+\item sdfsdf
+\end{itemize}
+
+\begin{itemize}
+\item 123
+\end{itemize}
+
+\begin{itemize}
+\item 234
+\end{itemize}
+
+
 
 \todo{write about our dataset selection method, as well as the datasets themselves}
 
