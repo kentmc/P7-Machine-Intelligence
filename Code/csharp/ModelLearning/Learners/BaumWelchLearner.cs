@@ -77,7 +77,7 @@ namespace ModelLearning.Learners {
 
             //hmm = new HiddenMarkovModel(trainingData.NumSymbols, states);
             hmm = new HiddenMarkovModel(transitionMatrix, emissionMatrix, initialProbabilities);
-            hmm.Learn(trainingData.GetNonempty(), tolerance);
+            hmm.Learn(trainingData.GetNonempty(), tolerance, true);
         }
 
         public override string Name() {
