@@ -1,1 +1,21 @@
 \section{Results}
+
+\begin{tikzpicture}
+	\begin{axis}[
+			xlabel = Number of states,
+            	ylabel = Score (lower is better)]
+		\addplot+table[x=States, y=Score, col sep=tab]
+		{content/Experiments/graphdata/set23.csv};
+		\addlegendentry{\textbf{Dataset: 23 States: 33}}
+	\end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+	\begin{axis}[
+			xlabel = Number of states,
+            	ylabel = Score (lower is better)]
+		\addplot+table[x=States, y=Score, col sep=tab]
+		{content/Experiments/graphdata/set1.csv};
+		\addlegendentry{\textbf{Dataset: 1 States: 64}}
+	\end{axis}
+\end{tikzpicture}
