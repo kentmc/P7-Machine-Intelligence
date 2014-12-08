@@ -43,20 +43,20 @@ namespace ModelLearning.Learners {
 
 
             //Add random transmissions. Each node will have at most Log(n) edges in both directions
-            for (int i = 0; i < graph.Nodes.Count; i++) {
-                List<Node> shuffled = graph.Nodes.Select(e => e).ToList();
-                Utilities.Shuffle(shuffled);
-                int upperBound = (int)Math.Ceiling(Math.Log(graph.Nodes.Count));
-                if (upperBound >= graph.Nodes.Count)
-                    upperBound = graph.Nodes.Count - 1;
-                for (int p = 0; p <= upperBound; p++) {
-                    Node from = graph.Nodes[i];
-                    Node to = graph.Nodes[p];
-                    from.SetTransition(to, ran.NextDouble());
-                }
-            }
-
-            
+            //for (int i = 0; i < graph.Nodes.Count; i++)
+            //{
+            //    List<Node> shuffled = graph.Nodes.Select(e => e).ToList();
+            //    Utilities.Shuffle(shuffled);
+            //    int upperBound = (int)Math.Ceiling(Math.Log(graph.Nodes.Count));
+            //    if (upperBound >= graph.Nodes.Count)
+            //        upperBound = graph.Nodes.Count - 1;
+            //    for (int p = 0; p <= upperBound; p++)
+            //    {
+            //        Node from = graph.Nodes[i];
+            //        Node to = graph.Nodes[p];
+            //        from.SetTransition(to, ran.NextDouble());
+            //    }
+            //}
 
             int numberOfTransitions = (int)Math.Ceiling(Math.Log(states));
 
