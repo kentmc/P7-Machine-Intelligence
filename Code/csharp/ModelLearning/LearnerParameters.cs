@@ -58,6 +58,9 @@ namespace ModelLearning
                     {
                         Console.WriteLine("Configure Greedy Extend Learner:");
 
+                        Console.Write("Intermediate BW iterations:");
+                        AdditionalParameters.Add("BWiterations", Int32.Parse(Console.ReadLine()));
+
                         Console.Write("Final BW threshold:");
                         AdditionalParameters.Add("finalBWThreshold", Double.Parse(Console.ReadLine()));
 
