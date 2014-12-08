@@ -41,9 +41,22 @@ namespace ModelLearning.Learners {
                 graph.AddNode(new_node);
             }
 
+
             //Add random transmissions. Each node will have at most Log(n) edges in both directions
-            List<Node> shuffled = graph.Nodes.Select(e => e).ToList();
-            Utilities.Shuffle(shuffled);
+            for (int i = 0; i < graph.Nodes.Count; i++) {
+                List<Node> shuffled = graph.Nodes.Select(e => e).ToList();
+                Utilities.Shuffle(shuffled);
+                int upperBound = (int)Math.Ceiling(Math.Log(graph.Nodes.Count));
+                if (upperBound >= graph.Nodes.Count)
+                    upperBound = graph.Nodes.Count - 1;
+                for (int p = 0; p <= upperBound; p++) {
+                    Node from = graph.Nodes[i];
+                    Node to = graph.Nodes[p];
+                    from.SetTransition(to, ran.NextDouble());
+                }
+            }
+
+            
 
             graph.Normalize();
 			hmm = SparseHiddenMarkovModel.FromGraph(graph);
