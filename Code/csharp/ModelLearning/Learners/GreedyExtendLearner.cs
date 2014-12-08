@@ -12,6 +12,7 @@ namespace ModelLearning.Learners {
         private double bestLikelihood;
         private int maxExpandAttempts;
         private double finalBWThreshold;
+        private int BWiterations;
         private System.IO.StreamWriter intermediateOutputFile;
         private string intermediateOutputFileName;
         private int run = 0;
@@ -54,7 +55,8 @@ namespace ModelLearning.Learners {
                     graph = ModelConverter.HMM2Graph(bestHMM);
                     RandomlyExtendGraphSparsely(graph);
                     HiddenMarkovModel hmm = ModelConverter.Graph2HMM(graph);
-                    hmm.Learn(trainingData.GetNonempty(), 0.01, validationData.GetNonempty()); //Run the BaumWelch algorithm
+                    if (BWiterations > 0)
+                        hmm.Learn(trainingData.GetNonempty(), BWiterations, validationData.GetNonempty()); //Run the BaumWelch algorithm
                     double likelihood = hmm.Evaluate(validationData.GetAll(), true);
                     if (likelihood > bestLikelihood) {
                         bestLikelihood = likelihood;
@@ -149,6 +151,7 @@ namespace ModelLearning.Learners {
         public override void Initialise(LearnerParameters parameters, int iteration) {
             maxStates = (int)parameters.AdditionalParameters["maxStates"];
             maxExpandAttempts = (int)parameters.AdditionalParameters["maxExpandAttempts"];
+            BWiterations = (int)parameters.AdditionalParameters["BWiterations"];
             finalBWThreshold = (double)parameters.AdditionalParameters["finalBWThreshold"];
         }
 

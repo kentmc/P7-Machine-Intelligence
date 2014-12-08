@@ -58,6 +58,19 @@ namespace ModelLearning.Learners {
 
             
 
+            int numberOfTransitions = (int)Math.Ceiling(Math.Log(states));
+
+            foreach (Node node in graph.Nodes)
+            {
+                for (int i = 0; i < numberOfTransitions; i++)
+                {
+                    Node target;
+                    while (node.Transitions.ContainsKey(target = graph.Nodes[ran.Next(states)])) ;
+
+                    node.SetTransition(target, ran.NextDouble());
+                }
+            }
+
             graph.Normalize();
 			hmm = SparseHiddenMarkovModel.FromGraph(graph);
             hmm.Learn(trainingData.GetNonempty(), tolerance);
@@ -78,7 +91,7 @@ namespace ModelLearning.Learners {
             outputWriter.WriteLine("States: {0}", hmm.NumberOfStates);
             outputWriter.WriteLine("Symbols: {0}", hmm.NumberOfSymbols);
             outputWriter.WriteLine("Threshold: {0}", tolerance);
-            //hmm.Save(outputWriter, csvWriter);
+            hmm.Save(outputWriter, csvWriter);
         }
     }
 }
