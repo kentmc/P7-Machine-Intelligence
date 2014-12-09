@@ -14,17 +14,15 @@ There is no obvious pattern in which Pautomac produced these datasets, which can
 	\end{axis}
 \end{tikzpicture}
 
-The range of the three variables is known, where we want to isolate each variable one at a time, to determine how the presented algorithms behave. There will be no optimal set of datasets, for isolating one variable, but by calculating the euclidean distance between a preselected point and all the datasets, it is possible to select the best-case.
+The range of the three variables is known, where we want to isolate each variable one at a time, to determine how the presented algorithms behave. There will be no optimal set of datasets for isolating one variable, but by calculating the unbiased euclidean distance between a preselected point and all the datasets, it is possible to select the best-case. By unbiased we mean that all of the variable's ranges are adjusted and plotted by the percentage on their respectable range and not the range itself. 
 
-The preselected point, has to be found by exploration. A natural first step is to determine the two static values based on a dense cluster in their own two-dimensional space. Having determined a plot for the two static values, some points for the variable have to be determined, so that the range of this variable is covered sufficiently. For instance, selecting the datasets for the state range we can use the above figure, where a cluster can be found at bottom left area. A point in this cluster is selected, determining the two static values and then the range of the variable is covered from 10 to 70 by 10 steps. Of course, not all of the points in the cluster will be close in the third dimension, so the 7 steps of the variable value, only came close to 4 datasets.
+The preselected point, has to be found by exploration. A natural first step is to determine the two static values based on a dense cluster in their own two-dimensional space. Having determined a plot for the two static values, some points for the variable have to be determined, so that the range of this variable is covered sufficiently. For instance, selecting the datasets for the state range we can use the above figure, where a cluster can be found at bottom left area. A point in this cluster is selected, determining the two static values and then the range of the variable is covered from 10 to 70 by 10 steps. Of course, not all of the points in the cluster will be close in the third dimension, so the 7 steps of the variable value, only came close to 4 datasets. 
 
 This process of selecting the best-case datasets for  at a time, were applied for all three variables:
 
 \begin{table}
 \centering
 {
-\textbf{State amount}
-
 \begin{tabular}{| c | c | c | c |}
   \hline
   Dataset 	& \textbf{States} 	& Density (\%) 	& Symbols \\  \hline
@@ -33,9 +31,14 @@ This process of selecting the best-case datasets for  at a time, were applied fo
   41			& \textbf{54} 			&	14.3				& 7 \\
   1				& \textbf{64} 			&	8.7				& 8 \\ \hline
 \end{tabular}
+\caption{State amount}
+\label{state_table}
+}
+\end{table}
 
-\textbf{Transition density percentage}
-
+\begin{table}
+\centering
+{
 \begin{tabular}{| c | c | c | c |}
   \hline
   Dataset 	& States  			& \textbf{Density (\%)} 		& Symbols \\  \hline
@@ -44,10 +47,14 @@ This process of selecting the best-case datasets for  at a time, were applied fo
   43			&	67					& \textbf{40.2 }					& 5 \\
   37			&	69					& \textbf{54 	}					& 8 \\ \hline
 \end{tabular}
+\caption{Transition density percentage}
+\label{density_table}
+}
+\end{table}
 
-
-\textbf{Symbol alphabet size}
-
+\begin{table}
+\centering
+{
 \begin{tabular}{| c | c | c | c |}
   \hline
   Dataset 	& States	 	& Density (\%) 	& \textbf{Symbols}	 \\  \hline
@@ -56,6 +63,8 @@ This process of selecting the best-case datasets for  at a time, were applied fo
   10			& 49				& 14.2 				& \textbf{11}	\\
   35			& 47				& 14.2 				& \textbf{20}	\\ \hline
 \end{tabular}
+\caption{Symbol alphabet size}
+\label{symbol_table}
 
 }
 \end{table}
