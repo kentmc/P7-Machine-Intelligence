@@ -1,10 +1,6 @@
-\section{Choice of programming language}
-Initially, Python was used for experimenting with the different algorithms (written in Python) which is provided at the Pautomac website.
-Python is advantageous in the time it takes to create new or alter existing algorithms.
-As it is a dynamically typed and a very concise language, one can quickly write a lot of code.
-However, when continuously running benchmarks to measure the performance of new algorithms, Python was too slow.
-We tried to increase the performance by using different interpreters of Python, which includes the standard Python interpreter, Anaconda and PyPy.
-Different packages were also tried which claimed to provide fast calculations of floating points of high precision.
-In the end, we found that switching to C\# increased the performance considerably.
-Despite the increase in performance, C\#'s static types have been very convenient when more people have been working on the same code.
-Unlike when using Python, the C\# code has adequately served as documentation.
+\section{Choice of Programming Language}
+Initially, Python was used for experimenting with the different algorithms (written in Python) which is provided at the Pautomac website. Python is advantageous in the time it takes to create new or alter existing algorithms, as a dynamically typed and very concise language Python provides for quick generation (writing) of new code. However, the Python programming language has been found unsuitable for our needs when continuously running multiple benchmarks to measure the performance of new and existing algorithms due to the long runtime.
+
+Several attempts to increase the performance of Python were attempted, such as using different interpreters including the standard Python interpreter, Anaconda and PyPy. Different packages claiming to provide fast calculations of floating points of high precision were also tested. In the end, however, the attempted approaches did not provide satisfactory results leading to a switch to C\# programming language achieving the coveted considerable increase in performance.
+
+Alongside the increase in performance, static types used by  C\# have proved to be very convenient when more people have been working on the same code. Unlike Python, the C\# code has achieved much higher level of readability adequately serving as documentation.

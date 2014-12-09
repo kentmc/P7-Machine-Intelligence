@@ -1,12 +1,17 @@
 \section{Test Environment}
 
-The test environment mainly serves two purposes. First, it makes it easy to evaluate and compare the performance of different probabilistic model learning techniques, according to the Pautomac evaluation criteria described in \todo{Insert secref}.
-Second, it makes it more convenient to experiment with the creation of new techniques by allowing reuse or altering of different techniques or parts thereof, that has already been implemented. In \ref{fig:testenvironment} an overview of the test environment is given.
+To comply with the need to continuously run multiple extensive experiments and test on both newly proposed algorithms and already existing ``baseline'' algorithms a robust test environment framework has been designed and implemented.
+
+Having the test environment framework common for every tested algorithm made it increasingly simple to set up and evaluate the tests and produce extensive result data as a common interface was implemented for every algorithm to feed it training data and obtain the resulting probabilities.
+
+Another important aspect to the test environment is the ability to reuse existing solutions in multiple algorithms. The experimental algorithms we introduce are mainly based around the well known \gls{baum-welch} and thus the test environment may be utilised to provide unified access to the standard \gls{baum-welch} for every of tested approaches, greatly decreasing the code redundancy and allowing for faster creation and testing of new algorithms in the process.
+
+The test environment thus mainly compromises from several main components. The architecture of the test environment and the dependencies and interoperability of the components are depicted in figure \ref{fig:testenvironment}.
 
 \begin{figure}[!htb]
 \centering
 \includegraphics[scale=.4]{pictures/test-environment-overview.eps}
-\caption{An overview of the test environment}
+\caption{An overview of the test environment architecture.}
 \label{fig:testenvironment}
 \end{figure}
 
