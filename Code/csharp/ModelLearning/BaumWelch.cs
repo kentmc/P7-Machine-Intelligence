@@ -1,15 +1,19 @@
 using System;
 using System.Linq;
 using System.IO;
+using System.Collections.Generic;
 
 namespace ModelLearning {
 
+
+	// TODO: Implement scaling and dynamic programming.
+	// 		 Perform Unit Tests.
 	public class BaumWelch {
 		HMMGraph graph;
 
 		public HMMGraph Learn(HMMGraph hmm, int[] [] Observations) {
 
-			Initialize(hmm);
+		//	Initialize(hmm);
 
 			foreach(int[] O in Observations) {
 
@@ -59,7 +63,7 @@ namespace ModelLearning {
 
 			foreach(Node n in graph.Nodes) {
 
-				Dictionary<int,double> gammaobs;
+				Dictionary<int,double> gammaobs = new Dictionary<int,double>();
 				double gamma = 0;
 
 				for(int t=0;t<O.Length;t++) {
@@ -71,8 +75,9 @@ namespace ModelLearning {
 				
 				foreach(int i in gammaobs.Keys) {
 
-					n.SetEmissions[i] = gammaobs[i] / gamma;
+					n.SetEmission(O[i], gammaobs[i] / gamma);
 				}
+			}
 		}
 
 		private double ComputeKsi(Node na, Node nb, HMMGraph G, 
