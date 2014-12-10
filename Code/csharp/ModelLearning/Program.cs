@@ -25,7 +25,7 @@ namespace ModelLearning
                 new Learners.BaumWelchLearner(),
                 new Learners.GreedyExtendLearner(),
                 new Learners.SparseBaumWelchLearner(),
-                new Learners.JaegerLearner(),
+                new Learners.StateSplitterLearner(),
                 new Learners.JLearner()
             };
 

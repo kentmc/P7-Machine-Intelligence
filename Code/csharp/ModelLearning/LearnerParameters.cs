@@ -39,13 +39,16 @@ namespace ModelLearning
                 case "greedy state splitter":
                     {
                         RunningParameterDecimal = true;
-                        RunningParameterName = "Epsilon";
+                        RunningParameterName = "Threshold";
 
                         Console.WriteLine("Configure Greedy State Splitting Learner:");
                         Console.Write("Convergence Threshold: ");
                         AdditionalParameters.Add("threshold", Double.Parse(Console.ReadLine()));
 
-                        Console.WriteLine("Define Epsilon Range:");
+                        Console.Write("Epsilon: ");
+                        AdditionalParameters.Add("epsilon", Double.Parse(Console.ReadLine()));
+
+                        Console.WriteLine("Define Threshold Range:");
                         goto case "DEF_RUNNING_PARAM";
                     }
                 case "jlearner":
@@ -57,6 +60,9 @@ namespace ModelLearning
                 case "greedyextendlearner":
                     {
                         Console.WriteLine("Configure Greedy Extend Learner:");
+
+                        Console.Write("Intermediate BW iterations:");
+                        AdditionalParameters.Add("BWiterations", Int32.Parse(Console.ReadLine()));
 
                         Console.Write("Final BW threshold:");
                         AdditionalParameters.Add("finalBWThreshold", Double.Parse(Console.ReadLine()));

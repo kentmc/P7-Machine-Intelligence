@@ -41,13 +41,39 @@ namespace ModelLearning.Learners {
                 graph.AddNode(new_node);
             }
 
+
             //Add random transmissions. Each node will have at most Log(n) edges in both directions
-            List<Node> shuffled = graph.Nodes.Select(e => e).ToList();
-            Utilities.Shuffle(shuffled);
+            //for (int i = 0; i < graph.Nodes.Count; i++)
+            //{
+            //    List<Node> shuffled = graph.Nodes.Select(e => e).ToList();
+            //    Utilities.Shuffle(shuffled);
+            //    int upperBound = (int)Math.Ceiling(Math.Log(graph.Nodes.Count));
+            //    if (upperBound >= graph.Nodes.Count)
+            //        upperBound = graph.Nodes.Count - 1;
+            //    for (int p = 0; p <= upperBound; p++)
+            //    {
+            //        Node from = graph.Nodes[i];
+            //        Node to = graph.Nodes[p];
+            //        from.SetTransition(to, ran.NextDouble());
+            //    }
+            //}
+
+            int numberOfTransitions = (int)Math.Ceiling(Math.Log(states));
+
+            foreach (Node node in graph.Nodes)
+            {
+                for (int i = 0; i < numberOfTransitions; i++)
+                {
+                    Node target;
+                    while (node.Transitions.ContainsKey(target = graph.Nodes[ran.Next(states)])) ;
+
+                    node.SetTransition(target, ran.NextDouble());
+                }
+            }
 
             graph.Normalize();
 			hmm = SparseHiddenMarkovModel.FromGraph(graph);
-            hmm.Learn(trainingData.GetNonempty(), tolerance);
+            hmm.Learn(trainingData.GetNonempty(), validationData.GetNonempty(), tolerance);
         }
 
         public override string Name() {
@@ -65,7 +91,7 @@ namespace ModelLearning.Learners {
             outputWriter.WriteLine("States: {0}", hmm.NumberOfStates);
             outputWriter.WriteLine("Symbols: {0}", hmm.NumberOfSymbols);
             outputWriter.WriteLine("Threshold: {0}", tolerance);
-            //hmm.Save(outputWriter, csvWriter);
+            hmm.Save(outputWriter, csvWriter);
         }
     }
 }

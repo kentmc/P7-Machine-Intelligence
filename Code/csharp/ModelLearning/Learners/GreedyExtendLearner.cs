@@ -8,10 +8,11 @@ namespace ModelLearning.Learners {
     class GreedyExtendLearner : Learner {
 
         private Random ran;
-        private HiddenMarkovModel bestHMM;
+        private SparseHiddenMarkovModel bestHMM;
         private double bestLikelihood;
         private int maxExpandAttempts;
         private double finalBWThreshold;
+        private int BWiterations;
         private System.IO.StreamWriter intermediateOutputFile;
         private string intermediateOutputFileName;
         private int run = 0;
@@ -45,16 +46,17 @@ namespace ModelLearning.Learners {
             intermediateOutputFile.WriteLine("States, Likelihood");
 
             HMMGraph graph = RandomSingleNodeGraph(trainingData.NumSymbols);
-            bestHMM = ModelConverter.Graph2HMM(graph);
+            bestHMM = SparseHiddenMarkovModel.FromGraph(graph);
             bestLikelihood = bestHMM.Evaluate(trainingData.GetAll(), true);
-            while (bestHMM.States < maxStates){
+            while (bestHMM.NumberOfStates < maxStates){
                 double last_ll = bestLikelihood;
-                WriteLine("Number of states: " + bestHMM.States);
+                WriteLine("Number of states: " + bestHMM.NumberOfStates);
                 for (int i = 0; i < maxExpandAttempts; i++) { //number of times to try adding a random node
-                    graph = ModelConverter.HMM2Graph(bestHMM);
+                    graph = bestHMM.ToGraph();
                     RandomlyExtendGraphSparsely(graph);
-                    HiddenMarkovModel hmm = ModelConverter.Graph2HMM(graph);
-                    hmm.Learn(trainingData.GetNonempty(), 0.01, validationData.GetNonempty()); //Run the BaumWelch algorithm
+                    SparseHiddenMarkovModel hmm = SparseHiddenMarkovModel.FromGraph(graph);
+                    if (BWiterations > 0)
+                        hmm.Learn(trainingData.GetNonempty(), validationData.GetNonempty(), 0, BWiterations); //Run the BaumWelch algorithm
                     double likelihood = hmm.Evaluate(validationData.GetAll(), true);
                     if (likelihood > bestLikelihood) {
                         bestLikelihood = likelihood;
@@ -76,7 +78,7 @@ namespace ModelLearning.Learners {
                 }
             }
             WriteLine("Runs Baum Welch last time with the final threshold");
-            bestHMM.Learn(trainingData.GetNonempty(), finalBWThreshold, trainingData.GetNonempty());
+            bestHMM.Learn(trainingData.GetNonempty(), validationData.GetNonempty(), finalBWThreshold);
             bestLikelihood = bestHMM.Evaluate(validationData.GetAll(), true);
             WriteLine("Final likelihood: " + bestLikelihood);
             OutputIntermediate();
@@ -84,7 +86,7 @@ namespace ModelLearning.Learners {
         }
 
         private void OutputIntermediate() {
-            intermediateOutputFile.WriteLine(bestHMM.States + ", " + bestLikelihood);
+            intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + bestLikelihood);
         }
 
         /// <summary>
@@ -149,13 +151,14 @@ namespace ModelLearning.Learners {
         public override void Initialise(LearnerParameters parameters, int iteration) {
             maxStates = (int)parameters.AdditionalParameters["maxStates"];
             maxExpandAttempts = (int)parameters.AdditionalParameters["maxExpandAttempts"];
+            BWiterations = (int)parameters.AdditionalParameters["BWiterations"];
             finalBWThreshold = (double)parameters.AdditionalParameters["finalBWThreshold"];
         }
 
         public override void Save(System.IO.StreamWriter outputWriter, System.IO.StreamWriter csvWriter)
         {
-            outputWriter.WriteLine("Number of States: {0}", bestHMM.States);
-            outputWriter.WriteLine("Number of Symbols: {0}", bestHMM.States);
+            outputWriter.WriteLine("Number of States: {0}", bestHMM.NumberOfStates);
+            outputWriter.WriteLine("Number of Symbols: {0}", bestHMM.NumberOfSymbols);
             outputWriter.WriteLine("Max expand attempts: {0}", maxExpandAttempts);
             outputWriter.WriteLine("Final BW threshold: {0}", finalBWThreshold);
             outputWriter.WriteLine("Max states: {0}", maxStates);

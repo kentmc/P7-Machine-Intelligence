@@ -1,16 +1,10 @@
 \section{Problem Definition}
 
-The premise for our work is to find a way to build a model PFA or otherwise, for the PAutomaC competition.
-As mentioned earlier the competion has it own evaluation function... 
-As mentioned earlier, the goal of the competition only focuses on building a model that resembles the one generating the
-observed sequence of symbols.
-We will also consider other metrics like the amount of time it takes to learn the model.
+With the wide use of the Baum Welch algorithm for learning the parameters of a \gls{hmm}, it is a natural to ask if one can come up with a better algorithm. Initially, a fixed number of states must be specified when using the Baum Welch algorithm.
+If one does not know the most suited number of states for the given problem, one may have to either choose a number of states arbitrarily, or perform tests using different number of states. If time is critical, the latter choice may not be possible. Therefore, an algorithm hopefully exists that eliminates the initial choice of states.
+The many data sets and solutions published during the Pautomac competition makes it easy to evaluate the performance of different algorithms.
+This naturally leads to our problem definition:
 
-\textbf{Problem:}"How do we learn a model that recieves a high score in the PAutomaC competition."
+\paragraph{Problem:}
 
-
-
-
-
-
-
+Can we develop an algorithm for learning the parameters of an \gls{hmm}, that performs at least as good as Baum Welch on the Pautomac data sets, but which does not require a fixed number of states to be specified initially?
