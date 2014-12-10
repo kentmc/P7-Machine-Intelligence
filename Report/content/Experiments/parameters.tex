@@ -1,0 +1,27 @@
+\section{Selecting Algorithm Parameters}
+5000 sequences train/validate
+10 - 100 states
+10 step
+
+\subsection{Baum-Welch Treshold}
+Baum-Welch takes 
+
+\begin{figure}
+	\begin{tikzpicture}
+		\begin{axis}[
+				ybar,
+				xtick=data,
+   				symbolic x coords={0.1,0.05,0.01,0.005,0.001,0.0001},
+				xlabel = Treshold,
+            		ylabel = Score (lower is better)]
+				\addplot+table[y=Score, col sep=tab]
+				{content/Experiments/treshold.csv};
+		\end{axis}
+	\end{tikzpicture} 
+\caption{Loglikelyhood when running Baum-Welch with a treshold}
+\label{fig:treshold}
+\end{figure}
+
+\subsection{Greedy Extend}
+10 BW iterations
+100 attempts
