@@ -1,52 +1,62 @@
-\FloatBarrier
-\section{Results}
-\subsection{State Experiments}
-
 \begin{tabular*}{\textwidth}{@{}cc@{}}
 \begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
 \centering
-\textbf{Dataset: 6, States: 19}\par\medskip
+\textbf{Dataset: 36, Density: 7.4\%}\par\medskip
 \begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.03)},
+		anchor=south}}
 	\begin{axis}[
 			xlabel = Number of states,
-            	ylabel = Score (lower is better)]
+            	ylabel = Score (lower is better),
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+		
 		\addplot+table[x=States, y=BW, col sep=tab]
-		{content/Experiments/graphdata/set6.csv};
-		\addlegendentry{\textbf{BW}}
+		{content/Experiments/graphdata/set36.csv};
+%		\addlegendentry{\textbf{BW}}
 		
 		\addplot+table[x=States, y=SBW, col sep=tab]
-		{content/Experiments/graphdata/set6.csv};
-		\addlegendentry{\textbf{Sparse BW}}
+		{content/Experiments/graphdata/set36.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
 		
 		\addplot+table[x=States, y=GE, col sep=tab]
-		{content/Experiments/graphdata/set6.csv};
-		\addlegendentry{\textbf{Greedy Extend}}
+		{content/Experiments/graphdata/set36.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
 	\end{axis}
 \end{tikzpicture} 
-\label{fig:dataset6}
+\label{fig:dataset36}
 \end{minipage}% 
 &
 \begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
 \centering
-\textbf{Dataset: 23, States: 33}\par\medskip
+\textbf{Dataset: 8, Density: 16.8\%}\par\medskip
 \begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.03)},
+		anchor=south}}
 	\begin{axis}[
 			xlabel = Number of states,
-            	ylabel = Score (lower is better)]
+            	ylabel = Score (lower is better),
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+		
 		\addplot+table[x=States, y=BW, col sep=tab]
-		{content/Experiments/graphdata/set23.csv};
-		\addlegendentry{\textbf{BW}}
+		{content/Experiments/graphdata/set8.csv};
+%		\addlegendentry{\textbf{BW}}
 		
 		\addplot+table[x=States, y=SBW, col sep=tab]
-		{content/Experiments/graphdata/set23.csv};
-		\addlegendentry{\textbf{Sparse BW}}
+		{content/Experiments/graphdata/set8.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
 		
 		\addplot+table[x=States, y=GE, col sep=tab]
-		{content/Experiments/graphdata/set23.csv};
-		\addlegendentry{\textbf{Greedy Extend}}
+		{content/Experiments/graphdata/set8.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
 	\end{axis}
 \end{tikzpicture} 
-\label{fig:dataset23}
+\label{fig:dataset8}
 \end{minipage}
 \\
 \begin{minipage}[t]{\dimexpr0.6\textwidth-2\tabcolsep}
@@ -55,248 +65,66 @@
 \begin{minipage}[t]{\dimexpr0.4\textwidth-2\tabcolsep}
 \end{minipage}
 \end{tabular*}%
-
-
-begin{tabular*}{\textwidth}{@{}cc@{}}
-\begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
-\centering
-\textbf{Dataset: 41, States: 54}\par\medskip
-\begin{tikzpicture}
-	\begin{axis}[
-			xlabel = Number of states,
-            	ylabel = Score (lower is better)]
-		\addplot+table[x=States, y=BW, col sep=tab]
-		{content/Experiments/graphdata/set41.csv};
-		\addlegendentry{\textbf{BW}}
-		
-		\addplot+table[x=States, y=SBW, col sep=tab]
-		{content/Experiments/graphdata/set41.csv};
-		\addlegendentry{\textbf{Sparse BW}}
-		
-		\addplot+table[x=States, y=GE, col sep=tab]
-		{content/Experiments/graphdata/set41.csv};
-		\addlegendentry{\textbf{Greedy Extend}}
-	\end{axis}
-\end{tikzpicture} 
-\label{fig:dataset41}
-\end{minipage}% 
-&
-\begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
-\centering
-\textbf{Dataset: 1, States: 64}\par\medskip
-\begin{tikzpicture}
-	\begin{axis}[
-			xlabel = Number of states,
-            	ylabel = Score (lower is better)]
-		\addplot+table[x=States, y=BW, col sep=tab]
-		{content/Experiments/graphdata/set64.csv};
-		\addlegendentry{\textbf{BW}}
-		
-		\addplot+table[x=States, y=SBW, col sep=tab]
-		{content/Experiments/graphdata/set64.csv};
-		\addlegendentry{\textbf{Sparse BW}}
-		
-		\addplot+table[x=States, y=GE, col sep=tab]
-		{content/Experiments/graphdata/set64.csv};
-		\addlegendentry{\textbf{Greedy Extend}}
-	\end{axis}
-\end{tikzpicture} 
-\label{fig:dataset64}
-\end{minipage}
 \\
-\begin{minipage}[t]{\dimexpr0.6\textwidth-2\tabcolsep}
-\end{minipage}
-&
-\begin{minipage}[t]{\dimexpr0.4\textwidth-2\tabcolsep}
-\end{minipage}
-\end{tabular*}%
-
-\subsection{Density Experiments}
-
-\FloatBarrier
 \begin{tabular*}{\textwidth}{@{}cc@{}}
 \begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
 \centering
+\textbf{Dataset: 43, Density: 40.2\%}\par\medskip
 \begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.03)},
+		anchor=south}}
 	\begin{axis}[
 			xlabel = Number of states,
-            	ylabel = Score (lower is better)]
+            	ylabel = Score (lower is better),
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
 		\addplot+table[x=States, y=BW, col sep=tab]
-		{content/Experiments/graphdata/set23.csv};
-		\addlegendentry{\textbf{BW}}
+		{content/Experiments/graphdata/set43.csv};
+%		\addlegendentry{\textbf{BW}}
 		
 		\addplot+table[x=States, y=SBW, col sep=tab]
-		{content/Experiments/graphdata/set23.csv};
-		\addlegendentry{\textbf{Sparse BW}}
+		{content/Experiments/graphdata/set43.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
 		
 		\addplot+table[x=States, y=GE, col sep=tab]
-		{content/Experiments/graphdata/set23.csv};
-		\addlegendentry{\textbf{Greedy Extend}}
-		
+		{content/Experiments/graphdata/set43.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
 	\end{axis}
-\end{tikzpicture}
-\label{dataset23}
+\end{tikzpicture} 
+\label{fig:dataset43}
 \end{minipage}% 
 &
 \begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
 \centering
+\textbf{Dataset: 37, Density: 50\%}\par\medskip
 \begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.03)},
+		anchor=south}}
 	\begin{axis}[
 			xlabel = Number of states,
-            	ylabel = Score (lower is better)]
+            	ylabel = Score (lower is better),
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
 		\addplot+table[x=States, y=BW, col sep=tab]
-		{content/Experiments/graphdata/set1.csv};
-		\addlegendentry{\textbf{Dataset: 1 States: 64}}
-	\end{axis}
-\end{tikzpicture}
-\label{dataset1}
-\end{minipage}
-\\
-\begin{minipage}[t]{\dimexpr0.6\textwidth-2\tabcolsep}
-\end{minipage}
-&
-\begin{minipage}[t]{\dimexpr0.4\textwidth-2\tabcolsep}
-\end{minipage}
-\end{tabular*}%
-
-\begin{tabular*}{\textwidth}{@{}cc@{}}
-\begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
-\centering
-\begin{tikzpicture}
-	\begin{axis}[
-			xlabel = Number of states,
-            	ylabel = Score (lower is better)]
-		\addplot+table[x=States, y=BW, col sep=tab]
-		{content/Experiments/graphdata/set23.csv};
-		\addlegendentry{\textbf{Dataset: 23 States: 33}}
-	\end{axis}
-\end{tikzpicture}
-\label{dataset23}
-\end{minipage}% 
-&
-\begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
-\centering
-\begin{tikzpicture}
-	\begin{axis}[
-			xlabel = Number of states,
-            	ylabel = Score (lower is better)]
-		\addplot+table[x=States, y=BW, col sep=tab]
-		{content/Experiments/graphdata/set1.csv};
-		\addlegendentry{\textbf{Dataset: 1 States: 64}}
-	\end{axis}
-\end{tikzpicture}
-\label{dataset1}
-\end{minipage}
-\\
-\begin{minipage}[t]{\dimexpr0.6\textwidth-2\tabcolsep}
-\end{minipage}
-&
-\begin{minipage}[t]{\dimexpr0.4\textwidth-2\tabcolsep}
-\end{minipage}
-\end{tabular*}%
-
-\subsection{Symbol size Experiments}
-
-\begin{tabular*}{\textwidth}{@{}cc@{}}
-\begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
-\centering
-\textbf{Dataset: 6, States: 19}\par\medskip
-\begin{tikzpicture}
-	\begin{axis}[
-			xlabel = Number of states,
-            	ylabel = Score (lower is better)]
-		\addplot+table[x=States, y=BW, col sep=tab]
-		{content/Experiments/graphdata/set6.csv};
-		\addlegendentry{\textbf{BW}}
+		{content/Experiments/graphdata/set37.csv};
+%		\addlegendentry{\textbf{BW}}
 		
 		\addplot+table[x=States, y=SBW, col sep=tab]
-		{content/Experiments/graphdata/set6.csv};
-		\addlegendentry{\textbf{Sparse BW}}
+		{content/Experiments/graphdata/set37.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
 		
 		\addplot+table[x=States, y=GE, col sep=tab]
-		{content/Experiments/graphdata/set6.csv};
-		\addlegendentry{\textbf{Greedy Extend}}
+		{content/Experiments/graphdata/set37.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
 	\end{axis}
 \end{tikzpicture} 
-\label{fig:dataset6}
-\end{minipage}% 
-&
-\begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
-\centering
-\textbf{Dataset: 23, States: 33}\par\medskip
-\begin{tikzpicture}
-	\begin{axis}[
-			xlabel = Number of states,
-            	ylabel = Score (lower is better)]
-		\addplot+table[x=States, y=BW, col sep=tab]
-		{content/Experiments/graphdata/set23.csv};
-		\addlegendentry{\textbf{BW}}
-		
-		\addplot+table[x=States, y=SBW, col sep=tab]
-		{content/Experiments/graphdata/set23.csv};
-		\addlegendentry{\textbf{Sparse BW}}
-		
-		\addplot+table[x=States, y=GE, col sep=tab]
-		{content/Experiments/graphdata/set23.csv};
-		\addlegendentry{\textbf{Greedy Extend}}
-	\end{axis}
-\end{tikzpicture} 
-\label{fig:dataset23}
-\end{minipage}
-\\
-\begin{minipage}[t]{\dimexpr0.6\textwidth-2\tabcolsep}
-\end{minipage}
-&
-\begin{minipage}[t]{\dimexpr0.4\textwidth-2\tabcolsep}
-\end{minipage}
-\end{tabular*}%
-
-
-begin{tabular*}{\textwidth}{@{}cc@{}}
-\begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
-\centering
-\textbf{Dataset: 41, States: 54}\par\medskip
-\begin{tikzpicture}
-	\begin{axis}[
-			xlabel = Number of states,
-            	ylabel = Score (lower is better)]
-		\addplot+table[x=States, y=BW, col sep=tab]
-		{content/Experiments/graphdata/set41.csv};
-		\addlegendentry{\textbf{BW}}
-		
-		\addplot+table[x=States, y=SBW, col sep=tab]
-		{content/Experiments/graphdata/set41.csv};
-		\addlegendentry{\textbf{Sparse BW}}
-		
-		\addplot+table[x=States, y=GE, col sep=tab]
-		{content/Experiments/graphdata/set41.csv};
-		\addlegendentry{\textbf{Greedy Extend}}
-	\end{axis}
-\end{tikzpicture} 
-\label{fig:dataset41}
-\end{minipage}% 
-&
-\begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
-\centering
-\textbf{Dataset: 1, States: 64}\par\medskip
-\begin{tikzpicture}
-	\begin{axis}[
-			xlabel = Number of states,
-            	ylabel = Score (lower is better)]
-		\addplot+table[x=States, y=BW, col sep=tab]
-		{content/Experiments/graphdata/set64.csv};
-		\addlegendentry{\textbf{BW}}
-		
-		\addplot+table[x=States, y=SBW, col sep=tab]
-		{content/Experiments/graphdata/set64.csv};
-		\addlegendentry{\textbf{Sparse BW}}
-		
-		\addplot+table[x=States, y=GE, col sep=tab]
-		{content/Experiments/graphdata/set64.csv};
-		\addlegendentry{\textbf{Greedy Extend}}
-	\end{axis}
-\end{tikzpicture} 
-\label{fig:dataset64}
+\label{fig:dataset37}
 \end{minipage}
 \\
 \begin{minipage}[t]{\dimexpr0.6\textwidth-2\tabcolsep}
