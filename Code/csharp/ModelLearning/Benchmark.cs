@@ -98,7 +98,7 @@ namespace ModelLearning
                     averageLearnerRuntimes.Add(learner, results[2]);
                     medianLearnerRuntimes.Add(learner, results[3]);
 
-                    outputWriter.WriteLine("{0}:\t{1:00000000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", learner.Name().PadRight(learnerNamePadding), medianLearnerScores[learner],
+                    outputWriter.WriteLine("{0}:\t{1:00000000.0000000000}\t{2:00000000.0000000000}\t{3:000000}\t{4:000000}", learner.Name().PadRight(learnerNamePadding), medianLearnerScores[learner],
                         averageLearnerScores[learner], medianLearnerRuntimes[learner], averageLearnerRuntimes[learner]);
 
                     csvWriter.WriteLine("{0},{1},{2},{3},{4},", learner.Name(), medianLearnerScores[learner], averageLearnerScores[learner], medianLearnerRuntimes[learner],
@@ -115,7 +115,7 @@ namespace ModelLearning
                 outputWriter.WriteLine("BEST");
                 outputWriter.WriteLine();
 
-                outputWriter.WriteLine("{0}:\t{1:00000000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", bestLearner.Name().PadRight(learnerNamePadding), medianLearnerScores[bestLearner],
+                outputWriter.WriteLine("{0}:\t{1:00000000.0000000000}\t{2:00000000.0000000000}\t{3:000000}\t{4:000000}", bestLearner.Name().PadRight(learnerNamePadding), medianLearnerScores[bestLearner],
                     averageLearnerScores[bestLearner], medianLearnerRuntimes[bestLearner], averageLearnerRuntimes[bestLearner]);
             }
         }
@@ -193,7 +193,7 @@ namespace ModelLearning
 
                 foreach (int iteration in parameterMedianScores.Keys)
                 {
-                    outputWriter.WriteLine("{0}:\t{1:00000000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", IterationName(parameters, iteration), parameterMedianScores[iteration],
+                    outputWriter.WriteLine("{0}:\t{1:00000000.0000000000}\t{2:00000000.0000000000}\t{3:000000}\t{4:000000}", IterationName(parameters, iteration), parameterMedianScores[iteration],
                         parameterAverageScores[iteration], parameterMedianRuntimes[iteration], parameterAverageRuntimes[iteration]);
                 }
                 outputWriter.WriteLine();
@@ -201,7 +201,7 @@ namespace ModelLearning
                 outputWriter.WriteLine("BEST");
                 outputWriter.WriteLine();
 
-                outputWriter.WriteLine("{0}:\t{1:00000000.0000000000}\t{2:0000.0000000000}\t{3:000000}\t{4:000000}", IterationName(parameters, bestIteration), parameterMedianScores[bestIteration],
+                outputWriter.WriteLine("{0}:\t{1:00000000.0000000000}\t{2:00000000.0000000000}\t{3:000000}\t{4:000000}", IterationName(parameters, bestIteration), parameterMedianScores[bestIteration],
                     parameterAverageScores[bestIteration], parameterMedianRuntimes[bestIteration], parameterAverageRuntimes[bestIteration]);
             }
 
