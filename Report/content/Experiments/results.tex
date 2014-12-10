@@ -1,10 +1,12 @@
 \section{Results}
 
+\input{./content/Experiments/results/greedyextend-results}
+
 \begin{tikzpicture}
 	\begin{axis}[
 			xlabel = Number of states,
             	ylabel = Score (lower is better)]
-		\addplot+table[x=States, y=Score, col sep=tab]
+		\addplot+table[x=States, y=Threshold, col sep=tab]
 		{content/Experiments/graphdata/set23.csv};
 		\addlegendentry{\textbf{Dataset: 23 States: 33}}
 	\end{axis}

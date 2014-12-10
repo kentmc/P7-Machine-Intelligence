@@ -1,0 +1,18 @@
+\subsection{Greedy Extend}
+
+The first big question about the Greedy Extend algorithm, is how the choice of $\beta$ affects the performance of the algorithm.
+As $\beta$ denotes the iterations of Baum Welch to run each time the algorithm attempts to extend the graph, increasing $\beta$ will also increase the run time of the algorithm. It may be the case that better results are achieved when $\beta$ is increased, since more iterations of Baum Welch also means a greater increase in likelihood. However, it could be the case that using many iterations early increases the chance of getting trapped in a local optimum.
+An experiment has been conducted of using different values for $\beta$ on data set $1$ from the Pautomac competition. The results can be seen in figure \ref{fig:ge-different-thresholds-tested}. Each line represents an average over 5 runs of Greedy Extend with the specified number of iterations.
+  
+\begin{tikzpicture}
+\begin{axis}[xlabel={$x$},ylabel={Column Data}]
+
+\addplot table[x index=0,y index=1,col sep=tab] {content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
+\addlegendentry{Iterations: 0}
+  
+\addplot table[x index=0,y index=2,col sep=tab] {content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
+\addlegendentry{Iterations: 1}
+
+\end{axis}
+\end{tikzpicture}  
+
