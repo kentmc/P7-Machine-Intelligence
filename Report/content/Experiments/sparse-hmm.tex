@@ -1,4 +1,4 @@
-\section{Sparse Hidden Markov Model}
+\subsubsection{Sparse Hidden Markov Model}
 
 As many of implemented experimental algorithms work with \glspl{hmm} that have sparse transition matrix in the sense of many transition probabilities being zero, we deemed it useful to optimise the algorithms for sparse matrix environment. For this purpose a new model, the \emph{Sparse hidden Markov model}, was implemented to utilise the sparseness of the matrix to achieve increased performance speed compared to standard methods.
 
@@ -15,7 +15,7 @@ The above information is utilised by both \gls{baum-welch} and \gls{fb_algorithm
 			width=0.8\textwidth,
 			height=0.32\textheight,
 			ymin=1,
-			ymax=3,
+			ymax=5,
 			xlabel = Number of states,
             		ylabel = Average speedup,
             		legend style={at={(0,1)}, anchor=north west}]
@@ -25,9 +25,12 @@ The above information is utilised by both \gls{baum-welch} and \gls{fb_algorithm
 			\addplot+table[x=States, y=BW_2, col sep=tab]
 			{content/Experiments/graphdata/sparseHMMspeedup10.csv};
 			\addlegendentry{B}
+			\addplot+table[x=States, y=BW_2, col sep=tab]
+			{content/Experiments/graphdata/sparseHMMspeedup5.csv};
+			\addlegendentry{C}
 		\end{axis}
 	\end{tikzpicture}
-	\caption{Average speedup achieved on \gls{baum-welch} using the \emph{Sparse hidden Markov model}. \textbf{A:} Tested a model with transition density of 10\% on dummy data with 8 symbols. \textbf{B:} Tested a model with transition density of 10\% on dummy data with 2 symbols.}
+	\caption{Average speedup achieved on \gls{baum-welch} using the \emph{Sparse hidden Markov model}. \textbf{A:} Tested a model with transition density of 10\% on dummy data with 8 symbols. \textbf{B:} Tested a model with transition density of 10\% on dummy data with 2 symbols. \textbf{C:} Tested a model with transition density of 5\% on dummy data with 2 symbols.}
 	\label{sparseBWspeedup}
 \end{figure}
 
@@ -59,4 +62,4 @@ The above information is utilised by both \gls{baum-welch} and \gls{fb_algorithm
 
 All of the performance tests were coded in C\# programming language just as the rest of the test environment and were solely single threaded. The performance speedup was measured running on a 4-core Intel Core i7-4700MQ processor machine clocked at frequency 2.4 GHz with 8 GB of available \gls{ram} and utilising the Microsoft Windows 8 operating system.
 
-A significant speedup has been observed for the \gls{viterbi}. As can be observed from the result graph, \ref{sparseViterbispeedup}, the speedup on the \gls{viterbi} is largely independent from the number of symbols however is almost linear to the negative density (or ``sparsity'') of the model as a speedup by a factor of $20.99$ has been observed for the model with 10\% density, but this factor was increased to $38.01$ with 5\% density model. Both of the discussed results are the highest observed speedups observed for $100$ state models.
+A significant speedup has been observed for the \gls{viterbi}. As can be observed from the result graph, \ref{sparseViterbispeedup}, the speedup on the \gls{viterbi} is largely independent from the number of symbols however is almost linear to the negative density (or ``sparsity'') of the model as a speedup by a factor of $20.99$ has been observed for the model with 10\% density, but this factor was increased to $38.01$ with 5\% density model. Both of the discussed results are the highest measured speedups observed for $100$ state models.
