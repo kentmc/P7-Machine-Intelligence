@@ -69,4 +69,9 @@ Another change was made to modify the \gls{baum-welch} to run with different dat
 
 \input{./content/Experiments/sparse-hmm.tex}
 
-\subsubsection{HMM Graph}
+\subsubsection{Hidden Markov Model Graph}
+
+The last implementation of the \gls{hmm} stores information inside a graph structure instead of utilising the transition and emissions matrices. There are no algorithms written for the graph representation of the \gls{hmm}, meaning that if a \gls{viterbi} or \gls{baum-welch} are to be performed the graph representation has to be first converted into either the standard \gls{hmm} or the sparse \gls{hmm}.
+
+The main purpose of the graph \gls{hmm} is to provide easy access to structural changes such as adding or removing a hidden state or adding or removing a transition in the hidden state space. As such it is mostly used as an intermediary format during algorithm performing the above actions.
+
