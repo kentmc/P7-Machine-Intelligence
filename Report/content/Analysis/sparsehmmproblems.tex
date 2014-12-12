@@ -1,4 +1,5 @@
 \section{HMM and sparsity}
+\label{sec:hmm-and-sparsity}
 It is our experience that when using a \gls{hmm} to model real world processes, the transition matrix often becomes sparse due to the nature of the process modeled.
 For example, in human trait recognition, a \gls{hmm} can be used to model the motion of a particular person while he walks\cite{trait-recognition}.
 If focusing on the lower part of the body, consider one state that represents the longest gap between the two feet while walking, where the right foot is in front. It is natural that this state cannot directly lead to the opposite state where the left foot is in front. There has to be a number of intermediate states to represent a more fluid movement, and hence the transition matrix may be quite sparse \gls{hmm}.

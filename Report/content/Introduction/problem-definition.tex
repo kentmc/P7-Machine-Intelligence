@@ -1,10 +1,10 @@
 \section{Problem Definition}
 
-With the wide use of the Baum Welch algorithm for learning the parameters of a \gls{hmm}, it is a natural to ask if one can come up with a better algorithm. Initially, a fixed number of states must be specified when using the Baum Welch algorithm.
-If one does not know the most suited number of states for the given problem, one may have to either choose a number of states arbitrarily, or perform tests using different number of states. If time is critical, the latter choice may not be possible. Therefore, an algorithm hopefully exists that eliminates the initial choice of states.
-The many data sets and solutions published during the Pautomac competition makes it easy to evaluate the performance of different algorithms.
+With the wide use of the Baum Welch algorithm for learning the parameters of a \gls{hmm}, it is a natural to ask if one can come up with a better algorithm. One thing that could be improved is the requirement for a fixed number of states to be specified up front when using the Baum Welch algorithm.
+If one does not know the most suited number of states for the given problem, one may have to either choose a number of states arbitrarily, or perform tests using different number of states. If time is critical, the latter choice may not be possible.
+The many data sets and solutions published during the Pautomac competition makes it easy to evaluate the performance of any proposed algorithm.
 This naturally leads to our problem definition:
 
 \paragraph{Problem:}
 
-Can we develop an algorithm for learning the parameters of an \gls{hmm}, that performs at least as good as Baum Welch on the Pautomac data sets, but which does not require a fixed number of states to be specified initially?
+Based on the Pautomac competition data, can we develop a better algorithm for learning the parameters of a \gls{hmm} than the Baum Welch algorithm?

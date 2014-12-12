@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Accord.Statistics.Models.Markov;
 using System.IO;
+using System.Diagnostics;
 
 namespace ModelLearning.Learners {
     class BaumWelchLearner : Learner {
@@ -77,7 +78,11 @@ namespace ModelLearning.Learners {
 
             //hmm = new HiddenMarkovModel(trainingData.NumSymbols, states);
             hmm = new HiddenMarkovModel(transitionMatrix, emissionMatrix, initialProbabilities);
-            hmm.Learn(trainingData.GetNonempty(), tolerance, validationData.GetNonempty());
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            hmm.Learn(trainingData.GetNonempty(), 10, validationData.GetNonempty());
+            sw.Stop();
+            Console.WriteLine(sw.Elapsed.TotalSeconds);
         }
 
         public override string Name() {
