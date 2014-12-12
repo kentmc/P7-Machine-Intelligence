@@ -1,24 +1,116 @@
 \section{Selecting Datasets}
-Pautomac delivered 48 datasets, which given this project's time constraint is too many, so a dataset selection method has to be devised. We want to understand how the presented algorithms handle the different known variations, of the model that originally created the datasets. There are three variables; the amount of states, a density percentage and the observable symbol alphabet size.
+Pautomac delivered 48 datasets, which is more than what is necessary to determine how the different learners behave on the different parameters for the datasets. Three parameters are known about the datasets: the amount of states that was used in the model that created the data, the amount of different symbols emitted by the model and the transition density of the model. One approach is of course to run experiments on all the datasets and accumulate the results. However using a representative set of datasets for each parameter variable, will produce the necessary results as well. The chosen approach is to select four representative datasets for each parameter variable. There is no perfect set of datasets, however the best fitting datasets have been chosen.
+Figure \ref{fig:statesetplot} shows how four datasets represents the range of the state amount parameter variable. The left scatterplot shows the datasets plotted by transition density in percentage and number of emission symbols, where the selected datasets are clustered together. The right scatterplot shows how the datasets has a much wider spread, following the number of state axis. This process of selecting nicely fitting datasets for each parameter range were applied to all three variables. The scatterplots for each variable can be seen in Figure \ref{fig:statesetplot}, \ref{fig:densitysetplot} and \ref{fig:symbolsetplot}. The  selected datasets with all their parameters can be seen in table \ref{state_table}, \ref{density_table} and \ref{symbol_table}.
 
-There is no obvious pattern in which Pautomac produced these datasets, which can easily be seen when plotting the datasets in a coordinate system:
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.5\textwidth}
+        	\begin{tikzpicture}
+			\begin{axis}[
+			%scatter/use mapped color={draw=blue,fill=blue!30!white}, 
+			%only marks,
+			xlabel = Transition density (\%),
+            	ylabel = Number of symbols]
+			\addplot[scatter,
+				only marks,
+				scatter src=explicit] 
+				table[meta=mark, x=density, y=symbols, col sep=tab]
+				{content/Experiments/stateset.csv};
+			\end{axis}
+		\end{tikzpicture}
+        \end{subfigure}%
+		\begin{subfigure}[b]{0.5\textwidth}
 
 \begin{tikzpicture}
 	\begin{axis}[
-			scatter/use mapped color={draw=blue,fill=blue!30!white}, 
-			only marks,
-			xlabel = Transition density (\%),
+			%scatter/use mapped color={draw=blue,fill=blue!30!white}, 
+			%only marks,
+			xlabel = Number of states,
             	ylabel = Number of symbols]
-		\addplot+table[x=density, y=symbols, col sep=comma, mark options={blue}]
+		\addplot[scatter,
+			only marks,
+			scatter src=explicit] 
+		table[meta=mark, x=states, y=symbols, col sep=tab]
 		{content/Experiments/stateset.csv};
 	\end{axis}
 \end{tikzpicture}
+	\end{subfigure}
+  	\caption{Two plots visualising the selected state-range datasets}\label{fig:statesetplot}
+\end{figure}
 
-The range of the three variables is known, where we want to isolate each variable one at a time, to determine how the presented algorithms behave. There will be no optimal set of datasets for isolating one variable, but by calculating the unbiased euclidean distance between a preselected point and all the datasets, it is possible to select the best-case. By unbiased we mean that all of the variable's ranges are adjusted and plotted by the percentage on their respectable range and not the range itself. 
+%%%%%%%%%%%%%%%%%%%%%%%
+%
+%_______density range______________
 
-The preselected point, has to be found by exploration. A natural first step is to determine the two static values based on a dense cluster in their own two-dimensional space. Having determined a plot for the two static values, some points for the variable have to be determined, so that the range of this variable is covered sufficiently. For instance, selecting the datasets for the state range we can use the above figure, where a cluster can be found at bottom left area. A point in this cluster is selected, determining the two static values and then the range of the variable is covered from 10 to 70 by 10 steps. Of course, not all of the points in the cluster will be close in the third dimension, so the 7 steps of the variable value, only came close to 4 datasets. 
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.5\textwidth}
+        	\begin{tikzpicture}
+			\begin{axis}[
+			xlabel = Number of states,
+            	ylabel = Number of symbols]
+			\addplot[scatter,
+				only marks,
+				scatter src=explicit] 
+				table[meta=mark, x=states, y=symbols, col sep=tab]
+				{content/Experiments/densityset.csv};
+			\end{axis}
+		\end{tikzpicture}
+		\end{subfigure}%
+		\begin{subfigure}[b]{0.5\textwidth}
 
-This process of selecting the best-case datasets for  at a time, were applied for all three variables:
+\begin{tikzpicture}
+	\begin{axis}[
+			xlabel = Transition density(\%),
+            	ylabel = Number of symbols]
+		\addplot[scatter,
+			only marks,
+			scatter src=explicit] 
+		table[meta=mark, x=density, y=symbols, col sep=tab]
+		{content/Experiments/densityset.csv};
+	\end{axis}
+\end{tikzpicture}
+\end{subfigure}
+  	\caption{Two plots visualising the selected density-range datasets}\label{fig:densitysetplot}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%
+%_______symbol range______________
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.5\textwidth}
+        	\begin{tikzpicture}
+			\begin{axis}[
+			xlabel = Transition density(\%),
+            	ylabel = Number of states]
+			\addplot[scatter,
+				only marks,
+				scatter src=explicit] 
+				table[meta=mark, x=density, y=states, col sep=tab]
+				{content/Experiments/symbolset.csv};
+			\end{axis}
+		\end{tikzpicture}
+        \end{subfigure}%
+		\begin{subfigure}[b]{0.5\textwidth}
+
+\begin{tikzpicture}
+	\begin{axis}[
+			xlabel = Number of symbols,
+            	ylabel = Number of states]
+		\addplot[scatter,
+			only marks,
+			scatter src=explicit] 
+		table[meta=mark, x=symbols, y=states, col sep=tab]
+		{content/Experiments/symbolset.csv};
+	\end{axis}
+\end{tikzpicture}
+	\end{subfigure}
+  	\caption{Two plots visualising the selected symbol-range datasets}\label{fig:symbolsetplot}
+\end{figure}
+
+\FloatBarrier
 
 \begin{table}
 \centering
