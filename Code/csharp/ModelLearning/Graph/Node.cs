@@ -23,7 +23,7 @@ namespace ModelLearning {
         /// </summary>
         /// <param name="node"></param>
         /// <param name="prob"></param>
-        internal void SetTransition(Node node, double prob) {
+        public void SetTransition(Node node, double prob) {
             if (prob == 0) {
                 if (Transitions.ContainsKey(node))
                     Transitions.Remove(node);
@@ -43,7 +43,7 @@ namespace ModelLearning {
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="prob"></param>
-        internal void SetEmission(int symbol, double prob) {
+        public void SetEmission(int symbol, double prob) {
             if (prob == 0) {
                 if (Emissions.ContainsKey(symbol))
                     Emissions.Remove(symbol);
