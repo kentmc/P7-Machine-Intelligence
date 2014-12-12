@@ -7,31 +7,28 @@ Figure \ref{fig:statesetplot} shows how four datasets represents the range of th
 	\begin{subfigure}[b]{0.5\textwidth}
         	\begin{tikzpicture}
 			\begin{axis}[
-			%scatter/use mapped color={draw=blue,fill=blue!30!white}, 
-			%only marks,
+			scale = 0.8,
 			xlabel = Transition density (\%),
             	ylabel = Number of symbols]
 			\addplot[scatter,
 				only marks,
 				scatter src=explicit] 
 				table[meta=mark, x=density, y=symbols, col sep=tab]
-				{content/Experiments/stateset.csv};
+				{content/Experiments/graphdata/stateset.csv};
 			\end{axis}
 		\end{tikzpicture}
         \end{subfigure}%
 		\begin{subfigure}[b]{0.5\textwidth}
-
 \begin{tikzpicture}
 	\begin{axis}[
-			%scatter/use mapped color={draw=blue,fill=blue!30!white}, 
-			%only marks,
+	scale = 0.8,
 			xlabel = Number of states,
             	ylabel = Number of symbols]
 		\addplot[scatter,
 			only marks,
 			scatter src=explicit] 
 		table[meta=mark, x=states, y=symbols, col sep=tab]
-		{content/Experiments/stateset.csv};
+		{content/Experiments/graphdata/stateset.csv};
 	\end{axis}
 \end{tikzpicture}
 	\end{subfigure}
@@ -47,27 +44,28 @@ Figure \ref{fig:statesetplot} shows how four datasets represents the range of th
 	\begin{subfigure}[b]{0.5\textwidth}
         	\begin{tikzpicture}
 			\begin{axis}[
+			scale = 0.8,
 			xlabel = Number of states,
             	ylabel = Number of symbols]
 			\addplot[scatter,
 				only marks,
 				scatter src=explicit] 
 				table[meta=mark, x=states, y=symbols, col sep=tab]
-				{content/Experiments/densityset.csv};
+				{content/Experiments/graphdata/densityset.csv};
 			\end{axis}
 		\end{tikzpicture}
 		\end{subfigure}%
 		\begin{subfigure}[b]{0.5\textwidth}
-
-\begin{tikzpicture}
+		\begin{tikzpicture}
 	\begin{axis}[
+			scale = 0.8,
 			xlabel = Transition density(\%),
             	ylabel = Number of symbols]
 		\addplot[scatter,
 			only marks,
 			scatter src=explicit] 
 		table[meta=mark, x=density, y=symbols, col sep=tab]
-		{content/Experiments/densityset.csv};
+		{content/Experiments/graphdata/densityset.csv};
 	\end{axis}
 \end{tikzpicture}
 \end{subfigure}
@@ -83,29 +81,30 @@ Figure \ref{fig:statesetplot} shows how four datasets represents the range of th
 	\begin{subfigure}[b]{0.5\textwidth}
         	\begin{tikzpicture}
 			\begin{axis}[
+			scale = 0.8,
 			xlabel = Transition density(\%),
             	ylabel = Number of states]
 			\addplot[scatter,
 				only marks,
 				scatter src=explicit] 
 				table[meta=mark, x=density, y=states, col sep=tab]
-				{content/Experiments/symbolset.csv};
+				{content/Experiments/graphdata/symbolset.csv};
 			\end{axis}
 		\end{tikzpicture}
-        \end{subfigure}%
-		\begin{subfigure}[b]{0.5\textwidth}
-
-\begin{tikzpicture}
-	\begin{axis}[
+       \end{subfigure}%
+	\begin{subfigure}[b]{0.5\textwidth}
+		\begin{tikzpicture}
+			\begin{axis}[
+			scale = 0.8,
 			xlabel = Number of symbols,
             	ylabel = Number of states]
 		\addplot[scatter,
 			only marks,
 			scatter src=explicit] 
 		table[meta=mark, x=symbols, y=states, col sep=tab]
-		{content/Experiments/symbolset.csv};
+		{content/Experiments/graphdata/symbolset.csv};
 	\end{axis}
-\end{tikzpicture}
+	\end{tikzpicture}
 	\end{subfigure}
   	\caption{Two plots visualising the selected symbol-range datasets}\label{fig:symbolsetplot}
 \end{figure}
