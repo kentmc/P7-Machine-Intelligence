@@ -1,0 +1,53 @@
+\subsection{Speed Comparison}
+
+Apart from scoring the individual learning algorithms by logarithmic likelihood or PautomaC evaluation criterion we have also recorded their running time. A special test was conducted to determine the performance benefits of sparsity and other approaches. The Baum-Welch Learner and Sparse Baum-Welch Learner were run for a model of size $5$ and subsequently on models $5$ hidden state larger. Both algorithms were run for exactly 8 hours to see, what results can be obtained during this time frame. The Greedy Extend Learner was also run for 8 hours to see if it could grow beyond one of the aforementioned approaches.
+
+The experiments were conducted using PautomaC dataset number 23. This dataset was chosen as the underlying model used by PautomaC had an average amount of state (33), rather low transition density (11.48\%) and number of symbols (7) making it considerably simple, but not too much. The experiments were run with the same parameters as the main tests, thus with convergence threshold of $0.01$, and a training and validation sets of $5000$ sequences.
+
+The score achieved by individual learners during the test can be seen in the graph \ref{fig:eight_hour_run}. Table \ref{tab:bw_vs_sbw} offers direct comparison of running times of the Baum-Welch Learner and Sparse Baum-Welch Learner for chosen model sizes.
+
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			width=0.92\textwidth,
+			height=0.5\textheight,
+			ymin=0,
+			xmin=1,
+			xlabel = Number of States,
+            		ylabel = Negative Logarithmic Likelihood,
+            		legend style={at={(0,0)}, anchor=south west}]
+			\addplot+table[x=States, y=Score, col sep=tab]
+			{content/Experiments/graphdata/8h_run_BW.csv};
+			\addlegendentry{Baum-Welch Learner}
+			\addplot+table[x=States, y=Score, col sep=tab]
+			{content/Experiments/graphdata/8h_run_SBW.csv};
+			\addlegendentry{Sparse Baum-Welch Learner}
+			\addplot+table[x=States, y=Score, col sep=tab]
+			{content/Experiments/graphdata/8h_run_GE.csv};
+			\addlegendentry{Greedy Extend Learner}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Results achieved in a time scope of eight hours.}
+	\label{fig:eight_hour_run}
+\end{figure}
+
+\begin{table}
+	\centering
+	\begin{tabular}{| c | c | c | c | c | c | c | c | c | c | c |}
+		\hline
+		\# of States & 5 & 25 & 50 & 75 & 100 & 120 & 140 & 160 & 180 & 200 \\ \hline
+		Baum-Welch & 22 s & 4.5 m & 6.5 m & 9.5 m & 13 m & 19.5 m & 28 m & 34.5 m & -- & -- \\ \hline
+		Sparse B-W & 25 s & 4 m & 7 m & 15 m & 19 m & 17 m & 15 m & 13 m & 20 m & 18 m \\ \hline
+	\end{tabular}
+	\caption{Running time comparison between Baum-Welch and Sparse Baum-Welch Learners.}
+	\label{tab:bw_vs_sbw}
+\end{table}
+
+The tests were run on the same machine as the average speedup tests for the \ref[sec:shmm]{Sparse hidden Markov model} with the following configuration:
+\begin{itemize}
+	\item[] Intel Core i7-4700MQ processor clocked at 2.4 GHz.
+	\item[] 8 GB \gls{ram}.
+	\item[] Microsoft Windows 8 operating system.
+\end{itemize}
+
