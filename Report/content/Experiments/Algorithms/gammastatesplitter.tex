@@ -1,0 +1,39 @@
+\subsubsection{Gamma State Splitting}
+
+% finding the most used state for a given sentence.
+$$q' = \argmax_{q \in Q}\sum_{o \in O}\sum_{t=0}^{T}\gamma_t(q)$$ 
+
+% find all possible transitions from q'
+$$z = \{a_{q'J} \in A \vert a_{q'J} \neq 0\}$$
+
+% compute average transition probability
+$$z_{arg} = \frac{\sum_{a_{q'J} \in z} a_{q'J}}{\vert z \vert}$$
+
+% compute the absolute error sum of all transitions. 
+$$AbsE = \sum_{a_{q'J} \in z} \vert a_{q'J} - z_{arg} \vert$$
+
+% if the absolute error is below the threshold value epsilon the
+% distribution is fairly uniform and the state q' is split into q_1 and q_2.
+$$Q' = \begin{cases}
+	Q-\{q'\} \cup \{ q_1,q_2 \} &\text{if } AbsE > \epsilon_1 \\
+	Q	&\text{otherwise}
+\end{cases}$$
+
+% 
+$$A_1 = \{a_{q_1i} \vert a_{q_1i} = a_{q'i} \wedge a_{q'i} \in A \wedge a_{q'i} >0 \wedge i \in Q' - \{q_1\}\}$$
+
+$$A_2 = \{a_{q_2i} \vert a_{q_2i} = a_{q'i} \wedge a_{q'i} \in A \wedge a_{q'i} > 0 \wedge i \in Q' - \{q_2\}\}$$
+
+$$A_1 \cap A_2 = \emptyset$$
+
+$$\vert A_1 \vert = \vert A_2 \vert$$
+
+$$A' = A_1 \cup A_2$$
+
+$$\sum_{a_{q_1i} \in A_1} a_{q_1i} = \sum_{a_{q_2J} \in A_1} a_{q_1J}$$
+
+$$A_1 = \{a_{q_1i} \vert a_{q_1i} \in A \wedge a_{q_1i} \notin A_2\}$$
+	$$A_1 = \{a_{q_2i} \vert a_{q_2i} \in A \wedge a_{q_2i} \notin A_1\}$$
+
+
+

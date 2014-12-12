@@ -4,9 +4,9 @@ To comply with the need to continuously run multiple extensive experiments and t
 
 Having the test environment framework common for every tested algorithm made it increasingly simple to set up and evaluate the tests and produce extensive result data as a common interface was implemented for every algorithm to feed it training data and obtain the resulting probabilities.
 
-Another important aspect to the test environment is the ability to reuse existing solutions in multiple algorithms. The experimental algorithms we introduce are mainly based around the well known \gls{baum-welch} and thus the test environment may be utilised to provide unified access to the standard \gls{baum-welch} for every of tested approaches, greatly decreasing the code redundancy and allowing for faster creation and testing of new algorithms in the process.
+Another important aspect to the test environment is the ability to reuse existing solutions in multiple algorithms. The experimental algorithms we introduce are mainly based around the well known \gls{baum-welch} and thus the test environment may be utilised to provide unified access to the standard \gls{baum-welch} for every of tested approach, greatly decreasing the code redundancy and allowing for faster creation and testing of new algorithms in the process.
 
-The test environment thus mainly compromises from several main components. The architecture of the test environment and the dependencies and interoperability of the components are depicted in figure \ref{fig:testenvironment}.
+The test environment thus mainly compromises of several main components. The architecture of the test environment and the dependencies and interoperability of the components are depicted in figure \ref{fig:testenvironment}.
 
 \begin{figure}[!htb]
 \centering
@@ -14,39 +14,64 @@ The test environment thus mainly compromises from several main components. The a
 \caption{An overview of the test environment architecture.}
 \label{fig:testenvironment}
 \end{figure}
+\todo{update diagram to reflect the newest version}
 
-\subsection{DataLoader}
-The \formatclass{DataLoader} class is responsible for loading both training data, test data and solution data from the files published at the Pautomac website. Both training and test data is represented by a list of sequences, while solution data is represented by a list of probabilities.
-This class contains the two functions \formatfunction{load\_probabilities\_from\_file(file\_path)} and \formatfunction{load\_sequences\_from\_file(file\_path)}. The file to be read by both functions must be formatted according to the Pautomac data formats, as described in \todo{insert secref}. The former function outputs a list of sequences, where each sequence is represented by a list of integers.
-The latter function outputs a list of probabilities, where each probability is represented by a floating point.
+\subsection{Benchmark}
+The \formatclass{Benchmark} class is the core element of the test environment as it is responsible for executing and tracking the actual tests and recording the results. The \formatclass{Benchmark} class is first initialised by specifying the parameters for the tests to be run and subsequently, the initialised tests are executed by calling the \formatfunction{Run()} method.
 
-\subsection{Learner}
-If one wants to implement a new technique for learning the parameters of a probabilistic model, a new class must be created that derives from the abstract class \formatclass{Learner}.
-A learner has only one responsibility: Given a list of training sequences, it must learn a probabilistic model as close as possible to the model used to generate those sequences. How this is done is up to the implementer to choose. The only requirement is that he implements a \formatfunction{calc\_probability(sequence)} function, which given a sequence should return how likely it is that the learned model generated that sequence.
-The \formatclass{Learner} class has an already implemented function called \formatfunction{evaluate(sequences, probabilities)}, which uses the \formatfunction{calc\_probability(sequence)} function to calculate probabilities for all provided sequences.
-The probabilities are then normalised, and a score is calculated based on the Pautomac evaluation criteria.
-The \formatfunction{evaluate} function can be seen by \ref{code:learner}.
-A learner should also define a name.
+Numerous test parameters can be specified for the Benchmark, namely:
 
-\subsection{Model}
-Consider one \formatclass{Learner} that uses the Baum Welch algorithm to estimate the parameters of a Hidden Markov Model and a second \formatclass{Learner} that uses another algorithm, also for estimating the parameters of a Hidden Markov Model. The two learners may need to do many of the same operations on a Hidden Markov Model, e.g. normalization, calculating the probability of being in a particular state or observing a particular sequence at a given time. 
-It would be time consuming and increase redundancy if both learners were to implement their own Hidden Markov Model and operations on it.
-The \formatclass{Model} has been created to facilitate this. It is an abstract class, which only dictates that a single function must be implemented, which is the \formatfunction{calc\_sequence\_probability(symbol\_sequence)} function. Given a sequence, it must return the probability for the model to generate that sequence. Note that this function is intended to be directly used as the output of the function in the \formatclass{Learner} class having the same name.
+\begin{itemize}
+	\item[] Data -- allows for the specification of PautomaC data files the tests are to be conducted on. The \formatclass{Benchmark} class prepares all the data in advance and uses them with the same settings for every different learner or configuration.
+	\item[] Learners -- specifies which learning algorithms to test. Every chosen learner then undergoes an individual configuration to allow testing the learner in multiple different configurations.
+	\item[] Number of runs -- as self-explanatory as it seems this parameter regulates the number of runs to be conducted in order to reduce possible noise.
+	\item[] Training and validation set size -- regulation of how many sequences from the PautomaC train data file are to be actually used for training and validation.
+	\item[] Evaluation method -- allows a choice between evaluating simply as logarithmic likelihood of the validation sequences or using the PautomaC evaluation criterion with the use of the solution data.
+\end{itemize}
 
-\begin{figure}
-\caption{The \formatfunction{evaluate} function of the \formatclass{Learner} class.}
-\label{code:learner}
-\pythonexternal{codeexamples/learner.py}
-\end{figure}
+The \formatclass{Benchmark} class provides information through several output channels. First it sends the information on currently conducted test to the command line making it easy to determine the progress of the whole benchmarking performed. Second it provides results in two different formats at once -- a plaintext with formatting that ensures easy readability by humans and \gls{csv} to allow easy modification by other applications or loading the data into a spreadsheet editor for further analysis. All the results are updated in real time so that if the benchmark fails to finish successfully or is user interrupted in the middle at least partial results from the already finished experiments are available.
 
+Multiple results are produced by the \formatclass{Benchmark}. Most naturally results of both the score and running time are recorded for each run, learner and configuration tested. Next a summary is added for each learner to show average and median performance over the different runs for each configuration and the best performing configuration is highlighted. A global summary through all the learners is also offered comparing their best configurations. Last but not least the learned model is saved for every run, learner and configuration so a review is possible if the results seem unnatural.
+
+\subsection{Data}
+The \formatclass{DataLoader} class is responsible for loading training data, test data and solution data from the files published at the Pautomac website. Both training and test data are expected to contain a list of sequences, while solution data is expected to contain a list of probabilities for the test sequences in accordance to the data format utilised by the PautomaC \todo{insert secref}.
+
+The data loader stores the loaded data in an entity class called \formatclass{DataSet} passed to the \formatclass{Benchmark}. The \formatclass{DataSet} is responsible for splitting the loaded training data obtained from PautomaC data files into data to be used for the actual training and data or validation. The split is done in a pseudo-random fashion in order to ensure that multiple algorithms in different configurations will be tested on the same training and validation data, but also provide diversity through increased number of runs, where a different split is generated for each run.
+
+As aforementioned the test environment also allows for specification of a given number of sequences to use as training or validation data. It thus becomes possible to run tests on smaller training sets in case only fast, approximate result is required.
 
 \subsection{Evaluator}
-This class is responsible for evaluating a \formatclass{Learner} according to the Pautomac evaluation criteria.
-Given a learner that has already learned a model, and a number of test sequences with their respective probabilities, it checks how well the probabilities predicted by the \formatclass{Learner} matches the real probabilities.
+The \formatclass{Evaluator} class is responsible for computing the score of a learner by either of the two offered evaluation criteria. As mentioned above the criteria are either the PautomaC evaluation criterion \todo{insert secref} comparing the learner directly to the solution file, or by logarithmic likelihood, which is simply a sum of logarithms of probabilities of all validation sequences given the model.
 
+\subsection{Learner}
+An integral part of the test environment is the abstract class \formatclass{Learner}. The \formatclass{Learner} provides a common interface for every implemented learning algorithm allowing the \formatclass{Benchmark} and \formatclass{Evaluator} to work with every learning approach indifferently.
 
-\subsection{Benchmarker}
-For evaluating particular learners on particular data sets, the \formatclass{Benchmarker} class is convenient to use.
-As input, it takes a set of learners and data sets, a number of runs, and an output file path.
-When run, the \formatclass{Benchmarker} will load all the data sets using the \formatclass{DataLoader}. A data set contains training sequences, test sequences, and a probability associated with each test sequence. For each run, the \formatclass{Benchmarker} randomly splits the training sequences into two sets, where the first $\frac{2}{3}$ sequences are used for training while the remaining are used for validation during training.
-Each \formatclass{Learner} will attempt to learn an underlying model for each of the data sets, one by one. When having learned a model for a particular data set, it is evaluated by the \formatclass{Evaluator}. The result of the benchmark is a mean and median score for each pair of learner and data set, which is output to a specified file in .csv format. Besides the mean and median score, the mean and median running time is also measured.
+The \formatclass{Learner} class specifies several methods that are implemented by individual learning algorithms and are subsequently called by either the \formatclass{Benchmark} class directly or by \formatclass{Evaluator} class:
+
+\begin{itemize}
+	\item[] \formatfunction{Initialise(learnerParameters)} -- initialises the \formatclass{Learner} into a given configuration. As different learning algorithms require different parameters a special class \formatclass{LearnerParameters} has been created to encompass all the different configuration parameters as specified by user. The \formatclass{Learner} can than obtain the relevant parameters to use them for initialisation.
+	\item[] \formatfunction{CalculateProbability(sequence, logarithm)} -- Computes the probability of the specified observable state sequence given the learned model. The probability can either be returned as is or as logarithm of the probability controlled by the boolean \formatfunction{logarithm} parameter.
+	\item[] \formatfunction{Learn(trainingData, validationData)} -- learns the actual model from the given training sequences. The validation sequences may and may not be used depending on the learning algorithm.
+	\item[] \formatfunction{Save(outputStream, csvStream)} -- saves the learned model into two files, plaintext for readability by humans and \gls{csv} for computer manipulation.
+\end{itemize}
+
+\subsection{Models}
+
+Our experimental algorithms ustilise the \acrlong{hmm} and only modify the learning of the model, generally still using the well known \gls{baum-welch}. To be able to provide access to commonly used algorithms such as the \gls{baum-welch} or \gls{viterbi} for every of the learning algorithms, an \gls{hmm} model class has been introduced into the test environment. The model was later implemented in three different version, as a standard \gls{hmm}, an \gls{hmm} optimised for sparse matrix (\emph{Sparse Hidden Markov Model}) and in form of a graph to allow simple structural modifications of the model. All three model versions are compatible and are directly convertible form one to another.
+
+\subsubsection{Standard Hidden Markov Model}
+
+The first utilised model was a standard implementation of an \gls{hmm} including the \gls{fb_algorithm}, \gls{viterbi} and \gls{baum-welch}. The original code was adopted from a tutorial by de Souza~\cite{desouza_hmm}, developer of the Accord.NET machine learning framework~\cite{accord_net}.
+
+Several changes had to be done to the algorithms to best suit our needs. First was a memory optimisation. The algorithm was written in a way that stored the $\xi_t(i,j)$ variables as defined in section \ref{sec:baum-welch} for every of the training sequences. With up to $100000$ sequences per data file even if we were to only use half of them for training and each of them was only $8$ symbols long in average, we would need at least $32$ GB of memory to store all the $\xi_t(i,j)$ variables for a $100$ state model. A slight modification was therefore made to only store $\xi_t(i,j)$ variables for one sequence at a time achieving huge drops in memory usage.
+
+Another change was made to modify the \gls{baum-welch} to run with different data for training and validation as the original algorithm used the same sequence set for both approximation of the parameters and subsequently to compute the logarithmic likelihood of all the sequences used to determine convergence. The new version of the algorithm works with separate training sequences for the learning itself and validation sequences for log likelihood computations.
+
+\input{./content/Experiments/sparse-hmm.tex}
+
+\subsubsection{Hidden Markov Model Graph}
+
+The last implementation of the \gls{hmm} stores information inside a graph structure instead of utilising the transition and emissions matrices. There are no algorithms written for the graph representation of the \gls{hmm}, meaning that if a \gls{viterbi} or \gls{baum-welch} are to be performed the graph representation has to be first converted into either the standard \gls{hmm} or the sparse \gls{hmm}.
+
+The main purpose of the graph \gls{hmm} is to provide easy access to structural changes such as adding or removing a hidden state or adding or removing a transition in the hidden state space. As such it is mostly used as an intermediary format during algorithm performing the above actions.
+
