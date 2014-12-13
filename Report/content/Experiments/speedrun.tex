@@ -1,19 +1,26 @@
 \subsection{Speed Comparison}
 
-Apart from scoring the individual learning algorithms by logarithmic likelihood or PautomaC evaluation criterion we have also recorded their running time. A special test was conducted to determine the performance benefits of sparsity and other approaches. The Baum-Welch Learner and Sparse Baum-Welch Learner were run for a model of size $5$ and subsequently on models $5$ hidden state larger. Both algorithms were run for exactly 8 hours to see, what results can be obtained during this time frame. The Greedy Extend Learner was also run for 8 hours to see if it could grow beyond one of the aforementioned approaches.
+Apart from scoring the individual learning algorithms by logarithmic likelihood or PautomaC evaluation criterion we have also recorded their running time. A special test was conducted to determine the performance benefits of sparsity and other approaches. The Baum-Welch Learner and Sparse Baum-Welch Learner were run for a model of size $5$ and subsequently on models $5$ hidden state larger. Both algorithms were run for exactly 8 hours to observe what results can be obtained during the given time frame. The Greedy Extend Learner was also run for 8 hours to see if the achieved growth can be faster than continuous tests on aforementioned algorithms.
 
-The experiments were conducted using PautomaC dataset number 23. This dataset was chosen as the underlying model used by PautomaC had an average amount of state (33), rather low transition density (11.48\%) and number of symbols (7) making it considerably simple, but not too much. The experiments were run with the same parameters as the main tests, thus with convergence threshold of $0.01$, and a training and validation sets of $5000$ sequences.
+The experiments were conducted using PautomaC dataset number 23. This dataset was chosen as the underlying model used by PautomaC had an average amount of states (33), rather low transition density (11.48\%) and number of symbols (7) making it considerably simple, but not too much. The experiments were run with the same parameters as the main tests, thus with convergence threshold of $0.01$, and a training and validation sets of $5000$ sequences.
 
-The score achieved by individual learners during the test can be seen in the graph \ref{fig:eight_hour_run}. Table \ref{tab:bw_vs_sbw} offers direct comparison of running times of the Baum-Welch Learner and Sparse Baum-Welch Learner for chosen model sizes.
+The obtained results as shown in regard to score (graph \ref{fig:eight_hour_run}) and running time(graph \ref{fig:bw_vs_sbw}) are speaking in favour of the Greedy Extend Learner, whilst Sparse Baum-Welch Learner achieved the worst performance. This might be attributed to the fact that the transition matrix for the Sparse Baum-Welch Learner is randomly generated, thus even the $nlog(n)$ non-zero transitions are picked by random and the topology of the hidden state space graph cannot be considered data derived.
+
+The tests were run on the same machine as the average speedup tests for the \hyperref[sec:shmm]{Sparse hidden Markov model} with the following configuration:
+\begin{itemize}
+	\item[] Intel Core i7-4700MQ processor clocked at 2.4 GHz.
+	\item[] 8 GB \gls{ram}.
+	\item[] Microsoft Windows 8 operating system.
+\end{itemize}
 
 \begin{figure}
 	\centering
 	\begin{tikzpicture}
 		\begin{axis}[
 			width=0.92\textwidth,
-			height=0.5\textheight,
+			height=0.76\textheight,
 			ymin=0,
-			xmin=1,
+			xmin=0,
 			xlabel = Number of States,
             		ylabel = Negative Logarithmic Likelihood,
             		legend style={at={(0,0)}, anchor=south west}]
@@ -32,22 +39,49 @@ The score achieved by individual learners during the test can be seen in the gra
 	\label{fig:eight_hour_run}
 \end{figure}
 
-\begin{table}
+In regards to logarithmic likelihood we may observe from the result graph \ref{fig:eight_hour_run} that both Baum-Welch and Sparse Baum-Welch Learners reach what could be called a convergence of the logarithmic likelihood score when increasing the number of states. The relatively stable value is reached at around 45 states for the Baum-Welch Learner with all the subsequent logarithmic likelihoods ranging from $50057.19$ (130 states) to $49718.1$ (80 states). The convergence is a little slower for the Sparse Baum-Welch Learner starting at around 55 states and ranging from $51856.74$ (75 states) to $50736.94$ (180 states).
+
+Unlike the Baum-Welch and Sparse Baum-Welch Learners, the Greedy Extend Learner did not reach convergence during the 8 hours of continuous run. On the other hand the logarithmic likelihood of the Greedy Extend Learner continued to improve as more states were included into the model and a faster improvement rate can be observed beyond 170 states. During the 8 hours the Greedy Extend Learner was capable of achieving logarithmic likelihood of $41352.82$ with 176 states.
+
+The difference between the continuous improvement of Greedy Extend and the stable value reached by Baum-Welch and Sparse Baum-Welch Learners can be attributed to the difference in the increase in the number of states. Whilst Baum-Welch and Sparse Baum-Welch Learners increase simply by creating a whole new model with more states that has to be re-learned from the very beginning, the Greedy Extend adds states one-by-one keeping the original model intact. Another possible explanation may be the number of iterations. It has been observed throughout the runs that Baum-Welch and Sparse Baum-Welch Learners showed a declining number of iterations until convergence with increase in the number of states. The Greedy Extend however runs a fixed number of \gls{baum-welch} iterations (tested with $\beta = 10$) each time a new state is added.
+
+The decreasing number of iterations with increasing number of states observed (mostly for Baum-Welch Learner) is suggesting a lower convergence threshold may be required for larger models. More tests with different thresholds are however necessary to confirm this hypothesis.
+
+\begin{figure}
 	\centering
-	\begin{tabular}{| c | c | c | c | c | c | c | c | c | c | c |}
-		\hline
-		\# of States & 5 & 25 & 50 & 75 & 100 & 120 & 140 & 160 & 180 & 200 \\ \hline
-		Baum-Welch & 22 s & 4.5 m & 6.5 m & 9.5 m & 13 m & 19.5 m & 28 m & 34.5 m & -- & -- \\ \hline
-		Sparse B-W & 25 s & 4 m & 7 m & 15 m & 19 m & 17 m & 15 m & 13 m & 20 m & 18 m \\ \hline
-	\end{tabular}
+	\begin{tikzpicture}
+		\begin{axis}[
+			width=0.92\textwidth,
+			height=0.32\textheight,
+			ymin=0,
+			xmin=0,
+			xlabel = Number of States,
+            		ylabel = Time until Convergence {[s]},
+            		legend style={at={(0,1)}, anchor=north west}]
+			\addplot+table[x=States, y=Time, col sep=tab]
+			{content/Experiments/graphdata/8h_run_BW.csv};
+			\addlegendentry{Baum-Welch Learner}
+			\addplot+table[x=States, y=Time, col sep=tab]
+			{content/Experiments/graphdata/8h_run_SBW.csv};
+			\addlegendentry{Sparse Baum-Welch Learner}
+		\end{axis}
+	\end{tikzpicture}
+	
+	
+%	\begin{tabular}{| c | c | c | c | c | c | c | c | c | c | c |}
+%		\hline
+%		\# of States & 5 & 25 & 50 & 75 & 100 & 120 & 140 & 160 & 180 & 200 \\ \hline
+%		Baum-Welch & 22 s & 4.5 m & 6.5 m & 9.5 m & 13 m & 19.5 m & 28 m & 34.5 m & -- & -- \\ \hline
+%		Sparse B-W & 25 s & 4 m & 7 m & 15 m & 19 m & 17 m & 15 m & 13 m & 20 m & 18 m \\ \hline
+%	\end{tabular}
 	\caption{Running time comparison between Baum-Welch and Sparse Baum-Welch Learners.}
-	\label{tab:bw_vs_sbw}
-\end{table}
+	\label{fig:bw_vs_sbw}
+\end{figure}
 
-The tests were run on the same machine as the average speedup tests for the \ref[sec:shmm]{Sparse hidden Markov model} with the following configuration:
-\begin{itemize}
-	\item[] Intel Core i7-4700MQ processor clocked at 2.4 GHz.
-	\item[] 8 GB \gls{ram}.
-	\item[] Microsoft Windows 8 operating system.
-\end{itemize}
+Interesting results are offered by the graph \ref{fig:bw_vs_sbw} comparing the running times of Baum-Welch and Sparse Baum-Welch Learners. One can immediately notice large instability in the running times of the Sparse Baum-Welch Learner. Contrary to the expectations the longest runtime (28 minutes and 47 seconds) was measured for 80 state model whilst the 200 hundred state model only required 11 and a half minutes, even less than the 60 state model with 15 minutes and 8 seconds. This unpredictable behaviour can be attributed mostly to the heavy randomness of the models used by the Sparse Baum-Welch Learner. With the topology of the sparse hidden state graph being random it is likely that a suitable topology is generated for some models whilst a highly unsuitable may be generated for different models leading to increased number of iterations until convergence.
 
+Significantly less unstable behaviour was measured for the Baum-Welch Learner. One can still notice models for which the running time is unusually high (55 states with 16 minutes and 4 seconds) or low (40 states with 3 minutes and 36 seconds) compared to the expectation derived from the trend of the line. This can once again be attributed to the random generation of the initial models. One can see however that with the complete graph topology \gls{baum-welch} is generally able to converge in similar number of iterations as with different random initial probabilities.
+
+The longest run measured for the Baum-Welch Learner was for the highest achieved number of states, 160 with 34 minutes and 34 seconds. The achieved running times for the Baum-Welch Learner are generally smaller than expected, mostly for the larger models. This is attributed mostly to the declining number of iterations required until convergence with the growing size of the model. Nevertheless a generally longer running time is measured for the Baum-Welch Learner than the Sparse Baum-Welch Learner with models beyond 100 states large. The graph \ref{fig:bw_vs_sbw} also suggests the gap to continue to widen with more states.
+
+It should be noted that the experiments in this section were conducted solely on one dataset. It might be necessary to confirm the derived results by running the tests on different data. This is also supported by the fact that vastly different running times were measured for individual datasets when performing other test sets.
