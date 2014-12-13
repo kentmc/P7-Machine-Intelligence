@@ -8,12 +8,12 @@ The algorithms proposed in this section have been divided into two types.
 The static algorithms start with a \gls{hmm} with a particular number of states which will never change.
 The dynamic algorithms start with a \gls{hmm} of just a single state, and will dynamically extend the number of states through a number of iterations. 
 For the static algorithms, $n$ denotes the number of states to be used.
-The dynamical algorithms will by $n$ denote a number of iterations $1, ..., n$, where each iteration extends the model by a single node.
+The dynamic algorithms will by $n$ denote a number of iterations $1, ..., n$, where each iteration extends the model by a single node.
+In \ref{fig:alg-hierarchy} the names and classes of our proposed algorithms can be seen. Note that the Baum Welch algorithm has also been included, simply to emphasize which class of algorithms it belongs to. 
 
-Since the Baum Welch algorithm is guaranteed to never worsen $LL(G)$ of any $G$, it is natural that the Baum Welch is used internally by many of the proposed algorithms.
-By $BW_t(M, D)$ we denote the \gls{hmm} obtained after running Baum Welch on the \gls{hmm} $M$ using the training sequences $D$, and iterating as long as each iteration increases the likelihood by at least $t$.
-By $BW^i(M, D)$ we denote the \gls{hmm} obtained after running $i$ iterations of Baum Welch on the \gls{hmm} $M$ using the training sequences $D$.
-If a \gls{hmm} is represented by a graph, we denote it $G$, and the similar notations $BW_t(G, D)$ and $BW^i(G, D)$ are used.
+\begin{figure}
+\label{fig:alg-hierarchy}
+\caption{The algorithms used in our experiments}
 \Tree[.Algorithms
 		[.{Static size} 
 			{Baum Welch}
@@ -25,6 +25,13 @@ If a \gls{hmm} is represented by a graph, we denote it $G$, and the similar nota
        		{Greedy Extend}
       	]
      ]
+\end{figure}
+
+Since the Baum Welch algorithm is guaranteed to never worsen $LL(G)$ when run on $G$, it is used internally by some of the algorithms.
+By $BW_t(M, D)$ we denote the \gls{hmm} obtained after running Baum Welch on the \gls{hmm} $M$ using the training sequences $D$, and iterating as long as each iteration increases the likelihood by at least $t$.
+By $BW^i(M, D)$ we denote the \gls{hmm} obtained after running $i$ iterations of Baum Welch on the \gls{hmm} $M$ using the training sequences $D$.
+If a \gls{hmm} is represented by a graph, we denote it $G$, and the similar notations $BW_t(G, D)$ and $BW^i(G, D)$ are used.
+
 
 \input{./content/Models/Algorithms/greedyextend}
 \input{./content/Models/Algorithms/sparsebaumwelch}
