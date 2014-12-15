@@ -26,7 +26,8 @@ namespace ModelLearning
                 new Learners.GreedyExtendLearner(),
                 new Learners.SparseBaumWelchLearner(),
                 new Learners.StateSplitterLearner(),
-                new Learners.JLearner()
+                new Learners.JLearner(),
+                new Learners.GGLearner()
             };
 
             //Console.WriteLine("Select Dataset:");
