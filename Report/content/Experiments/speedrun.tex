@@ -24,13 +24,13 @@ The tests were run on the same machine as the average speedup tests for the \hyp
 			xlabel = Number of States,
             		ylabel = Negative Logarithmic Likelihood,
             		legend style={at={(0,0)}, anchor=south west}]
-			\addplot+table[x=States, y=Score, col sep=tab]
+			\addplot+[mark=none]table[x=States, y=Score, col sep=tab]
 			{content/Experiments/graphdata/8h_run_BW.csv};
 			\addlegendentry{Baum-Welch Learner}
-			\addplot+table[x=States, y=Score, col sep=tab]
+			\addplot+[mark=none]table[x=States, y=Score, col sep=tab]
 			{content/Experiments/graphdata/8h_run_SBW.csv};
 			\addlegendentry{Sparse Baum-Welch Learner}
-			\addplot+table[x=States, y=Score, col sep=tab]
+			\addplot+[mark=none]table[x=States, y=Score, col sep=tab]
 			{content/Experiments/graphdata/8h_run_GE.csv};
 			\addlegendentry{Greedy Extend Learner}
 		\end{axis}
