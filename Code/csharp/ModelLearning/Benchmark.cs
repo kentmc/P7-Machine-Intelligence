@@ -129,6 +129,10 @@ namespace ModelLearning
                 string intermediateOutputFileName = String.Format(@"Benchmark_{0}/DataSet_{1}/{2}", Name, dataSet.Number, "intermediate");
                 ((Learners.GreedyExtendLearner)learner).SetIntermediateOutputFile(intermediateOutputFileName);
             }
+            if (learner is Learners.PadawanLearner) {
+                string intermediateOutputFileName = String.Format(@"Benchmark_{0}/DataSet_{1}/{2}", Name, dataSet.Number, "intermediate");
+                ((Learners.PadawanLearner)learner).SetIntermediateOutputFile(intermediateOutputFileName);
+            }
             if (learner is Learners.GGLearner)
             {
                 string intermediateOutputFileName = String.Format(@"Benchmark_{0}/DataSet_{1}/{2}", Name, dataSet.Number, "intermediate");
