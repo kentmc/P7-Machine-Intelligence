@@ -6,10 +6,11 @@ If focusing on the lower part of the body, consider one state that represents th
 
 When building a system to recognize handwritten text, the transitions matrix of a \gls{hmm} can capture the probability of seeing a particular letter given a letter that precedes it.
 In the English language (and possible many other languages), there are many instances of two particular letters, that very rarely or never occur next to each other. An example of the transition probabilities between letters in the English alphabet can be seen in figure \ref{fig:ocr-transitions}, which was made from an analysis of 6020 handwritten words provided by Rob Kassel at MIT Spoken Language Systems Group\cite{thomas-letter-pair-analysis-picture}. Visually, it seems like the transition matrix has many probabilities of zero or very close to. The handouts\cite{leon-letter-pair-analysis-handouts} of Jeffrey S. Leon, confirms the many zero values by providing specific number of occurrences based on analysis of seven English language novels.
-\begin{center}
+
 \begin{figure}
+\begin{centering}
 \includegraphics[scale=0.4]{pictures/ocr-transitions.jpg}
-\label{fig:ocr-transitions}
 \caption{The transition probabilities between two letters in an English word. White colour denotes a probability of 0 while black denotes a probability of 1.}
+\label{fig:ocr-transitions}
+\end{centering}
 \end{figure}
-\end{center}

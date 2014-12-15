@@ -96,7 +96,7 @@ namespace ModelLearning {
             Utilities.Shuffle(shuffled, randomSeed);
 
             trainingData.AddSequences(sequence_list.Take(trainingDataSize));
-            validaitonData.AddSequences(sequence_list.Skip(trainingDataSize).Take(validationDataSize));
+			validaitonData.AddSequences(sequence_list.Skip(sequence_list.Count - validationDataSize).Take(validationDataSize));
 
             trainingData.SaveAddedSequences();
             validaitonData.SaveAddedSequences();

@@ -83,6 +83,7 @@ namespace ModelLearning
                     continue;
 
                 int trainingSetSize = SelectTrainingSetSize();
+				int validationSetSize = SelectValidationSetSize();
 
                 //Select verbosity
                 bool verbose = ShowInterfaceSelectYesNo("Show intermediate output from learners?");
@@ -91,7 +92,7 @@ namespace ModelLearning
 
                 bool useTestData = ShowInterfaceSelectYesNo("Use PautomaC test data?");
 
-                Benchmark benchmark = new Benchmark(benchmarkName, selected_learners, selected_datasets, trainingSetSize, num_runs, useTestData);
+				Benchmark benchmark = new Benchmark(benchmarkName, selected_learners, selected_datasets, trainingSetSize, validationSetSize, num_runs, useTestData);
                 benchmark.Run();
 
                 //Run benchmarker
@@ -153,6 +154,18 @@ namespace ModelLearning
             else
                 return trainingSetSize;
         }
+
+		static int SelectValidationSetSize()
+		{
+			Console.WriteLine("\nSelect the size of the validation set: (default: 10000)");
+			int validationSetSize;
+			if (!Int32.TryParse(Console.ReadLine(), out validationSetSize))
+				return 10000;
+			if (validationSetSize <= 0)
+				return 10000;
+			else
+				return validationSetSize;
+		}
 
         static List<int> ShowInterfaceSelectDatasets(int num_datasets)
         {

@@ -2,7 +2,36 @@
 Each algorithm will be run on some step size between 1 and 100 states for its model. This number is simply selected by examining the models that originally generated each dataset. The maximum amount of states from a Pautomac model is 73 states. It is not certain that Baum-Welch, given 73 states as parameter, will reach an illustrative and representative result for a model of that size, which is why the maximum amount of states has been set to 100. It should be noted that 100 states might not be enough to reach a near optimal result.
 The datasets given by Pautomac ranges in sequences. Some have 20.000 sequences while others have 100.000. These amounts of sequences are however larger than what is necessary to illustrate how one algorithm behaves, given some dataset. Another problem is that the larger datasets takes significantly longer to compute, compared to a subset of sequences. It is therefore interesting to explore what amount of sequences that will both produces useful results, without spending an unnecessary amount of time doing the computations.
 
-\todo{add graph of BW run on different sequense amounts}
+\paragraph{Training Sequences}
+There is at least 20,000 sequences in pautomac's training sets, which is much more than what is necessary to produce representative results for the presented models and algorithms. To determine some reasonable amount of training observations, we do a small experiment with \gls{baum-welch}, where a variable amount of sequences is used. Figure \ref{fig:sequences} shows that even 100 sequences will be enough for a representative result, however the running time changes so little until 5000 sequences, that it has been decided that a training set of 5000 sequences most suitable for the following experiments.
+
+The setup for this experiment:
+\begin{itemize}
+\item Dataset: 36
+\item Algorithm: Baum Welch
+\item Threshold: 0.01
+\item Validation sequences: 1000
+\item CPU: 2 Ghz Intel core 2 duo
+\end{itemize}
+
+\begin{figure}
+\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+				ybar,
+				xtick=data,
+   				symbolic x coords={100,500,1000,5000,10000,50000},
+				xlabel = Sequences,
+            		ylabel = Score (lower is better)]
+				\addplot+table[y=score, col sep=tab]
+	%			\addplot+table[y=time, col sep=tab]
+				{content/Experiments/graphdata/sequences.csv};
+		\end{axis}
+	\end{tikzpicture}
+\caption{Loglikelyhood when running Baum-Welch on different sequences}
+\label{fig:sequences}
+\end{figure}
+
 
 \paragraph{Baum-Welch Treshold}
 The Baum-Welch algorithm takes two parameters, the amount of states which the trained model should consist of and the threshold of convergence. The state range for the experiments have already been selected to range between 10 and 100 with a step size of 10. Unlike the choice of states, which is a variable, the threshold should be a static value for all the experiments.
