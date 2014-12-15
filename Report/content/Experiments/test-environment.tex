@@ -1,12 +1,9 @@
 \section{Test Environment}
-
 To comply with the need to continuously run multiple extensive experiments and test on both newly proposed algorithms and already existing algorithms, a robust test environment framework has been designed and implemented.
 
-Having the test environment framework common for every tested algorithm made it increasingly simple to set up and evaluate the tests and produce extensive result data as a common interface was implemented for every algorithm to feed it training data and obtain the resulting probabilities.
-
-Another important aspect to the test environment is the ability to reuse existing solutions in multiple algorithms. The experimental algorithms we introduce are mainly based around the well known \gls{baum-welch} and thus the test environment may be utilised to provide unified access to the standard \gls{baum-welch} for every of tested approach, greatly decreasing the code redundancy and allowing for faster creation and testing of new algorithms in the process.
-
-The test environment thus mainly compromises of several main components. The architecture of the test environment and the dependencies and interoperability of the components are depicted in figure \ref{fig:testenvironment}.
+The test environment made it easy to reuse existing models and algorithms as a part of new algorithms and models. 
+The algorithms we propose are mainly based around the well known \gls{baum-welch}, and hence the test environment aims to provide a flexibility around the use of \gls{baum-welch}, which have reduced code redundancy.
+The architecture of the test environment are depicted in figure \ref{fig:testenvironment}.
 
 \begin{figure}[!htb]
 \centering
@@ -18,11 +15,12 @@ The test environment thus mainly compromises of several main components. The arc
 \subsection{Benchmark}
 The \formatclass{Benchmark} class is the core element of the test environment as it is responsible for executing and tracking the actual tests and recording the results. The \formatclass{Benchmark} class is first initialised by specifying the parameters for the tests to be run and subsequently, the initialised tests are executed by calling the \formatfunction{Run()} method.
 
-Numerous test parameters can be specified for the Benchmark, namely:
+The test parameters needed to perform a Benchmark:
 
 \begin{itemize}
-	\item[] Data -- allows for the specification of PautomaC data files the tests are to be conducted on. The \formatclass{Benchmark} class prepares all the data in advance and uses them with the same settings for every different learner or configuration.
-	\item[] Learners -- specifies which learning algorithms to test. Every chosen learner then undergoes an individual configuration to allow testing the learner in multiple different configurations.
+	\item[] Name: This is the output name of the folder created by the benchmarking process, where the results are stored.
+	\item[] Learners: A list of learners, that should be benchmarked.
+	\item[] Datasets: allows for the specification of PautomaC data files the tests are to be conducted on. The \formatclass{Benchmark} class prepares all the data in advance and uses them with the same settings for every different learner or configuration.
 	\item[] Number of runs -- as self-explanatory as it seems this parameter regulates the number of runs to be conducted in order to reduce possible noise.
 	\item[] Training and validation set size -- regulation of how many sequences from the PautomaC train data file are to be actually used for training and validation.
 	\item[] Evaluation method -- allows a choice between evaluating simply as logarithmic likelihood of the validation sequences or using the PautomaC evaluation criterion with the use of the solution data.
