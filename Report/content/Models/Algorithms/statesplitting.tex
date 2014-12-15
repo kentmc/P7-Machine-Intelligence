@@ -6,8 +6,8 @@ Let $(n, s, \epsilon, D, V)$ be the input vector of the Greedy State Splitting a
 
 \begin{itemize}
 	\item[] Phase 1, state splitting
-	\item[1)] For each observable state sequence $O \in V$ a corresponding most probable hidden state sequence is computed using \gls{viterbi}: $Q=\mathcal{V}_G(O)$.
-	\item[2)] For each vertex $v \in V(G)$ compute a score $s(v)$ as the probability the given vertex outputs the desired output symbol according to the precomputed hidden state sequences weighted by the probability of these sequences. In more formal terms, let $\xi_G(O=(o_1,...,o_T), v) = \{t\in\{1, ..., T\}|Q_t=v\}$ then: $$s(v) = \sum_{O\in D}P(Q|O,G) \frac{\sum_{t \in \xi_G(O, v)}b_v(o_t)}{|\xi_G(O, v)|}$$
+	\item[1)] For each observable state sequence $\mathbf{O} \in V$ a corresponding most probable hidden state sequence is computed using \gls{viterbi}: $\mathbf{Q}=\mathcal{V}_G(\mathbf{O})$.
+	\item[2)] For each vertex $v \in V(G)$ compute a score $s(v)$ as the probability the given vertex outputs the desired output symbol according to the precomputed hidden state sequences weighted by the probability of these sequences. In more formal terms, let $\theta_G(\mathbf{O}=(o_1,...,o_T), v) = \{t\in\{1, ..., T\}|\mathbf{Q}_t=v\}$ then: $$s(v) = \sum_{\mathbf{O}\in V}P(\mathbf{Q}|\mathbf{O},G) \frac{\sum_{t \in \theta_G(\mathbf{O}, v)}b_v(o_t)}{|\theta_G(\mathbf{O}, v)|}$$
 	\item[3)] Find the ``weakest'' vertex: $$w = \argmin_{v\in V(G)}\{s(v)\}$$.
 	\item[4)] Create a new graph $G' = G\cup \{w'\}$ where $w'$ is a new vertex such that: $\forall v\in V(G): a_{w'v} = a_{wv} \land a_{vw'} = a_{vw}$, $\forall \sigma \in \Sigma: b_{w'}(\sigma) = b_w(\sigma)$ and $\pi(w') = \pi(w)$.
 	\item[5)] Normalise $G'$ so all the probabilities sum up to $1$.
