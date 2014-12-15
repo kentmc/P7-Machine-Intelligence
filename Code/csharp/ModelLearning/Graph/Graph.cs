@@ -20,6 +20,15 @@ namespace ModelLearning {
             Nodes.Add(n);
         }
 
+        public void RemoveNode(Node n)
+        {
+            foreach (Node x in this.Nodes)
+            {
+                x.Transitions.Remove(n);
+            }
+            Nodes.Remove(n);
+        }
+
         public int NumNodes {
             get { return Nodes.Count(); }
         }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ModelLearning {
-    class SequenceData {
+    public class SequenceData {
         private int[][] sequences;
         private int[][] non_empty_sequences;
         private List<int[]> sequence_list;

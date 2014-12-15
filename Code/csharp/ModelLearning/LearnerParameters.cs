@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ModelLearning
 {
-    class LearnerParameters
+    public class LearnerParameters
     {
         public bool RunningParameterDecimal { get; private set; }
         public string RunningParameterName { get; private set; }
