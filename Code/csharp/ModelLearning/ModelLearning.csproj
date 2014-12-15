@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GG_Graph">
+      <HintPath>.\GG_Graph.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,7 +56,7 @@
     <Compile Include="Accord.Statistics\Properties\AssemblyInfo.cs" />
     <Compile Include="Benchmark.cs" />
     <Compile Include="BaumWelch.cs" />
-	<Compile Include="Benchmarker.cs" />
+    <Compile Include="Benchmarker.cs" />
     <Compile Include="BWBenchmarker.cs" />
     <Compile Include="DataLoader.cs" />
     <Compile Include="DataSet.cs" />
@@ -62,6 +65,7 @@
     <Compile Include="Graph\Graph.cs" />
     <Compile Include="Learner.cs" />
     <Compile Include="LearnerParameters.cs" />
+    <Compile Include="Learners\GGLearner.cs" />
     <Compile Include="Learners\JLearner.cs" />
     <Compile Include="Learners\PadawanLearner.cs" />
     <Compile Include="Learners\SparseBaumWelchLearner .cs" />

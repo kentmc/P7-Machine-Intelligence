@@ -47,7 +47,7 @@ namespace ModelLearning.Learners {
 
             HMMGraph graph = RandomSingleNodeGraph(trainingData.NumSymbols);
             bestHMM = SparseHiddenMarkovModel.FromGraph(graph);
-            bestLikelihood = bestHMM.Evaluate(trainingData.GetAll(), true);
+            bestLikelihood = bestHMM.Evaluate(validationData.GetAll(), true);
             while (bestHMM.NumberOfStates < maxStates){
                 double last_ll = bestLikelihood;
                 WriteLine("Number of states: " + bestHMM.NumberOfStates);

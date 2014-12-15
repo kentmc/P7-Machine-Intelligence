@@ -2,13 +2,13 @@
 \subsection{Markov models}
 
 \subsection{n-Gram}
-The n-Gram model is used to learn probabilities of observing symbol $s$ at timepoint $t$; $s_t$, given the $t-1$ prior symbols. For instance a 3-gram, or trigram, the probability of producing symbol n will look like: 
+The n-Gram model defines a probability of observing symbol $y$ at time $t$, denoted $y_t$, given the $n-1$ prior symbols. For a 3-gram, also known as a trigram, the probability of producing symbol $s$ is defined as:
 \begin{description}
-\item $Pr(s_t | s_t-2, s_t-1)$. 
+\item $Pr(y_t | y_{t-2}, y_{t-1}) = Pr(y_t, y_{t-1}, y_{t-2}) \frac{1}{|S|}\Sigma_{s \in S} Pr(s_t, s_{t-2}, s_{t-1})$. 
 \end{description}
 And determining the probability for an observed sequence can then be defined by:
 \begin{description}
-\item $$Pr(s_1, s_2 \dots s_n) = \prod_{t = 1}^{n} Pr(s_t | s_{t-2}, s_{t-1})$$ \cite{Notesw4705}
+\item $Pr(y_1, y_2 \dots y_n) = \prod_{t = 1}^{n} Pr(y_t | y_{t-2}, y_{t-1})$ \cite{Notesw4705}
 \end{description}
 According to \cite{pautomacTR}, whether n-grams can be consistently outperformed by PFA, HMM or DPFA models for prediction tasks, is still an open problem. n-grams are less powerful than the before mentioned models, however the n-gram’s structure and parameters are easier to compute, which often gives an effective model in practice.
 

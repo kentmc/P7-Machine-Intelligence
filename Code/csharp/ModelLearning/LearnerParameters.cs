@@ -86,6 +86,26 @@ namespace ModelLearning
                         Console.WriteLine("Number of States:");
                         goto case "DEF_RUNNING_PARAM";
                     }
+                case "gg learner":
+                    {
+                        Console.WriteLine("Configure GG Learner:");
+
+                        Console.Write("Minimum initial number or transitions:");
+                        AdditionalParameters.Add("minNbTransitions", Int32.Parse(Console.ReadLine()));
+
+                        Console.Write("Intermediate BW iterations:");
+                        AdditionalParameters.Add("BWiterations", Int32.Parse(Console.ReadLine()));
+
+                        Console.Write("Final BW threshold:");
+                        AdditionalParameters.Add("finalBWThreshold", Double.Parse(Console.ReadLine()));
+
+                        Console.Write("Max expand attempts:");
+                        AdditionalParameters.Add("maxExpandAttempts", int.Parse(Console.ReadLine()));
+
+                        Console.Write("Maximum number of states:");
+                        AdditionalParameters.Add("maxStates", Int32.Parse(Console.ReadLine()));
+                        break;
+                    }
                 case "uniform learner":
                     {
                         Console.WriteLine("Uniform Learner needs no configuration.");

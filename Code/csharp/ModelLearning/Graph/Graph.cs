@@ -80,5 +80,11 @@ namespace ModelLearning {
             NormalizeEmissions();
             NormalizeTransitions();
         }
+
+        public void NormalizeKeepInitial()
+        {
+            NormalizeEmissions();
+            NormalizeTransitions();
+        }
     }
 }

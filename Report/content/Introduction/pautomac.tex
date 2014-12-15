@@ -1,158 +1,33 @@
 \section{PautomaC Competition}
-
+\label{sec:pautomac}
 \subsection{PautomaC}
+PautomaC (Probabilistic Automata learning Competition) was an online competition about learning distributions over strings. For the competition a number of probabilistic automata have each generated a large set of sequences, which have been compiled into a training set and a test set, where the test data were used to evaluate a score for the contestants.
+The contestants did not know anything about the automata, besides the fact that only four types of automata were used: \gls{mc}, \gls{dpfa}, \gls{hmm} and \gls{pfa}.
 
-PautomaC stands for Probabilistic Automata learning Competition. To
-win, the competitors had to try and create the most accurate algorithm
-for learning what are called \gls{npfa}. The aim of this competition was to improve
-the existing knowledge on \gls{npfa} learning algorithms.
+To reach a score from a learned model, the 1000 sequences of the test set were each given a probability. These probabilities were then compared to the probabilities of the original data generator, using the perplexity measure:
 
+\begin{equation} \label{eq:perplexity}
+2^{-(\sum_{x\epsilon TestSet}P_{r_{T}}(x)\times\log(P_{r_{C}}(x))}
+\end{equation}
 
-\subsubsection{Reminder about PAs}
+Where $P_{r_{T}}(x)$ represents the real probability of the
+sequence $x$, and $P_{r_{C}}$ is a contestants submitted probability for the sequence $x$.
+The contestants could submit solutions unlimited. However only a rank among other contestants, and not a precise score, were publish while the competition were running.
 
-More commonly referred to as simply \gls{pa} or
-sometimes Rabin Automaton, like the name of Michael O. Rabin who introduced
-this concept in 1963, \gls{pa}s generalise the concept of \gls{nfa}. \gls{nfa}s can transition to zero or more states,
-without requiring input symbols for state transitions. However, \gls{pa}s
-introduce transitioning probabilities in the definition. Therefore,
-whereas \gls{nfa}s all have a Deterministic equivalent, the introduction
-of the probability concept in \gls{pa}s prevent the existence of \gls{dfa} equivalents,
-unless all probabilities are equal to 0 or 1.
+\subsubsection{About PautomaC's Automata}
+While the contestant did not know anything about the automata, we have the luxury of some more exact parameters for the models, including:
 
-The languages \gls{pa}s recognise are called stochastic languages \cite{macarie} - of which
-the regular ones are a subset. The number of stochastic languages is uncountable.
-By their definition, \gls{pa}s extend the Markov Chain concept. More formally:
-
-\begin{description}
-	\item [{P:}] probability of transitioning to a particular state
-	\item [{Q:}] finite set of states
-	\item [{$q_{0}$:}] probability vector of being in a particular initial
-	state
-	\item [{$\varSigma$:}] finite set of input symbols
-	\item [{$\delta:Q\times\varSigma\longrightarrow P(Q)$:}] transition function
-	\item [{F:}] finite set of final states, with $F\subset Q$
-\end{description}
-
-In addition, the transition matrix T from a state q to a state q'
-while producing the symbol s must have the following property:
-
-\[
-\sum_{q'}[T_{s}]_{qq'}=1
-\]
-
-
-This means that, if a symbol s is produced, the probability of transitioning
-from a state to another (or possibly the same) is 1. A Probabilistic
-Automaton thus has:
 \begin{itemize}
-\item A probability of being in a particular initial state
-\item A probability of producing a symbol depending on the current state
-\item A probability of transitioning from a state to another, depending
-on the symbol produced
-\item A probability of ending the sequence when in a final state
-\end{itemize}
-Albeit complex, \gls{pa}s have many applications. Indeed, in most cases,
-the only available data is the observed output. It is thus necessary
-to learn how to make a model out of these observed sequences to understand
-them. \gls{dna} sequences are a good example of this problem. The observed
-symbols undoubtedly follow a model of some sort, yet unknown. The
-goal of a \gls{pa} is to approximate this kind of model, and learning \gls{pa}s
-ultimately leads to learning how \gls{dna} sequences are generated.
-
-
-\subsubsection{Test generation}
-
-All test files have been computer-generated. They include 4 model
-types:
-\begin{enumerate}
 \item Markov Chains
-\item Probabilistic Finite Automata (PFAs)
-\item Deterministic Probabilistic Finite Automata (DPFAs)
-\item Hidden Markov Models (HMMs)
-\end{enumerate}
-The manner in which those files have been generated is as follows:
-\begin{itemize}
+\item Deterministic Probabilistic Finite Automata (DPFA)
+\item Probabilistic Finite Automata (PFA)
+\item Hidden Markov Models (HMM)
+\end{itemize}
+All model parameters have been randomly generated based on some values chosen for:
+\begin{description}
 \item N for the number of states
-\item A for the size of the alphabet (or number of observed symbols)
-\item S for the scarcity of symbols
-\item T for the scarcity of transitions\end{itemize}
-\begin{description}
-\item [{\textmd{The}}] ``S'' and ``T'' values can be confusing. Let's
-clarify what they mean:
-
-\begin{description}
-\item [{S}] represents the average percentage of symbols produced by any
-given state. In other words, each state will only produce S\% of the
-whole alphabet A in average. Do note that two states may still produce
-different symbols.
-\item [{T}] represents the average percentage of all possible transitions
-branching out from any given state. A transition here is a link from
-one state to another, with a symbol associated to it. With this in
-mind: for each state, out of all the possible transitions branching
-out from it (each with their respective symbol and destination state),
-only T\% will be generated.
+\item A for the size of the alphabet (observable symbols)
+\item $S_s$ for the sparsity of symbols
+\item $T_S$ for the sparsity of transitions
 \end{description}
-\end{description}
-The organisers entered those 4 values for each file. Finally, they
-chose to set the number of initial states to T$\times$N and the number
-of final states to S$\times$N. Everything else is entirely computer-generated. 
-
-
-\subsubsection{The model files}
-
-Generating a test model means that a model file is generated. This
-file contains all the necessary information to generate sequences.
-The information inside those files is displayed in a particular manner
-described as follows:
-\begin{description}
-\item [{I:}] (state number)\\
-Probability of starting the sequence in that state.\\
-\textit{Note: the sum of all those probabilities is equal to 1.}
-\item [{F:}] (state number)\\
-Probably of ending the sequence when in that state\textit{.}\\
-\textit{Note: those probabilities are independent of every other,
-including the symbol and transition ones. Also, their sum is NOT equal
-to 1.}
-\item [{S:}] (state number, symbol number)\\
-Probability of producing this symbol in this state.\\
-\textit{Note: the sum of all the probabilities for any one state is
-equal to 1.}
-\item [{T:}] (starting state number, symbol number, destination state number)\\
-Probability of reaching this destination state from this starting
-state, given this symbol.\\
-\textit{Note: the sum of all the probabilities sharing the same ``starting
-state number'' and ``symbol number'' is equal to 1.}
-\end{description}
-
-\subsubsection{Rating}
-
-At the time of the competition, the model and solution files were,
-of course, not available. The competitors had to provide their solution
-file to each test file. Those solution files did not contain a model,
-though. What they contained instead was, for each sequence of the
-test file, the probability for it to occur. The organisers then compared
-their results to the actual probabilities inside their solution files,
-and rated the competitors based on how close they were. The formula
-they used is:
-
-\[
-2^{-(\sum_{x\epsilon TestSet}P_{r_{T}}(x)\times\log(P_{r_{C}}(x)))}
-\]
-
-
-where $P_{r_{T}}$ represents the organisers' probability for the
-sequence x, and $P_{r_{C}}$ the candidates' one.
-
-Worthy of note is that only the results mattered. This means that
-the competitors\textquoteright{} models or numbers of states did not
-matter, so long as they were able to approximate the behaviour of
-the organisers\textquoteright{} models.
-
-
-\subsubsection{Exploiting their data}
-
-Our project also deals with finding a learning algorithm for these
-automata. As such, the data available on PautomaC is a good starting
-point. Additionally, now that the solution and model files have been
-made publicly available, this gives us a means with which our algorithms
-can be tested.
+Where $N * T_s$ is used as the number of initial states while $N * S_s$ is used as the number of final states. For this report $S$ will denote the size of the alphabet for a given model and $T$ will denote the amount of transitions in percentage, given the state space and maximum possible amount of transitions.
