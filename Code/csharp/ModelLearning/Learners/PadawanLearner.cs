@@ -12,7 +12,7 @@ namespace ModelLearning.Learners {
         private const double TRANSITION_UNIFORMITY_THRESHOLD = 0.0;
         private const double EMISSION_UNIFORMITY_THRESHOLD = 0.0;
         private const double THRESHOLD = 0.0;
-        private const int BW_ITERATIONS = 15;
+        private const int BW_ITERATIONS = 10;
         private SparseHiddenMarkovModel hmm;
         private int maximum_states;
         private int minimum_states;
