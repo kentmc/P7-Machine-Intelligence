@@ -12,8 +12,13 @@ namespace ModelLearning.Learners {
         private const double TRANSITION_UNIFORMITY_THRESHOLD = 0.0;
         private const double EMISSION_UNIFORMITY_THRESHOLD = 0.0;
         private const double THRESHOLD = 0.0;
-        private const int ITERATIONS = 15;
+        private const int BW_ITERATIONS = 15;
         private SparseHiddenMarkovModel hmm;
+        private int maximum_states;
+        private int minimum_states;
+        private System.IO.StreamWriter intermediateOutputFile;
+        private string intermediateOutputFileName;
+        private int run = 0;
 
         public override string Name() {
             return "Padawan Learner";
@@ -25,14 +30,14 @@ namespace ModelLearning.Learners {
                 return EMPTY_SEQUENCE_PROBABILITY;
             }
             else {
-                return hmm.Evaluate(sequence);
+                return hmm.Evaluate(sequence,logarithm);
             }
         }
 
         private HMMGraph Splitstate(Node prime, HMMGraph graph) {
             Random random = new Random();
             Node qPrime = graph.Nodes[0];
-            Node q1 = new Node();
+            Node q1 = new Node();   
 
             foreach (Node x in graph.Nodes) {
 
@@ -101,7 +106,8 @@ namespace ModelLearning.Learners {
         }
 
         public override void Learn(SequenceData trainingData,
-                SequenceData validationData, SequenceData testData) {
+                SequenceData validationData, SequenceData testData) 
+        {
        
             #region Junk
             //hmm.Learn(trainingData.GetNonempty(), 1);
@@ -162,7 +168,30 @@ namespace ModelLearning.Learners {
 
             #endregion
 
-            HMMGraph graph = hmm.ToGraph();
+            intermediateOutputFile = new System.IO.StreamWriter(intermediateOutputFileName + (run++) + ".csv");
+            intermediateOutputFile.WriteLine("States, Likelihood");
+
+            // Initialize graph
+            HMMGraph graph = new HMMGraph(trainingData.NumSymbols);
+
+            for (int i = 0; i < minimum_states; i++) {
+
+                graph.AddNode(new Node());
+            }
+
+            foreach (Node n in graph.Nodes) {
+                foreach (Node m in graph.Nodes) {
+                    n.SetTransition(m, 0.5);
+                }
+
+                for (int i = 0; i < trainingData.NumSymbols; i++) {
+                    n.SetEmission(i, 0.5);
+                }
+            }
+            graph.Normalize();
+
+            this.hmm = SparseHiddenMarkovModel.FromGraph(graph);
+
             CleanGraph(graph);
             Random rnd = new Random();
 
@@ -174,8 +203,9 @@ namespace ModelLearning.Learners {
             int[] combinedTrainData = cList.ToArray();
 
             // Run iterations.
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < (maximum_states-minimum_states); i++) {
 
+                Console.WriteLine("* Iteration {0} of {1}",i,(maximum_states-minimum_states));
                 graph = hmm.ToGraph();
 
                 Node qPrime = FindQPrime(graph, combinedTrainData);
@@ -183,9 +213,11 @@ namespace ModelLearning.Learners {
                 graph = Splitstate(qPrime, graph);
 
                 hmm = SparseHiddenMarkovModel.FromGraph(graph);
-                hmm.Learn(trainingData.GetAll(), THRESHOLD, ITERATIONS);
+                hmm.Learn(trainingData.GetAll(), THRESHOLD, BW_ITERATIONS);
+                OutputIntermediate(validationData);
             }
             hmm = SparseHiddenMarkovModel.FromGraph(graph);
+            intermediateOutputFile.Close();
         }
 
         // Assign incoming transitions to qPrime between q1 and q2
@@ -316,29 +348,51 @@ namespace ModelLearning.Learners {
         public override void Initialise(LearnerParameters parameters,
                 int iteration) {
 
-            const int NUM_SYMBOLS = 42;
-            HMMGraph graph = new HMMGraph(NUM_SYMBOLS);
-            graph.AddNode(new Node());
-            graph.AddNode(new Node());
-            graph.AddNode(new Node());
+            maximum_states = (int)parameters.Maximum;
+            minimum_states = (int)parameters.Minimum;
 
-            foreach (Node n in graph.Nodes) {
-                foreach (Node m in graph.Nodes) {
-                    n.SetTransition(m, 0.5);
-                }
+            //const int NUM_SYMBOLS = 42;
+            //HMMGraph graph = new HMMGraph(NUM_SYMBOLS);
+            
+            //for (int i = 0; i < parameters.Minimum; i++) {
 
-                for (int i = 0; i < NUM_SYMBOLS; i++) {
-                    n.SetEmission(i, 0.5);
-                }
-            }
-            graph.Normalize();
+            //    graph.AddNode(new Node());
+            //}
 
-            this.hmm = SparseHiddenMarkovModel.FromGraph(graph);
+            //foreach (Node n in graph.Nodes) {
+            //    foreach (Node m in graph.Nodes) {
+            //        n.SetTransition(m, 0.5);
+            //    }
+
+            //    for (int i = 0; i < NUM_SYMBOLS; i++) {
+            //        n.SetEmission(i, 0.5);
+            //    }
+            //}
+            //graph.Normalize();
+
+            //this.hmm = SparseHiddenMarkovModel.FromGraph(graph);
         }
 
+        public void SetIntermediateOutputFile(string fileName) {
+            intermediateOutputFileName = fileName;
+        }
+
+        private void OutputIntermediate(SequenceData valData) {
+
+            List<int> combined = new List<int>();
+            
+            foreach(int[] arr in valData.GetAll()) {
+
+                combined.AddRange(arr);
+            }
+
+            intermediateOutputFile.WriteLine(hmm.NumberOfStates + ", " + this.hmm.Evaluate(valData.GetAll(), true));
+            //intermediateOutputFile.WriteLine(hmm.NumberOfStates + ", " + this.CalculateProbability(combined.ToArray()));
+        }
+        
         public override void Save(StreamWriter outputWriter, StreamWriter csvWriter) {
 
-            throw new NotImplementedException();
+
         }
     }
 

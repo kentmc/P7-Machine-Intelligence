@@ -112,6 +112,15 @@ namespace ModelLearning
 
                         break;
                     }
+                case "padawan learner": {
+                        Console.Write("Minimum: ");
+                        Minimum = Double.Parse(Console.ReadLine());
+
+                        Console.Write("Maximum: ");
+                        Maximum = Double.Parse(Console.ReadLine());
+
+                        break;
+                    }
                 case "DEF_RUNNING_PARAM":
                     {
                         Console.Write("Minimum: ");
