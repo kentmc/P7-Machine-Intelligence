@@ -14,6 +14,10 @@ namespace ModelLearning
 
         public double Maximum { get; private set; }
 
+        public int MaxStates { get; private set; }
+
+        public int MaxIterations { get; private set; }
+
         public double StepSize { get; private set; }
 
         public Dictionary<string, object> AdditionalParameters { get; private set; }
@@ -113,11 +117,12 @@ namespace ModelLearning
                         break;
                     }
                 case "padawan learner": {
-                        Console.Write("Minimum: ");
-                        Minimum = Double.Parse(Console.ReadLine());
 
-                        Console.Write("Maximum: ");
-                        Maximum = Double.Parse(Console.ReadLine());
+                        Console.Write("Max Iterations: ");
+                        MaxIterations = Int16.Parse(Console.ReadLine());
+
+                        Console.Write("Max States: ");
+                        MaxStates = Int16.Parse(Console.ReadLine());
 
                         break;
                     }
