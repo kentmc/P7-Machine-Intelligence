@@ -4,33 +4,63 @@ Another dynamic size \gls{hmm} learning approach was to construct a greedy heuri
 
 The greedy state splitting algorithm consists of two main modules, with possible extensions. The main modules include the heuristics to identify the state (or multiple states) to split and the splitting algorithm itself. During the experiments two additional concepts, not fundamental for the state splitting itself, were also explored. This included edge cutting and state removal.
 
-\subsubsection{State Identification Heuristics}
-Two main approaches were explored for identifying the best state to split. The first one utilised the \gls{viterbi} thus named the \emph{Viterbi heuristic}, whilst the second one uses the $\gamma_t(i)$ variables computed during the \gls{baum-welch} algorithm and was therefore named the \emph{Gamma heuristic}.
+\subsubsection{State Split Mechanics}
+Two main approaches to splitting the states were considered for the state splitting algorithm. One being very simple, just producing a copy of the state to split (\emph{Clone split}) and a much more elaborate approach considering the topology of the state inside the hidden state graph (\emph{Distribution split}).
 
-Both of the heuristics compute a score $s:S \rightarrow \mathcal{R}$ for each hidden state of the model, that can later be utilised to determine the state to split.
+\subsubsection{State Identification Heuristics}
+Similarly to state splitting itself, two main approaches were explored for identifying the best state to split. The first one utilised the \gls{viterbi} thus named the \emph{Viterbi heuristic}, whilst the second one uses the $\gamma_t(i)$ variables computed during the \gls{baum-welch} algorithm and was therefore named the \emph{Gamma heuristic}.
+
+Both of the heuristics compute a score $\zeta:S \rightarrow \mathcal{R}$ for each hidden state of the model, that can later be utilised to determine the state to split.
 
 \paragraph{Viterbi Heuristic}
+The \emph{Viterbi heuristic} computes the score $\zeta$ for each hidden state as a probability of producing the correct symbol in the validation sequences for which it belongs to the corresponding most probable hidden state sequence as determined by the \gls{viterbi}.
 
+In more formal terms, the computation of the score $\zeta(s)$ for each $s \in S$ and a given \gls{hmm} $\lambda = (\mathbf{A}, \mathbf{B}, \boldsymbol{\pi})$ can be described by the following procedure:
+\begin{enumerate}
+	\item For each signal $\mathbf{O}\in V$ a corresponding most probable hidden state sequence is computed using the \gls{viterbi}: $\mathbf{Q}=\mathcal{V}_G(\mathbf{O})$.
+	\item For each state $s\in S$ determine the significant positions in the hidden state sequences given by \gls{viterbi}:
+	$$\forall s\in S,\forall \mathbf{O}=(o_1, ..., o_T)\in V: \tau_{s, \lambda}^\mathbf{O}=\{t\in\{1, ..., T\}|\mathbf{Q}_t=s\}$$
+	\item For each state $s \in S$  and $\mathbf{O}\in V$ compute the partial score (performance) $\hat\zeta_{\mathbf{O}}(s)$ as the average probability of producing the expected observable symbol in accordance to the signal $\mathbf{O}$ over all the significant positions for the given state $s$ and signal $\mathbf{O}$:
+	$$\forall s\in S,\forall \mathbf{O}\in V: \hat{\zeta}_{\mathbf{O}}(s) = \frac{\sum_{t\in\tau_{s, \lambda}^{\mathbf{O}}}b_s(o_t)}{|\tau_{s, \lambda}^{\mathbf{O}}|}$$
+	\item Finally, compute the $\zeta$ score for each state $s\in S$ as a sum of all the partial scores for the given state weighted by the probabilities of generating the associated signals by the corresponding hidden state sequences:
+	$$\forall s\in S: \zeta(s)=\sum_{\mathbf{O}\in V}P(\mathbf{Q}|\mathbf{O}, \lambda)\hat\zeta_{s, \lambda}^{\mathbf{O}}$$
+\end{enumerate}
 
+The obtained $\zeta$ scores the states of the \gls{hmm} based on their ``performance'' for the tasks they are most likely to perform. As such the state with the lowest score is determined to be the worst performing node $w$: $$w = \argmin_{s\in S}(\zeta(s))$$
 
+As the worst performing node is deemed to perform worse because of being involved in the generation of many of the signal in the validation set $V$. As such, it seems meaningful to split the node into more two to split the extensive workload and increase performance.
 
+The \emph{Viterbi heuristic} can be straightforwardly extended to identify more than just one state to split as such producing a set of the worst performing nodes $\mathcal{W}$. The set can be constructed iteratively starting with $\mathcal{W} = \emptyset$ as:
+$$\mathcal{W} = \mathcal{W} \cup \{\argmin_{s\in S\setminus \mathcal{W}}(\zeta(s))\}$$
+until the $|\mathcal{W}|$ equals the desired number of states to split.
 
+A further modification of the \emph{Viterbi heuristic} was considered to incorporate the use of a splitting threshold $\theta$ instead of a maximum number of states. For this purpose a normalised version of the score $\overline{\zeta}$ was introduced:
+$$\overline{\zeta}(s) = \frac{\zeta(s)}{\sum_{s\in S}\zeta(s)}$$
 
-This algorithm utilises a greedy concept to grow the hidden state space of a \gls{hmm} whilst maintaining a sparse transition matrix to preserve computability in large state spaces. The Greedy State Splitting relies heavily on the existing \gls{baum-welch} calling it repeatedly to achieve convergence.
+The states to split $\mathcal{W}$ were thus determined as all states that scored below the given threshold $\theta$:
+$$\mathcal{W} = \{s\in S|\overline\zeta(s) < \theta\}$$
 
-Let $(n, s, \epsilon, D, V)$ be the input vector of the Greedy State Splitting algorithm where: $n, s \in \mathbb{N}, \epsilon\in[0,1], D$ is the training data set and $V$ is the validation data set. The greedy State Splitting algorithm starts with two vertex complete graph $G=K_2$ for the hidden state space with all the parameters randomised. Afterwards it iterates through the following phases until $|V(G)| = n$:
+More improvements to the \emph{Viterbi heuristic} were considered, mainly including the \emph{n-step Viterbi heuristic} that should have computed the score not only on the output probability in the given significant position, but also the probability of correctly outputting the next $n -1$ symbols of the given signal starting in the explored state to further increase precision. The above described version of the \emph{Viterbi heuristic} would be considered \emph{1-step Viterbi heuristic} in this context. This approach however remains untested due to preference of the \emph{Gamma heuristic} and can be considered for future work.
 
-\begin{itemize}
-	\item[] Phase 1, state splitting
-	\item[1)] For each observable state sequence $\mathbf{O} \in V$ a corresponding most probable hidden state sequence is computed using \gls{viterbi}: $\mathbf{Q}=\mathcal{V}_G(\mathbf{O})$.
-	\item[2)] For each vertex $v \in V(G)$ compute a score $s(v)$ as the probability the given vertex outputs the desired output symbol according to the precomputed hidden state sequences weighted by the probability of these sequences. In more formal terms, let $\theta_G(\mathbf{O}=(o_1,...,o_T), v) = \{t\in\{1, ..., T\}|\mathbf{Q}_t=v\}$ then: $$s(v) = \sum_{\mathbf{O}\in V}P(\mathbf{Q}|\mathbf{O},G) \frac{\sum_{t \in \theta_G(\mathbf{O}, v)}b_v(o_t)}{|\theta_G(\mathbf{O}, v)|}$$
-	\item[3)] Find the ``weakest'' vertex: $$w = \argmin_{v\in V(G)}\{s(v)\}$$.
-	\item[4)] Create a new graph $G' = G\cup \{w'\}$ where $w'$ is a new vertex such that: $\forall v\in V(G): a_{w'v} = a_{wv} \land a_{vw'} = a_{vw}$, $\forall \sigma \in \Sigma: b_{w'}(\sigma) = b_w(\sigma)$ and $\pi(w') = \pi(w)$.
-	\item[5)] Normalise $G'$ so all the probabilities sum up to $1$.
-	\item[] Phase 2, edge cutting
-	\item[6)] For each edge $e = (v_1,v_2)\in E(G')$ check if the edge probability is lower then the given threshold: $a_{v-1,v_2}<\epsilon$. If so, remove the edge from the graph ($a_{v-1,v_2} = 0$).
-	\item[] Phase 3, re-estimation of the model parameters.
-	\item[7)] Run \gls{baum-welch} to re-learn the model parameters of the new model: $G = BW_t(G', D)$.
-\end{itemize}
+\paragraph{Gamma Heurisitic}
 
-The algorithm has also been considered in a ``strict'' variation at first, where the edge cutting phase did not depend on the parameter $\epsilon$ but instead a constant out-degree was maintained for all vertices, namely the size of the output symbol alphabet $s = |\Sigma|$. The early results however showed, that the strict out-degree variation is outperformed by the $\epsilon$ threshold.
+\todo{Finish the state splitting section.}
+
+%This algorithm utilises a greedy concept to grow the hidden state space of a \gls{hmm} whilst maintaining a sparse transition matrix to preserve computability in large state spaces. The Greedy %State Splitting relies heavily on the existing \gls{baum-welch} calling it repeatedly to achieve convergence.
+
+%Let $(n, s, \epsilon, D, V)$ be the input vector of the Greedy State Splitting algorithm where: $n, s \in \mathbb{N}, \epsilon\in[0,1], D$ is the training data set and $V$ is the validation data %set. The greedy State Splitting algorithm starts with two vertex complete graph $G=K_2$ for the hidden state space with all the parameters randomised. Afterwards it iterates through the %following phases until $|V(G)| = n$:
+
+%\begin{itemize}
+%	\item[] Phase 1, state splitting
+%	\item[1)] For each observable state sequence $\mathbf{O} \in V$ a corresponding most probable hidden state sequence is computed using \gls{viterbi}: %$\mathbf{Q}=\mathcal{V}_G(\mathbf{O})$.
+%	\item[2)] For each vertex $v \in V(G)$ compute a score $s(v)$ as the probability the given vertex outputs the desired output symbol according to the precomputed hidden state %sequences weighted by the probability of these sequences. In more formal terms, let $\theta_G(\mathbf{O}=(o_1,...,o_T), v) = \{t\in\{1, ..., T\}|\mathbf{Q}_t=v\}$ then: $$s(v) = %\sum_{\mathbf{O}\in V}P(\mathbf{Q}|\mathbf{O},G) \frac{\sum_{t \in \theta_G(\mathbf{O}, v)}b_v(o_t)}{|\theta_G(\mathbf{O}, v)|}$$
+%	\item[3)] Find the ``weakest'' vertex: $$w = \argmin_{v\in V(G)}\{s(v)\}$$.
+%	\item[4)] Create a new graph $G' = G\cup \{w'\}$ where $w'$ is a new vertex such that: $\forall v\in V(G): a_{w'v} = a_{wv} \land a_{vw'} = a_{vw}$, $\forall \sigma \in \Sigma: %b_{w'}(\sigma) = b_w(\sigma)$ and $\pi(w') = \pi(w)$.
+%	\item[5)] Normalise $G'$ so all the probabilities sum up to $1$.
+%	\item[] Phase 2, edge cutting
+%	\item[6)] For each edge $e = (v_1,v_2)\in E(G')$ check if the edge probability is lower then the given threshold: $a_{v-1,v_2}<\epsilon$. If so, remove the edge from the graph %($a_{v-1,v_2} = 0$).
+%	\item[] Phase 3, re-estimation of the model parameters.
+%	\item[7)] Run \gls{baum-welch} to re-learn the model parameters of the new model: $G = BW_t(G', D)$.
+%\end{itemize}
+
+%The algorithm has also been considered in a ``strict'' variation at first, where the edge cutting phase did not depend on the parameter $\epsilon$ but instead a constant out-degree was %maintained for all vertices, namely the size of the output symbol alphabet $s = |\Sigma|$. The early results however showed, that the strict out-degree variation is outperformed by the %$\epsilon$ threshold.
