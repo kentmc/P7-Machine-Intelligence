@@ -2,14 +2,39 @@
 
 \section{Results}\label{results}
 
-\subsection{State Experiments}
+\subsection{State Space Experiments}
+The purpose of the state experiments are to show how \gls{bw} and our own algorithms and models perform in relation to the state space.
 	\input{./content/Experiments/graphdata/state-result.tex}
 
-\subsection{Density Experiments}
+Initial observations
+\begin{itemize}
+\item GE performs the best, except dataset 1. It seems like GE would surpass BW with a larger state space.
+\item SBW performs worse than BW, note that dataset 41 has a fairly small y-axis, where the best GE result is about 800 points. We estimate an error margin of 100-200 points. Without more runs for each experiment, it is impossible to determine an exact error margin.
+\item In general we seem to 
+\end{itemize}
+
+
+\subsection{Transition Density Experiments}
+The purpose of the transition density experiments are to show how \gls{bw} and our own algorithms and models perform in relation to the transition density.
 	\input{./content/Experiments/graphdata/density-result.tex}
 
-\subsection{Symbol size Experiments}
+Initial observations
+\begin{itemize}
+\item GE performs the best
+\item 
+\item 
+\end{itemize}
+
+\subsection{Symbol Alphabet Size Experiments}
+The purpose of the s are to show how \gls{bw} and our own algorithms and models perform in relation to the size of the emission symbol alphabet size.
 	\input{./content/Experiments/graphdata/symbol-result.tex}
+	
+Initial observations
+\begin{itemize}
+\item BW performs the best on 3 out of 4 sets
+\item 
+\item 
+\end{itemize}	
 	
 %\subsection{Greedy Extend Experiments}
 	%\input{./content/Experiments/results/greedyextend-results.tex}
