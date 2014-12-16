@@ -16,7 +16,8 @@ namespace ModelLearning.Learners {
         private System.IO.StreamWriter intermediateOutputFile;
         private string intermediateOutputFileName;
         private int run = 0;
-
+        private SequenceData testData;
+        private double[] solutions;
         //settings
         private int maxStates;
 
@@ -42,6 +43,7 @@ namespace ModelLearning.Learners {
         }
 
         public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
+            this.testData = testData;
             intermediateOutputFile = new System.IO.StreamWriter(intermediateOutputFileName + (run++) + ".csv");
             intermediateOutputFile.WriteLine("States, Likelihood");
 
@@ -73,7 +75,6 @@ namespace ModelLearning.Learners {
                     break;
                 }
                 else {
-                    WriteLine("Likelihood increased to: " + bestLikelihood);
                     OutputIntermediate();
                 }
             }
@@ -86,7 +87,14 @@ namespace ModelLearning.Learners {
         }
 
         private void OutputIntermediate() {
-            intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + bestLikelihood);
+            double real_score = PautomacEvaluator.Evaluate(this, testData, solutions);
+            intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + bestLikelihood + ", " + real_score);
+            intermediateOutputFile.Flush();
+            WriteLine("Likelihood increased to: " + bestLikelihood + " Pautomac score: " + real_score);
+        }
+
+        public void SetSolutions(double[] solutions) {
+            this.solutions = solutions;
         }
 
         /// <summary>
