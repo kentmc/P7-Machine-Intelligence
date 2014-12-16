@@ -4,9 +4,11 @@
 \textbf{Dataset: 32, Symbols: 4}\par\medskip
 \begin{tikzpicture}
 	\pgfplotsset{every axis legend/.append style={ 
-		at={(0.5,1.03)},
+		at={(0.55,1.03)},
 		anchor=south}}
 	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
 			xlabel = Number of states,
             	ylabel = Score (lower is better),
             	legend columns=-1,
@@ -34,9 +36,11 @@
 \textbf{Dataset: 8, Symbols: 8}\par\medskip
 \begin{tikzpicture}
 	\pgfplotsset{every axis legend/.append style={ 
-		at={(0.5,1.03)},
+		at={(0.55,1.03)},
 		anchor=south}}
 	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
 			xlabel = Number of states,
             	ylabel = Score (lower is better),
             	legend columns=-1,
@@ -72,9 +76,11 @@
 \textbf{Dataset: 10, Symbols: 11}\par\medskip
 \begin{tikzpicture}
 	\pgfplotsset{every axis legend/.append style={ 
-		at={(0.5,1.03)},
+		at={(0.55,1.03)},
 		anchor=south}}
 	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
 			xlabel = Number of states,
             	ylabel = Score (lower is better),
             	legend columns=-1,
@@ -102,9 +108,11 @@
 \textbf{Dataset: 35, Symbols: 20}\par\medskip
 \begin{tikzpicture}
 	\pgfplotsset{every axis legend/.append style={ 
-		at={(0.5,1.03)},
+		at={(0.55,1.03)},
 		anchor=south}}
 	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
 			xlabel = Number of states,
             	ylabel = Score (lower is better),
             	legend columns=-1,
@@ -123,7 +131,7 @@
 		{content/Experiments/graphdata/set35.csv};
 %		\addlegendentry{\textbf{Greedy Extend}}
 	\end{axis}
-\end{tikzpicture} 
+\end{tikzpicture}
 \label{fig:dataset35}
 \end{minipage}
 \\

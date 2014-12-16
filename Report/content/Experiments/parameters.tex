@@ -1,4 +1,4 @@
-\subsection{Experiment Parameters}
+\subsection{Experiment Parameters}\label{sec:parameters}
 Each algorithm will be run on some step size between 1 and 100 states for its model. This number is simply selected by examining the models that originally generated each dataset. The maximum amount of states from a Pautomac model is 73 states. It is not certain that Baum-Welch, given 73 states as parameter, will reach an illustrative and representative result for a model of that size, which is why the maximum amount of states has been set to 100. It should be noted that 100 states might not be enough to reach a near optimal result.
 The datasets given by Pautomac ranges in sequences. Some have 20.000 sequences while others have 100.000. These amounts of sequences are however larger than what is necessary to illustrate how one algorithm behaves, given some dataset. Another problem is that the larger datasets takes significantly longer to compute, compared to a subset of sequences. It is therefore interesting to explore what amount of sequences that will both produces useful results, without spending an unnecessary amount of time doing the computations.
 
