@@ -10,12 +10,13 @@ namespace ModelLearning.Learners {
     public class PadawanLearner : Learner {
         private const double EMPTY_SEQUENCE_PROBABILITY = 1.0;
         private const double TRANSITION_UNIFORMITY_THRESHOLD = 0.5;
-        private const double EMISSION_UNIFORMITY_THRESHOLD = 0.5;
+        private const double EMISSION_UNIFORMITY_THRESHOLD = 0.6;
         private const double THRESHOLD = 0.0;
         private const int BW_ITERATIONS = 10;
+        private const short MINIMUM_STATES = 3;
         private SparseHiddenMarkovModel hmm;
         private int maximum_states;
-        private int minimum_states;
+        private int maximum_iterations;
         private System.IO.StreamWriter intermediateOutputFile;
         private string intermediateOutputFileName;
         private int run = 0;
@@ -173,7 +174,7 @@ namespace ModelLearning.Learners {
             // Initialize graph
             HMMGraph graph = new HMMGraph(trainingData.NumSymbols);
 
-            for (int i = 0; i < minimum_states; i++) {
+            for (int i = 0; i < MINIMUM_STATES; i++) {
 
                 graph.AddNode(new Node());
             }
@@ -202,9 +203,11 @@ namespace ModelLearning.Learners {
             int[] combinedTrainData = cList.ToArray();
 
             // Run iterations.
-            for (int i = 0; i < (maximum_states-minimum_states); i++) {
+            int iteration = 1;
+            while(hmm.NumberOfStates < maximum_states
+                  && iteration < maximum_iterations) {
 
-                Console.WriteLine("* Iteration {0} of {1} Model contains {2} states",i,(maximum_states-minimum_states),hmm.NumberOfStates);
+                Console.WriteLine("* Iteration {0} of {1} Model contains {2} states",iteration,maximum_iterations,hmm.NumberOfStates);
                
                 graph = hmm.ToGraph();
 
@@ -219,6 +222,7 @@ namespace ModelLearning.Learners {
                 hmm = SparseHiddenMarkovModel.FromGraph(graph);
                 hmm.Learn(trainingData.GetAll(), THRESHOLD, BW_ITERATIONS);
                 OutputIntermediate(validationData);
+                iteration++;
             }
             hmm = SparseHiddenMarkovModel.FromGraph(graph);
             intermediateOutputFile.Close();
@@ -356,8 +360,8 @@ namespace ModelLearning.Learners {
         public override void Initialise(LearnerParameters parameters,
                 int iteration) {
 
-            maximum_states = (int)parameters.Maximum;
-            minimum_states = (int)parameters.Minimum;
+            maximum_iterations = parameters.MaxIterations;
+            maximum_states = parameters.MaxStates;
 
             //const int NUM_SYMBOLS = 42;
             //HMMGraph graph = new HMMGraph(NUM_SYMBOLS);
