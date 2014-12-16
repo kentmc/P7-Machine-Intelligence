@@ -9,8 +9,8 @@ namespace ModelLearning.Learners {
 
     public class PadawanLearner : Learner {
         private const double EMPTY_SEQUENCE_PROBABILITY = 1.0;
-        private const double TRANSITION_UNIFORMITY_THRESHOLD = 0.0;
-        private const double EMISSION_UNIFORMITY_THRESHOLD = 0.0;
+        private const double TRANSITION_UNIFORMITY_THRESHOLD = 0.5;
+        private const double EMISSION_UNIFORMITY_THRESHOLD = 0.5;
         private const double THRESHOLD = 0.0;
         private const int BW_ITERATIONS = 10;
         private SparseHiddenMarkovModel hmm;
@@ -34,9 +34,8 @@ namespace ModelLearning.Learners {
             }
         }
 
-        private HMMGraph Splitstate(Node prime, HMMGraph graph) {
+        private HMMGraph Splitstate(Node qPrime, HMMGraph graph) {
             Random random = new Random();
-            Node qPrime = graph.Nodes[0];
             Node q1 = new Node();   
 
             foreach (Node x in graph.Nodes) {
@@ -46,10 +45,10 @@ namespace ModelLearning.Learners {
 
             foreach (int symbol in qPrime.Emissions.Keys) {
 
-                q1.SetEmission(symbol, random.NextDouble());
+                q1.SetEmission(symbol, qPrime.Emissions[symbol]);
             }
 
-            q1.InitialProbability = random.NextDouble();
+            q1.InitialProbability = qPrime.InitialProbability;
 
             foreach (Node n in graph.Nodes) {
 
@@ -205,12 +204,17 @@ namespace ModelLearning.Learners {
             // Run iterations.
             for (int i = 0; i < (maximum_states-minimum_states); i++) {
 
-                Console.WriteLine("* Iteration {0} of {1}",i,(maximum_states-minimum_states));
+                Console.WriteLine("* Iteration {0} of {1} Model contains {2} states",i,(maximum_states-minimum_states),hmm.NumberOfStates);
+               
                 graph = hmm.ToGraph();
 
                 Node qPrime = FindQPrime(graph, combinedTrainData);
 
-                graph = Splitstate(qPrime, graph);
+                if (isUniform(qPrime.Transitions.Values.ToArray(),TRANSITION_UNIFORMITY_THRESHOLD) 
+                    || isUniform(qPrime.Emissions.Values.ToArray(),EMISSION_UNIFORMITY_THRESHOLD)) {
+                    
+                    graph = Splitstate(qPrime, graph);
+                }
 
                 hmm = SparseHiddenMarkovModel.FromGraph(graph);
                 hmm.Learn(trainingData.GetAll(), THRESHOLD, BW_ITERATIONS);
@@ -335,7 +339,11 @@ namespace ModelLearning.Learners {
                          select p);
 
             double Zavg = probs.Sum() / probs.Count();
-            double AbsErr = probs.Sum(p => Math.Abs(p - Zavg));
+            //double AbsErr = probs.Sum(p => Math.Abs(p - Zavg));
+            double AbsErr = 0.0;
+            foreach (double val in probs) {
+                AbsErr += Math.Abs(val - Zavg);
+            }
 
             return AbsErr < threshold;
         }
