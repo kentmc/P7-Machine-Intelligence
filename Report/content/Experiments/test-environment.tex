@@ -49,10 +49,10 @@ An integral part of the test environment is the abstract class \formatclass{Lear
 The \formatclass{Learner} class specifies several methods that are implemented by individual learning algorithms and are subsequently called by either the \formatclass{Benchmark} class or the \formatclass{PautomacEvaluator} class:
 
 \begin{itemize}
-	\item[] \formatfunction{Initialize(learnerParameters)} -- initialises the \formatclass{Learner} into a given configuration. As different learning algorithms require different parameters, a special class \formatclass{LearnerParameters} has been created to encompass all the different configuration parameters a user is required to specify for each learner. With the use of the \formatclass{LearnerParameters} class, the \formatclass{Learner} obtains the relevant parameters used for initialisation.
-	\item[] \formatfunction{CalculateProbability(sequence, logarithm)} -- Computes the probability of the specified observable state sequence given the learned model. The probability should be returned either as is,or as a logarithm, depending on the boolean \formatfunction{logarithm} parameter.
-	\item[] \formatfunction{Learn(trainingData, validationData)} -- learns the actual model from the given training sequences. The validation sequences may and may not be used depending on the learning algorithm.
-	\item[] \formatfunction{Save(outputStream, csvStream)} -- saves the learned model into two files, one in plaintext and one in \gls{csv}.
+	\item[] \formatfunction{initialize(learner\_parameters)} -- initialises the \formatclass{Learner} into a given configuration. As different learning algorithms require different parameters, a special class \formatclass{LearnerParameters} has been created to encompass all the different configuration parameters a user is required to specify for each learner. With the use of the \formatclass{LearnerParameters} class, the \formatclass{Learner} obtains the relevant parameters used for initialisation.
+	\item[] \formatfunction{calc\_probability(seq, logarithm)} -- Computes the probability of the specified observable state sequence given the learned model. The probability should be returned either as is,or as a logarithm, depending on the boolean \formatfunction{logarithm} parameter.
+	\item[] \formatfunction{learn(train\_seqs, val\_seqs)} -- learns the actual model from the given training sequences. The validation sequences may and may not be used depending on the learning algorithm.
+	\item[] \formatfunction{save(output\_writer, csv\_writer)} -- saves the learned model into two files, one in plaintext and one in \gls{csv}.
 \end{itemize}
 
 \subsection{Models}

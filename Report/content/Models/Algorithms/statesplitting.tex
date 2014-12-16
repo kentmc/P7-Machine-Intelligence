@@ -1,4 +1,20 @@
-\subsubsection{Greedy State Splitting}
+\subsection{State Splitting Approach}
+
+Another dynamic size \gls{hmm} learning approach was to construct a greedy heuristics to ``split'' states. Several version and concepts were attempted whilst maintaining the \gls{baum-welch} as a basis for the approach running it repeatedly on the growing model to ensure convergence. The initial experiments were splitting states until a given number of states ($n$) was reached, but a threshold ($\theta$) mechanic was employed at a later time in attempt to reduce the dependency on the prior knowledge of number of states.
+
+The greedy state splitting algorithm consists of two main modules, with possible extensions. The main modules include the heuristics to identify the state (or multiple states) to split and the splitting algorithm itself. During the experiments two additional concepts, not fundamental for the state splitting itself, were also explored. This included edge cutting and state removal.
+
+\subsubsection{State Identification Heuristics}
+Two main approaches were explored for identifying the best state to split. The first one utilised the \gls{viterbi} thus named the \emph{Viterbi heuristic}, whilst the second one uses the $\gamma_t(i)$ variables computed during the \gls{baum-welch} algorithm and was therefore named the \emph{Gamma heuristic}.
+
+Both of the heuristics compute a score $s:S \rightarrow \mathcal{R}$ for each hidden state of the model, that can later be utilised to determine the state to split.
+
+\paragraph{Viterbi Heuristic}
+
+
+
+
+
 
 This algorithm utilises a greedy concept to grow the hidden state space of a \gls{hmm} whilst maintaining a sparse transition matrix to preserve computability in large state spaces. The Greedy State Splitting relies heavily on the existing \gls{baum-welch} calling it repeatedly to achieve convergence.
 
