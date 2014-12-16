@@ -13,17 +13,17 @@ The architecture of the test environment are depicted in figure \ref{fig:testenv
 \end{figure}
 
 \subsection{Benchmark}
-The \formatclass{Benchmark} class is the core element of the test environment as it is responsible for executing and tracking the actual tests and recording the results. The \formatclass{Benchmark} class is first initialised by specifying the parameters for the tests to be run and subsequently, the initialised tests are executed by calling the \formatfunction{Run()} method.
+The \formatclass{Benchmark} class is the core element of the test environment as it is responsible for executing and tracking the actual tests and recording the results. The \formatclass{Benchmark} class is first initialised by specifying the parameters for the tests to be run and subsequently, the initialized tests are executed by calling the \formatfunction{Run} method.
 
 The test parameters needed to perform a Benchmark:
 
 \begin{itemize}
-	\item[] Name: This is the output name of the folder created by the benchmarking process, where the results are stored.
-	\item[] Learners: A list of learners, that should be benchmarked.
-	\item[] Datasets: allows for the specification of PautomaC data files the tests are to be conducted on. The \formatclass{Benchmark} class prepares all the data in advance and uses them with the same settings for every different learner or configuration.
-	\item[] Number of runs -- as self-explanatory as it seems this parameter regulates the number of runs to be conducted in order to reduce possible noise.
-	\item[] Training and validation set size -- regulation of how many sequences from the PautomaC train data file are to be actually used for training and validation.
-	\item[] Evaluation method -- allows a choice between evaluating simply as logarithmic likelihood of the validation sequences or using the PautomaC evaluation criterion with the use of the solution data.
+	\item[] Name: This is the name of the folder created by the benchmarking process, where all the results are stored.
+	\item[] Learners: A list of all learners that should be benchmarked.
+	\item[] Datasets: A list of integers, representing the IDs of the PautomaC problem sets to benchmark on. The \formatclass{Benchmark} class loads this data using the \formatclass{DataLoader}.
+	\item[] Number of runs: By using an increased number of runs, an average can be taken to produce a more reliable result.
+	\item[] Training and validation set size: The training data loaded from the PautomaC train data file is split into a training and validation set of the specified sizes.
+	\item[] Evaluate on test data: If true, the score of each learner is calculated according to the Pautomac evaluation criteria by using the test data from the competition. If false, the log likelihood of the validation data is returned.
 \end{itemize}
 
 The \formatclass{Benchmark} class provides information through several output channels. First it sends the information on currently conducted test to the command line making it easy to determine the progress of the whole benchmarking performed. Second it provides results in two different formats at once -- a plaintext with formatting that ensures easy readability by humans and \gls{csv} to allow easy modification by other applications or loading the data into a spreadsheet editor for further analysis. All the results are updated in real time so that if the benchmark fails to finish successfully or is user interrupted in the middle at least partial results from the already finished experiments are available.
