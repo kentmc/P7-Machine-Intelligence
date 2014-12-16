@@ -1,14 +1,14 @@
 \section{Algorithms}
 In this section a number of algorithms are described, which all try to learn the parameters of a \gls{hmm} given a set of training sequences $D$, which contains a number of sequences over $s$ distinct symbols.
 In other words, each algorithm will try to find a model that makes the generation of the particular training sequences most likely.
-Since a \gls{hmm} can be represented by the use of either matrices or a graph like structure, any of the algorithms may output either a matrix or graph representation of a \gls{hmm}, denoted by $M$ or $G$ respectively.
+Since a \gls{hmm} can be represented by the use of either matrices or a graph-like structure, any of the algorithms may output either a matrix or a graph representation of a \gls{hmm}, denoted by $M$ or $G$ respectively.
 By $LL(M)$ or $LL(G)$ we denote the logarithmic likelihood of the training sequences given the model.
 
 The algorithms proposed in this section have been divided into two types.
 The static algorithms start with a \gls{hmm} with a particular number of states which will never change.
-The dynamic algorithms start with a small \gls{hmm} in regards to number of states, and will dynamically extend the number of states through a number of iterations. 
+The dynamic algorithms start with a small \gls{hmm} in regards to the number of states, and will dynamically extend the number of states through a number of iterations. 
 For the static algorithms, $n$ denotes the number of states to be used.
-The dynamic algorithms will by $n$ denote a number of iterations $1, ..., n$, where each iteration extends the model by a single node.
+For the dynamic algorithms, $n$ denotes a number of iterations $1, ..., n$, where each iteration extends the model by a single node.
 In \ref{fig:alg-hierarchy} the names and classes of our proposed algorithms can be seen. Note that the \gls{baum-welch} has also been included, simply to emphasize which class of algorithms it belongs to. 
 
 \begin{figure}[!h]
