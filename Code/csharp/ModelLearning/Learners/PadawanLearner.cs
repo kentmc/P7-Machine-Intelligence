@@ -10,9 +10,10 @@ namespace ModelLearning.Learners {
     public class PadawanLearner : Learner {
         private const double EMPTY_SEQUENCE_PROBABILITY = 1.0;
         private const double TRANSITION_UNIFORMITY_THRESHOLD = 0.5;
-        private const double EMISSION_UNIFORMITY_THRESHOLD = 0.6;
+        private const double EMISSION_UNIFORMITY_THRESHOLD = 0.4;
         private const double THRESHOLD = 0.0;
         private const int BW_ITERATIONS = 10;
+        private const int MAX_STUCK = 10;
         private const short MINIMUM_STATES = 3;
         private SparseHiddenMarkovModel hmm;
         private int maximum_states;
@@ -202,8 +203,13 @@ namespace ModelLearning.Learners {
             }
             int[] combinedTrainData = cList.ToArray();
 
+
+
             // Run iterations.
             int iteration = 1;
+            int stuckAt = 1;
+            int stuckFor = 1;
+
             while(hmm.NumberOfStates < maximum_states
                   && iteration < maximum_iterations) {
 
@@ -213,9 +219,25 @@ namespace ModelLearning.Learners {
 
                 Node qPrime = FindQPrime(graph, combinedTrainData);
 
+                // check to see if the algorithm is stuck
+                if (stuckAt == hmm.NumberOfStates) {
+                    stuckFor++;
+                }
+                else {
+                    stuckAt = hmm.NumberOfStates;
+                    stuckFor = 1;
+                }
+
+                bool isStuck = stuckFor > MAX_STUCK ? true : false; 
+
                 if (isUniform(qPrime.Transitions.Values.ToArray(),TRANSITION_UNIFORMITY_THRESHOLD) 
-                    || isUniform(qPrime.Emissions.Values.ToArray(),EMISSION_UNIFORMITY_THRESHOLD)) {
-                    
+                    || isUniform(qPrime.Emissions.Values.ToArray(),EMISSION_UNIFORMITY_THRESHOLD)
+                    || isStuck) 
+                {
+
+                    if (isStuck) {
+                        Console.WriteLine("Algorithm is stuck: FORCING SPLIT");
+                    }
                     graph = Splitstate(qPrime, graph);
                 }
 
