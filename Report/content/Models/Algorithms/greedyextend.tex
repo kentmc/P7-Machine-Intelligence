@@ -19,7 +19,7 @@ The following pseudo code describes how the algorithm continuously tries to exte
 
 \paragraph{Determining the $\alpha$ Value}
 
-The value $\alpha$ determines how many times the algorithm will try to expand the model. If the $\alpha$ attempts cannot improve the model further, it stops and returns the model. By observing the algorithm it is clear that most small model improve with the very first expansion attempt, while larger models need more attempt to find a new state that improves the model. It is difficult to determine exactly how many expansion attempt that can be deemed sufficient, as the amount of random expansion possibilities is very large, however as we shall see later in Chapter \ref{chap:experiment} where 100 runs were used, only few experiments ended because 100 expand attempts without improving.
+The value $\alpha$ determines how many times the algorithm will try to expand the model. If the $\alpha$ attempts cannot improve the model further, it stops and returns the model. By observing the algorithm it is clear that most small model improve with the very first expansion attempt, while larger models need more attempt to find a new state that improves the model. It is difficult to determine exactly how many expansion attempt that can be deemed sufficient, as the amount of random expansion possibilities is very large, however as we shall see later in Chapter \ref{chap:experiments} where 100 runs were used, only few experiments ended because 100 expand attempts without improving.
 
 \paragraph{Determining the $\beta$ Value}
 
