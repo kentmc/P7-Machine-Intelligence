@@ -1,0 +1,8 @@
+\subsubsection{Variable length n-gram Extend}
+This learner has been created with the idea of coupling a rough approach to a splitting algorithm - such as our Greedy Extend one. The intuition is to create a simple initial graph which disregards the possibility of having several paths. Once created, the splitting algorithm comes in and gradually solves this rough approximation by creating the paths.
+
+The initial graph $G$ is a graph created following a variable length n-gram approach. Instead of having a fixed length like the 3-grams do, a variable length n-gram tries to match the sequence with a previously seen subsequence until it no longer can. When this happens, it learns the new subsequence and links it to the rest accordingly.
+
+All the states in this graph $G$ have an initial probability of 0, except for one. In this single state have been merged all the possible initial states, once again leaving the issue of deciding whether to have several of them or not to the splitting algorithm.
+
+Experiments have shown this can sometimes lead to several states having very few transitions. Keepin the same intuition in mind, those states are all merged into one - if their number of transitions is less than 3.

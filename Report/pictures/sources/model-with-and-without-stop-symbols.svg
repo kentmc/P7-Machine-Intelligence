@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.5 r10040"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="model-with-and-without-stop-symbols.svg">
   <defs
      id="defs4">
     <marker
@@ -317,9 +317,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="226.46065"
-     inkscape:cy="788.9658"
+     inkscape:zoom="2.8"
+     inkscape:cx="204.35731"
+     inkscape:cy="702.60792"
      inkscape:document-units="px"
      inkscape:current-layer="layer1-9"
      showgrid="false"
@@ -336,7 +336,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -398,7 +398,7 @@
            sodipodi:role="line">1</tspan></text>
       <path
          transform="matrix(0.32186797,0,0,0.32186797,149.34335,14.083447)"
-         d="m 265.71429,210.93361 a 81.428574,81.428574 0 1 1 -162.85714,0 81.428574,81.428574 0 1 1 162.85714,0 z"
+         d="m 265.71429,210.93361 c 0,44.97176 -36.45681,81.42857 -81.42857,81.42857 -44.97176,0 -81.42857,-36.45681 -81.42857,-81.42857 0,-44.97176 36.45681,-81.42857 81.42857,-81.42857 44.97176,0 81.42857,36.45681 81.42857,81.42857 z"
          sodipodi:ry="81.428574"
          sodipodi:rx="81.428574"
          sodipodi:cy="210.93361"
@@ -443,12 +443,12 @@
            y="9.1117315"
            x="187.424"
            id="tspan5803-5-3-4-9-0"
-           sodipodi:role="line">a: 0.8</tspan><tspan
+           sodipodi:role="line">a: 0.4</tspan><tspan
            style="font-size:14px"
            y="26.611732"
            x="187.424"
            sodipodi:role="line"
-           id="tspan3255">b: 0.2</tspan></text>
+           id="tspan3255">b: 0.1</tspan></text>
       <text
          sodipodi:linespacing="125%"
          id="text6509"

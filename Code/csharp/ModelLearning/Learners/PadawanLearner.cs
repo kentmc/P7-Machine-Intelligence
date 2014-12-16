@@ -10,12 +10,14 @@ namespace ModelLearning.Learners {
     public class PadawanLearner : Learner {
         private const double EMPTY_SEQUENCE_PROBABILITY = 1.0;
         private const double TRANSITION_UNIFORMITY_THRESHOLD = 0.5;
-        private const double EMISSION_UNIFORMITY_THRESHOLD = 0.5;
+        private const double EMISSION_UNIFORMITY_THRESHOLD = 0.4;
         private const double THRESHOLD = 0.0;
         private const int BW_ITERATIONS = 10;
+        private const int MAX_STUCK = 10;
+        private const short MINIMUM_STATES = 3;
         private SparseHiddenMarkovModel hmm;
         private int maximum_states;
-        private int minimum_states;
+        private int maximum_iterations;
         private System.IO.StreamWriter intermediateOutputFile;
         private string intermediateOutputFileName;
         private int run = 0;
@@ -173,7 +175,7 @@ namespace ModelLearning.Learners {
             // Initialize graph
             HMMGraph graph = new HMMGraph(trainingData.NumSymbols);
 
-            for (int i = 0; i < minimum_states; i++) {
+            for (int i = 0; i < MINIMUM_STATES; i++) {
 
                 graph.AddNode(new Node());
             }
@@ -201,24 +203,48 @@ namespace ModelLearning.Learners {
             }
             int[] combinedTrainData = cList.ToArray();
 
-            // Run iterations.
-            for (int i = 0; i < (maximum_states-minimum_states); i++) {
 
-                Console.WriteLine("* Iteration {0} of {1} Model contains {2} states",i,(maximum_states-minimum_states),hmm.NumberOfStates);
+
+            // Run iterations.
+            int iteration = 1;
+            int stuckAt = 1;
+            int stuckFor = 1;
+
+            while(hmm.NumberOfStates < maximum_states
+                  && iteration < maximum_iterations) {
+
+                Console.WriteLine("* Iteration {0} of {1} Model contains {2} states",iteration,maximum_iterations,hmm.NumberOfStates);
                
                 graph = hmm.ToGraph();
 
                 Node qPrime = FindQPrime(graph, combinedTrainData);
 
+                // check to see if the algorithm is stuck
+                if (stuckAt == hmm.NumberOfStates) {
+                    stuckFor++;
+                }
+                else {
+                    stuckAt = hmm.NumberOfStates;
+                    stuckFor = 1;
+                }
+
+                bool isStuck = stuckFor > MAX_STUCK ? true : false; 
+
                 if (isUniform(qPrime.Transitions.Values.ToArray(),TRANSITION_UNIFORMITY_THRESHOLD) 
-                    || isUniform(qPrime.Emissions.Values.ToArray(),EMISSION_UNIFORMITY_THRESHOLD)) {
-                    
+                    || isUniform(qPrime.Emissions.Values.ToArray(),EMISSION_UNIFORMITY_THRESHOLD)
+                    || isStuck) 
+                {
+
+                    if (isStuck) {
+                        Console.WriteLine("Algorithm is stuck: FORCING SPLIT");
+                    }
                     graph = Splitstate(qPrime, graph);
                 }
 
                 hmm = SparseHiddenMarkovModel.FromGraph(graph);
                 hmm.Learn(trainingData.GetAll(), THRESHOLD, BW_ITERATIONS);
                 OutputIntermediate(validationData);
+                iteration++;
             }
             hmm = SparseHiddenMarkovModel.FromGraph(graph);
             intermediateOutputFile.Close();
@@ -356,8 +382,8 @@ namespace ModelLearning.Learners {
         public override void Initialise(LearnerParameters parameters,
                 int iteration) {
 
-            maximum_states = (int)parameters.Maximum;
-            minimum_states = (int)parameters.Minimum;
+            maximum_iterations = parameters.MaxIterations;
+            maximum_states = parameters.MaxStates;
 
             //const int NUM_SYMBOLS = 42;
             //HMMGraph graph = new HMMGraph(NUM_SYMBOLS);
