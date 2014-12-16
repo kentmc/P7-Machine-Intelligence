@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ModelLearning
 {
-    class LearnerParameters
+    public class LearnerParameters
     {
         public bool RunningParameterDecimal { get; private set; }
         public string RunningParameterName { get; private set; }
@@ -109,6 +109,15 @@ namespace ModelLearning
                 case "uniform learner":
                     {
                         Console.WriteLine("Uniform Learner needs no configuration.");
+
+                        break;
+                    }
+                case "padawan learner": {
+                        Console.Write("Minimum: ");
+                        Minimum = Double.Parse(Console.ReadLine());
+
+                        Console.Write("Maximum: ");
+                        Maximum = Double.Parse(Console.ReadLine());
 
                         break;
                     }

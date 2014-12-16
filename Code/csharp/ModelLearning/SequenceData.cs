@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ModelLearning {
-    class SequenceData {
+    public class SequenceData {
         private int[][] sequences;
         private int[][] non_empty_sequences;
         private List<int[]> sequence_list;
@@ -96,7 +96,7 @@ namespace ModelLearning {
             Utilities.Shuffle(shuffled, randomSeed);
 
             trainingData.AddSequences(sequence_list.Take(trainingDataSize));
-            validaitonData.AddSequences(sequence_list.Skip(trainingDataSize).Take(validationDataSize));
+			validaitonData.AddSequences(sequence_list.Skip(sequence_list.Count - validationDataSize).Take(validationDataSize));
 
             trainingData.SaveAddedSequences();
             validaitonData.SaveAddedSequences();

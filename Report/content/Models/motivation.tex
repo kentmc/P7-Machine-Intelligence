@@ -1,8 +1,11 @@
 \section{Motivation}
 The development of these models has been motivated by two disadvantages we have encountered while using the Baum Welch algorithm.
 The first problem is that Baum Welch can be quite computationally expensive.
-During this project, we have been using two different Baum Welch implementations. One written in Python, provided at Pautomacs website, and another written in C\#, provided by the Accord.NET framework. The latter was definitely the fastest, hence it has been used in all of our tests.
+
+During this project, we have been using two different Baum Welch implementations. One written in Python, available at PautomaC website, and another written in C\#, provided by the Accord.NET framework. The latter was definitely the fastest, hence it has been used in all of our tests.
+
 For a 100 state \gls{hmm}, 10 iterations of Baum Welch on a small subset (5,000 random sequences) of training set 1 from the Pautomac website took 510 seconds on an Intel Core i7-4500U. We have seen that converging to a threshold of 0.01 takes about 300 iterations on a training set of 5,000 sequences. Since the complexity of Baum Welch scales linearly with the number of sequences and iterations, training on a set of 100,000 sequences with 300 iterations would take about $306,000$ seconds, which is about $3.5$ days. And that is even without considering that it typically takes more iterations to converge when training on larger sets. 
+
 Since the Baum Welch algorithm considers all possible transitions from one state to another, we might be able to decrease its running time if we can lower the the number of transitions between states. As we argued in section \ref{sec:hmm-and-sparsity}, it seems like many problems that can be modeled with a \gls{hmm} calls for a sparse transition matrix.
 The second property of Baum Welch we think can be improved, is the fact that one needs to specify a number of states to be used up front.
 We think a better approach could be to use a small graph initially, and iteratively extend it based on some heuristics.

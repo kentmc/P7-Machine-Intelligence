@@ -20,7 +20,7 @@ namespace ModelLearning
         private int trainingSetSize;
         private int validationSetSize;
 
-        public DataSet(int number, int trainingSetSize)
+		public DataSet(int number, int trainingSetSize, int validationSetSize)
         {
             Number = number;
 
@@ -28,7 +28,7 @@ namespace ModelLearning
             TestData = DataLoader.LoadSequences(String.Format(@"Data/{0}.pautomac.test", Number));
 
             this.trainingSetSize = Math.Min(trainingSetSize, ((pautomacTrainingData.Count * 2) / 3));
-            this.validationSetSize = Math.Min(trainingSetSize, (pautomacTrainingData.Count - this.trainingSetSize));
+			this.validationSetSize = Math.Min(validationSetSize, (pautomacTrainingData.Count - this.trainingSetSize));
 
             SolutionData = DataLoader.LoadSolutions(String.Format(@"Data/{0}.pautomac_solution.txt", Number));
         }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace ModelLearning {
-    abstract class Learner {
+    public abstract class Learner {
 
         private bool verbose;
 

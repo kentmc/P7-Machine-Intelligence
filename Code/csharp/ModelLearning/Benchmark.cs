@@ -19,11 +19,11 @@ namespace ModelLearning
 
         public string Name { get; private set; }
 
-        public Benchmark(string name, IEnumerable<Learner> learners, IEnumerable<int> dataSets, int trainingSetSize, int numberOfRuns, bool useTestData = false)
+		public Benchmark(string name, IEnumerable<Learner> learners, IEnumerable<int> dataSets, int trainingSetSize, int validationSetSize, int numberOfRuns, bool useTestData = false)
         {
             Name = name;
 
-            this.dataSets = dataSets.Select(num => new DataSet(num, trainingSetSize)).ToArray();
+			this.dataSets = dataSets.Select(num => new DataSet(num, trainingSetSize, validationSetSize)).ToArray();
 
             this.numberOfRuns = numberOfRuns;
 
@@ -128,6 +128,10 @@ namespace ModelLearning
             if (learner is Learners.GreedyExtendLearner) {
                 string intermediateOutputFileName = String.Format(@"Benchmark_{0}/DataSet_{1}/{2}", Name, dataSet.Number, "intermediate");
                 ((Learners.GreedyExtendLearner)learner).SetIntermediateOutputFile(intermediateOutputFileName);
+            }
+            if (learner is Learners.PadawanLearner) {
+                string intermediateOutputFileName = String.Format(@"Benchmark_{0}/DataSet_{1}/{2}", Name, dataSet.Number, "intermediate");
+                ((Learners.PadawanLearner)learner).SetIntermediateOutputFile(intermediateOutputFileName);
             }
             if (learner is Learners.GGLearner)
             {
