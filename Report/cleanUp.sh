@@ -1,6 +1,6 @@
 rm *.aux
 rm *.lof
-rm *.log
+#rm *.log
 rm *.out
 rm *.toc
 rm *.tdo
