@@ -1,9 +1,9 @@
 \section{Test Environment}
-To comply with the need to continuously run multiple extensive experiments and test on both newly proposed algorithms and already existing algorithms, a robust test environment framework has been designed and implemented.
+To comply with the need for continuously running multiple experiments on new proposed algorithms as well as existing algorithms, a test environment framework has been designed and implemented.
 
-The test environment made it easy to reuse existing models and algorithms as a part of new algorithms and models. 
-The algorithms we propose are mainly based around the well known \gls{baum-welch}, and hence the test environment aims to provide a flexibility around the use of \gls{baum-welch}, which have reduced code redundancy.
-The architecture of the test environment are depicted in figure \ref{fig:testenvironment}.
+The test environment made it easy to reuse existing models, algorithms and experiments as a part of new algorithms and models. 
+The algorithms we propose are mainly based on the well known \gls{baum-welch}, and hence the test environment aims to provide a flexible use of \gls{baum-welch}, to reduce code redundancy.
+The architecture of the test environment is depicted in figure \ref{fig:testenvironment}.
 
 \begin{figure}[!htb]
 \centering
@@ -26,19 +26,19 @@ The test parameters needed to perform a Benchmark:
 	\item[] Evaluate on test data: If true, the score of each learner is calculated according to the Pautomac evaluation criteria by using the test data from the competition. If false, the log likelihood of the validation data is returned.
 \end{itemize}
 
-Beside the parameters required by the benchmarker, each learner can determine that additional parameters need to be specified for that particular learner. For these parameters, the benchmarker allow you to specify a range, for which a test should be performed with each value in that range, jumping by a specified step size.
+Beside the parameters required by the benchmarker, each learner can determine that additional parameters need to be specified for that particular learner. For instance these parameters could allow for the user to specify a range and a step size, for how a test should be executed.
 
-While benchmarking, the \formatclass{Benchmark} class outputs information about its current state through the command line. Its current state covers the current run, learner, and dataset. After the benchmark has finished, it saves the results of the benchmark in two different formats at once -- a plaintext format that ensures easy readability by humans and a \gls{csv} format to allow easy modification by other applications or loading the data into a spreadsheet editor for further analysis. The saved data includes the configuration tested as well as data about the score and running time of learner's different runs. For the dynamical algorithms (those that continuously extend a model), the benchmarker also saves intermediate data about the performance of each of the intermediate models encountered. 
-Finally, a summary is saved for each learner to show the average and median performance over the different runs for each configuration and the best performing configuration is highlighted. A global summary through all the learners is also offered comparing their best configurations. Last but not least the learned model is saved for every run, learner and configuration such that a review is possible if one wants to reason about the model learned.
+While benchmarking, the \formatclass{Benchmark} class outputs information about its current state through the command line. Its current state covers the current run, learner, and dataset. After the benchmark has finished, it saves the results of the benchmark in two different formats: a plaintext format that ensures easy readability and a \gls{csv} format to allow easy data management for other applications or analysis. The saved data includes the configuration tested as well as data about the score and running time for the learner's different runs. For the dynamical algorithms (those that continuously extend a model), the benchmarker also saves intermediate data about the performance of each of the intermediate models encountered. 
+Finally, a summary is saved for each learner to show the average and median performance over the different runs for each configuration and the best performing configuration is highlighted. A global summary through all the learners is also offered, comparing their best configurations. Last but not least the intermediate learned models are saved for every run, learner and configuration such that a review is possible if one wants to reason about the models while learned.
 
 All of the results are updated in real time so that if the benchmark fails to finish successfully, at least partial results from the already finished experiments are available. In many cases, it can be relevant to examine only partial results, which may help one decide whether to continue the test or stop it and conduct a new experiment using more promising parameters.
 
 \subsection{Data}
 The \formatclass{DataLoader} class is responsible for loading training data, test data and solution data from the files published at the Pautomac website. Both training and test data contain a list of sequences, while the solution data contains a list of probabilities, one for each test sequence, representing the probability of the generating that particular sequence from the model used. However, the probabilities are normalized, so they sum to 1.
 
-The data loader stores the loaded data in an entity class called \formatclass{DataSet} passed to the \formatclass{Benchmark}. The \formatclass{DataSet} is responsible for splitting the loaded training data obtained from PautomaC data files into data to be used for the actual training and data for validation. The split is done in a pseudo-random fashion in order to ensure that multiple algorithms in different configurations will be tested on the same training and validation data, but also provide diversity through increased number of runs, where a different shuffle is generated for each run.
+The data loader stores the loaded data in an entity class called \formatclass{DataSet} passed to the \formatclass{Benchmark}. The \formatclass{DataSet} is responsible for splitting the loaded training data obtained from PautomaC data files into data for training and for validation. The split is done in a pseudo-random fashion in order to ensure that multiple algorithms in different configurations will be tested on the same training and validation data, but also provide diversity through increased number of runs, where a different shuffle is generated for each run.
 
-As aforementioned, the test environment also allows for specification of a given number of sequences to be used as training or validation data. It thus becomes possible to run tests on smaller training sets in case only fast, approximate result is required.
+As mentioned, the test environment also allows for specification of a given number of sequences to be used as training or validation data. It thus becomes possible to run tests on smaller training sets in cases where only fast, approximate result is required.
 
 \subsection{PautomacEvaluator}
 The \formatclass{PautomacEvaluator} class is responsible for computing the score of a learner by either of the two offered evaluation criteria. As earlier mentioned, the criteria are either the PautomaC evaluation criterion described in section \ref{sec:pautomac}, which compares the probabilities calculated by the learner directly to the solution file, or by logarithmic likelihood of the validation data, that is, how likely it is, that the learned model have generated the sequences used as validation data.
@@ -50,7 +50,7 @@ The \formatclass{Learner} class specifies several methods that are implemented b
 
 \begin{itemize}
 	\item[] \formatfunction{initialize(learner\_parameters)} -- initialises the \formatclass{Learner} into a given configuration. As different learning algorithms require different parameters, a special class \formatclass{LearnerParameters} has been created to encompass all the different configuration parameters a user is required to specify for each learner. With the use of the \formatclass{LearnerParameters} class, the \formatclass{Learner} obtains the relevant parameters used for initialisation.
-	\item[] \formatfunction{calc\_probability(seq, logarithm)} -- Computes the probability of the specified observable state sequence given the learned model. The probability should be returned either as is,or as a logarithm, depending on the boolean \formatfunction{logarithm} parameter.
+	\item[] \formatfunction{calc\_probability(seq, logarithm)} -- Computes the probability of the specified observable state sequence given the learned model. The probability should be returned either as is, or as a logarithm, depending on the boolean \formatfunction{logarithm} parameter.
 	\item[] \formatfunction{learn(train\_seqs, val\_seqs)} -- learns the actual model from the given training sequences. The validation sequences may and may not be used depending on the learning algorithm.
 	\item[] \formatfunction{save(output\_writer, csv\_writer)} -- saves the learned model into two files, one in plaintext and one in \gls{csv}.
 \end{itemize}
@@ -67,15 +67,14 @@ This is a standard implementation of an \gls{hmm} including the \gls{fb_algorith
 
 Several changes had to be done to the algorithms to best suit our needs. First was a memory optimisation. The algorithm was written in a way that stored the $\xi_t(i,j)$ variables as defined in section \ref{sec:baum-welch} for every of the training sequences. With up to $100000$ sequences per data file even if we were to only use half of them for training and each of them was only $8$ symbols long in average, we would need at least $32$ GB of memory to store all the $\xi_t(i,j)$ variables for a $100$ state model. A slight modification was therefore made to only store $\xi_t(i,j)$ variables for one sequence at a time achieving huge drops in memory usage.
 
-Another change was made to modify the \gls{baum-welch} to run with different data for training and validation as the original algorithm used the same sequence set for both approximation of the parameters and subsequently to compute the logarithmic likelihood of all the sequences used to determine convergence. The new version of the algorithm works with separate training sequences for the learning itself and validation sequences for log likelihood computations.
-
-\input{./content/Experiments/sparse-hmm.tex}
+Another change was made to modify the \gls{baum-welch} to run with different data for training and validation as the original algorithm used the same sequence set for both approximation of the parameters and subsequently to compute the logarithmic likelihood of all the sequences used to determine convergence. The new version of the algorithm works with separate training sequences for the learning itself and validation sequences for logarithmic likelihood computations.
 
 \subsubsection{HMMGraph}
 
-The is a graph implementation of a \gls{hmm}, which stores states as nodes, and transitions as directed edges between nodes. Each node also stores emission probabilities for each symbol. This model does not contain implementations of the \gls{fb_algorithm}, \gls{viterbi} and \gls{baum-welch}.
+The HMMGraph is simply a graph implementation of a \gls{hmm}, which stores states as nodes, and transitions as directed edges between nodes. Each node also stores emission probabilities for each symbol. This model does not contain implementations of the \gls{fb_algorithm}, \gls{viterbi} and \gls{baum-welch}.
 Thus, if one needs to use these algorithms, the model must be converted to either a \formatclass{HiddenMarkovModel} or a \formatclass{SparseHiddenMarkovModel}.
 
 The main purpose of the graph \gls{hmm} is to provide easy access to structural changes such as adding, removing, splitting or merging states. Having states, transitions, and emissions represented as lists makes it more convenient for using higher order functions such as mapping or filtering.
 In general, the \formatclass{HMMGraph} is mostly used as an intermediary format while algorithms perform the above mentioned actions.
 
+\input{./content/Experiments/sparse-hmm.tex}

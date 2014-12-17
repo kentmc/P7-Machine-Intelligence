@@ -1,5 +1,5 @@
 \subsection{Greedy Extend}
-Initially, a graph representation $G$ of a single state \gls{hmm} is created. The single node has initial probability 1, loops to itself with probability 1, and its emission probabilities for each of the $m$ symbols are chosen randomly and normalised.
+Initially, a graph representation $G$ of a single state \gls{hmm} is created. The single node has the initial probability set to 1, loops to itself with probability 1, and its emission probabilities for each of the $m$ symbols are chosen randomly and normalised.
 
 The following pseudo code describes how the algorithm continuously tries to extend the graph, as long as it improves the likelihood of the data:
 
@@ -70,4 +70,4 @@ An experiment has been conducted of using different values for $\beta$ on data s
 
 The figure shows surprisingly that using no iterations is somehow better than using just a single iteration. However, using 5 or more iterations is better than not using any iterations at all.
 When using 5 iterations, only a single run did not reach 50 states (it stopped at 49).
-We elected to conduct further experiments with $\beta = 10$, since all runs with 10 iterations reached 50 states, and it looks like the performance does not change significantly when increasing the number of iterations beyond 10.
+We elected to conduct further experiments with $\beta = 5$, since it looks like the performance does not change significantly when increasing the number of iterations beyond 5.
