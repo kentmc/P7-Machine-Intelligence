@@ -2,20 +2,14 @@
 Initially, a graph representation $G$ of a single state \gls{hmm} is created. The single node has the initial probability set to 1, loops to itself with probability 1, and its emission probabilities for each of the $m$ symbols are chosen randomly and normalised.
 
 The following pseudo code describes how the algorithm continuously tries to extend the graph, as long as it improves the likelihood of the data:
-
-\begin{itemize}
-\item (1) Repeat $\alpha$ times:
-	\begin{itemize}
+\begin{enumerate}
+\item Repeat $\alpha$ times:
 	\item $G'$ = $(V(G) \cup \{y'\}, E(G))$, where $y'$ is a new node with a random initial probability in range $[0, 1]$ having random emission probabilities for all $s$ symbols, which sums to $1$.
 	\item Randomly choose a set of nodes $Y = \{y_1, y_2, ... , y_l\}$ from $V(G')$, where $l = \lceil \log |V(G')| \rceil$ and $\forall a,b: y_a \neq y_b$.
 	\item For each $y \in Y$, the transitions $(y, y')$ and $(y', y)$ are added to $E(G')$ with random transition probabilities.
 	\item Normalize $G'$.
-	\item If $LL(BW^{\beta}(G', D)) > LL(G)$, let $G = LL(BW^{\beta}(G', D))$, go to (1). Else:
-	\begin{itemize}
-		\item[] Return $BW_t(G, D, V)$.
-	\end{itemize}
-	\end{itemize}
-\end{itemize}
+	\item If $LL(BW^{\beta}(G', D)) > LL(G)$, let $G = LL(BW^{\beta}(G', D))$, go to (1). Else: Return $BW_t(G, D, V)$.
+\end{enumerate}
 
 \paragraph{Determining the $\alpha$ Value}
 
