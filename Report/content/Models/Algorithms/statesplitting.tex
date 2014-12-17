@@ -21,9 +21,12 @@ No significant difference in performance has been observed between the two very 
 	$$\forall s,r\in S: a_{sr} = \frac{a_{sr}}{\sum_{p\in S}a_{sp}}$$
 \end{enumerate}
 
-The state $w'$ created by the above procedure will have exactly the same parameters as the original $w$. This in itself has proven to be a huge disadvantage of the \emph{Clone split} methods as the \gls{baum-welch} has proved to be unable to distinguish between the two states and thus learn them to have different parameters. A possible solution would be to randomise part or all of the parameters of the newly created state $w'$, however this approach resembles the \hyperref[sec:greedy_extend]{Greedy Extend} very much and was thus not attempted.
+The state $w'$ created by the above procedure will have exactly the same parameters as the original $w$. This in itself has proven to be a huge disadvantage of the \emph{Clone split} methods as the \gls{baum-welch} was unable to distinguish between the two states and thus learn them to have different parameters. A possible solution would be to randomise part or all of the parameters of the newly created state $w'$, however this approach resembles the \hyperref[sec:greedy_extend]{Greedy Extend} very much and was thus not attempted.
 
+The above described problem proved fatal for the \emph{Clone split} approach despite the attempts to alleviate it by incorporating other concepts such as edge cutting and state removal.
 
+\paragraph{Distribution split}
+\todo{Finish the state splitting section.}
 
 \subsubsection{State Identification Heuristics}
 Similarly to state splitting itself, two main approaches were explored for identifying the best state to split. The first one utilised the \gls{viterbi} thus named the \emph{Viterbi heuristic}, whilst the second one uses the $\gamma_t(i)$ variables computed during the \gls{baum-welch} and was therefore named the \emph{Gamma heuristic}.
@@ -35,13 +38,13 @@ The \emph{Viterbi heuristic} computes the score $\zeta$ for each hidden state as
 
 In more formal terms, the computation of the score $\zeta(s)$ for each $s \in S$ and a given \gls{hmm} $\lambda = (\mathbf{A}, \mathbf{B}, \boldsymbol{\pi})$ can be described by the following procedure:
 \begin{enumerate}
-	\item For each signal $\mathbf{O}\in V$ a corresponding most probable hidden state sequence is computed using the \gls{viterbi}: $\mathbf{Q}=\mathcal{V}_G(\mathbf{O})$.
+	\item For each signal $\mathbf{O}\in D$ a corresponding most probable hidden state sequence is computed using the \gls{viterbi}: $\mathbf{Q}=\mathcal{V}_G(\mathbf{O})$.
 	\item For each state $s\in S$ determine the significant positions in the hidden state sequences given by \gls{viterbi}:
-	$$\forall s\in S,\forall \mathbf{O}=(o_1, ..., o_T)\in V: \tau_{s, \lambda}^\mathbf{O}=\{t\in\{1, ..., T\}|\mathbf{Q}_t=s\}$$
-	\item For each state $s \in S$  and $\mathbf{O}\in V$ compute the partial score (performance) $\hat\zeta_{\mathbf{O}}(s)$ as the average probability of producing the expected observable symbol in accordance to the signal $\mathbf{O}$ over all the significant positions for the given state $s$ and signal $\mathbf{O}$:
-	$$\forall s\in S,\forall \mathbf{O}\in V: \hat{\zeta}_{\mathbf{O}}(s) = \frac{\sum_{t\in\tau_{s, \lambda}^{\mathbf{O}}}b_s(o_t)}{|\tau_{s, \lambda}^{\mathbf{O}}|}$$
+	$$\forall s\in S,\forall \mathbf{O}=(o_1, ..., o_T)\in D: \tau_{s, \lambda}^\mathbf{O}=\{t\in\{1, ..., T\}|\mathbf{Q}_t=s\}$$
+	\item For each state $s \in S$  and $\mathbf{O}\in D$ compute the partial score (performance) $\hat\zeta_{\mathbf{O}}(s)$ as the average probability of producing the expected observable symbol in accordance to the signal $\mathbf{O}$ over all the significant positions for the given state $s$ and signal $\mathbf{O}$:
+	$$\forall s\in S,\forall \mathbf{O}\in D: \hat{\zeta}_{\mathbf{O}}(s) = \frac{\sum_{t\in\tau_{s, \lambda}^{\mathbf{O}}}b_s(o_t)}{|\tau_{s, \lambda}^{\mathbf{O}}|}$$
 	\item Finally, compute the $\zeta$ score for each state $s\in S$ as a sum of all the partial scores for the given state weighted by the probabilities of generating the associated signals by the corresponding hidden state sequences:
-	$$\forall s\in S: \zeta(s)=\sum_{\mathbf{O}\in V}P(\mathbf{Q}|\mathbf{O}, \lambda)\hat\zeta_{s, \lambda}^{\mathbf{O}}$$
+	$$\forall s\in S: \zeta(s)=\sum_{\mathbf{O}\in D}P(\mathbf{Q}|\mathbf{O}, \lambda)\hat\zeta_{s, \lambda}^{\mathbf{O}}$$
 \end{enumerate}
 
 The obtained $\zeta$ scores the states of the \gls{hmm} based on their ``performance'' for the tasks they are most likely to perform. As such the state with the lowest score is determined to be the worst performing node $w$: $$w = \argmin_{s\in S}(\zeta(s))$$
@@ -62,8 +65,17 @@ $$\mathcal{W} = \{s\in S|\overline\zeta(s) < \theta\}$$
 More improvements to the \emph{Viterbi heuristic} were considered, mainly including the \emph{n-step Viterbi heuristic} that would have computed the score on not only the output probability in the given significant position, but also on the probability of correctly outputting the next $n -1$ symbols of the given signal - starting from the explored state - to further increase precision. The above described version of the \emph{Viterbi heuristic} would be considered \emph{1-step Viterbi heuristic} in this context. This approach however remains untested due to preference of the \emph{Gamma heuristic} and can be considered for future work.
 
 \paragraph{Gamma Heurisitic}
+\todo{Write the gamma splitting.}
 
-\todo{Finish the state splitting section.}
+\subsubsection{Edge Cutting}
+In attempt to induce a data derived sparsity into the model while using the \emph{Clone split} an approach of cutting unsaturated edges from the model has been devised. The concept of cutting in this context means setting the transition probability to $0$.
+
+Two different methods of cutting edges had been tested. The first one labeled as ``strict'' kept a constant out (in) degrees for the nodes and a different ``unconstrained'' edge cutting approach that was forcing transition probability to zero once it dropped below a certain threshold.
+
+\paragraph {Strict Edge Cutting}
+The strict edge cutting method was motivated by lowering the computational complexity of the \gls{baum-welch} algorithm. As the \gls{baum-welch} runs with the complexity $\mathcal{O}(Tn^2+Tnm)$ where $n$ is the number of states $m$ is the number of symbols and $T$ is the length of the training sequence, we attempted to lower the complexity to simply $\mathcal{O}(Tnm)$. As such an upper bound of $m$ has been placed on the out degree of all the states: $$\forall s\in S: d^-(s) \le m$$ where the $d^-(s)$ is the out degree of the node $s$ in the sense of number of non-zero out-transitions of the node $s$.
+
+The edge cutting occurs immediately after splitting states includes a breach of the above property.
 
 %This algorithm utilises a greedy concept to grow the hidden state space of a \gls{hmm} whilst maintaining a sparse transition matrix to preserve computability in large state spaces. The Greedy %State Splitting relies heavily on the existing \gls{baum-welch} calling it repeatedly to achieve convergence.
 
