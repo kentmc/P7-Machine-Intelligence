@@ -2,7 +2,7 @@
 \label{sec:pautomac}
 \subsection{PautomaC}
 PautomaC (Probabilistic Automata learning Competition) was an online competition about learning distributions over strings. For the competition a number of probabilistic automata have each generated a large set of sequences, which have been compiled into a training set and a test set, where the test data were used to evaluate a score for the contestants.
-The contestants did not know anything about the automata, besides the fact that only four types of automata were used: \gls{mc}, \gls{dpfa}, \gls{hmm} and \gls{pfa}.
+The contestants did not know anything about the automata, which were randomly generated from four unknown parameters.
 
 To reach a score from a learned model, the 1000 sequences of the test set were each given a probability. These probabilities were then compared to the probabilities of the original data generator, using the perplexity measure:
 
