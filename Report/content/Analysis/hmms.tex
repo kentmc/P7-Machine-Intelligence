@@ -83,51 +83,67 @@ $$\max_{\mathbf{Q}\in\mathcal{Q}_T^\lambda}(P(\mathbf{Q}|\mathbf{O}, \lambda))$$
 
 An algorithmic solution exists for optimisation of maximisation of $P(\mathbf{O}, \mathbf{Q}|\lambda)$, equivalent to the above expression, based on dynamic programing methods, called \gls{viterbi}~\cite{Viterbi1967, Forney1973}. The algorithm iteratively computes the best single state path score for the first $t$ symbols of the observed sequence. We denote this score for state $i$ and time $t$ as $\delta_t(i)$:
 $$\delta_t(i) = \max_{q_1, ..., q_{t-1}}(P((o_1, ..., o_t), (q_1, ..., q_{t-1}), q_t=S_i|\lambda))$$
+Following \ref{Rabiner89hmm} the \gls{viterbi} is describe as such:
+	\begin{align}
+	\intertext{Step 1 - Initialization}
+		\delta_1(i) 	&= \pi_ib_i(o_1),& 1 \leq i \leq N\\
+		\psi_1(i) 	&= 0\\
+	\intertext{Step 2 - Recursion}
+		\delta_t(j)	&= \max_{1 \leq i \leq N}[\delta_{t-1}(i)a_{ij}]b_j(o_t), 	& 2 \leq t \leq T\\
+          				&																				& 1 \leq j \leq N\\	
+		\psi_y(j) 	&= \argmax_{1 \leq i \leq N}[\delta_{t-1}(i)a_{ij}], 										& 2 \leq t \leq T\\
+          				&																				& 1 \leq j \leq N\\
+	\intertext{Step 3 - Termination}
+		P^* 			&= \max_{1 \leq i \leq N}[\delta_T(i)]\\
+		q_T^*		&= \argmax_{1 \leq i \leq N}[\delta_T(i)]\\
+	\intertext{Step 4 - Path (state sequence backtracking)}
+		q_T^* 		&= \psi_{t+1}(q_{t+1}^*),												& t=T-1, \, T-2, \dots,1
+	\end{align}		
 
-The \gls{viterbi} is briefly illustrated by the following pseudocode:
-\begin{lstlisting}[mathescape=true]
-real, int[] Viterbi (int n, int T, real[,] A,
- real[,] B, real[] $\pi$, int[] O) begin
-   real[,] $\delta$ := new real[T,n] //$\delta$[t,i] = $\delta_t(i)$
-   int[,] $\psi$ := new int[T,n] //For backtracking
-   real p := 0.0 //Best score
-   int[] q := new int[T] //Optimal sequence
-   
-   //Initialisation
-   for int i := 1 to n do begin
-      $\delta$[1,i] := $\pi$[i]B[i,O[1]]
-      $\psi$[1,i] := 0
-   end
-   
-   //Iteration
-   for int t := 2 to T do begin
-      for int j := 1 to n do begin
-         $\delta$[t,j] := 0
-         for int i := 1 to n do begin //Maximum over i
-            if $\delta$[t,j] < $\delta$[(t - 1),i]A[i,j]B[j,O[t]] then
-             do begin
-               $\delta$[t,j] := $\delta$[(t - 1),i]A[i,j]B[j,O[t]]
-               $\psi$[t,j] := i
-            end
-         end
-      end
-   end
-   
-   //Termination
-   for int i := 1 to n do begin //Maximum over i
-      if p < $\delta$[T,i] then do begin
-         p := $\delta$[T,i]
-         q[T] := i
-      end
-   end
-   
-   //Backtracking
-   for int t := (T - 1) downto 1 do
-      q[t] := $\psi$[(t + 1), q[t + 1]]
-
-   return p, q;
-end
-\end{lstlisting}
+%The \gls{viterbi} is briefly illustrated by the following pseudocode:
+%\begin{lstlisting}[mathescape=true]
+%real, int[] Viterbi (int n, int T, real[,] A,
+% real[,] B, real[] $\pi$, int[] O) begin
+%   real[,] $\delta$ := new real[T,n] //$\delta$[t,i] = $\delta_t(i)$
+%   int[,] $\psi$ := new int[T,n] //For backtracking
+%   real p := 0.0 //Best score
+%   int[] q := new int[T] //Optimal sequence
+%   
+%   //Initialisation
+%   for int i := 1 to n do begin
+%      $\delta$[1,i] := $\pi$[i]B[i,O[1]]
+%      $\psi$[1,i] := 0
+%   end
+%   
+%   //Iteration
+%   for int t := 2 to T do begin
+%      for int j := 1 to n do begin
+%         $\delta$[t,j] := 0
+%         for int i := 1 to n do begin //Maximum over i
+%            if $\delta$[t,j] < $\delta$[(t - 1),i]A[i,j]B[j,O[t]] then
+%             do begin
+%               $\delta$[t,j] := $\delta$[(t - 1),i]A[i,j]B[j,O[t]]
+%               $\psi$[t,j] := i
+%            end
+%         end
+%      end
+%   end
+%   
+%   //Termination
+%   for int i := 1 to n do begin //Maximum over i
+%      if p < $\delta$[T,i] then do begin
+%         p := $\delta$[T,i]
+%         q[T] := i
+%      end
+%   end
+%   
+%   //Backtracking
+%   for int t := (T - 1) downto 1 do
+%      q[t] := $\psi$[(t + 1), q[t + 1]]
+%
+%   return p, q;
+%end
+%\end{lstlisting}
 
 \subsection{Estimating Model Parameters}
 \label{sec:baum-welch}
@@ -187,7 +203,7 @@ The whole \gls{baum-welch} can also be viewed as an instance of an \gls{em} algo
 
 As learning the \gls{hmm} parameters can be considered an optimisation problem, other approaches are possible, such as the gradient techniques~\cite{levinson1983, Rabiner89hmm}.
 
-\subsection{Classification}
+\subsection{Variations}
 
 In general case, the \gls{hmm} as defined would be ergodic - between each couple of states, there exists a finite path with non-zero probability. For many applications it is desirable to restrict the model in some fashion. The most commonly known of such restrictions is the so called left-right model also known as the Bakis model. This model only allows transitions in the hidden state space in one direction, formally: $$\forall i,j \in \{1, ..., n\}; i < j: a_{ji} = 0$$
 The left-right model is used extensively for speech recognition.~\cite{bakis1976, jelinek1976}.
