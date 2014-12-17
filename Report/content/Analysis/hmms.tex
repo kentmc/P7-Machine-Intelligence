@@ -203,7 +203,7 @@ The whole \gls{baum-welch} can also be viewed as an instance of an \gls{em} algo
 
 As learning the \gls{hmm} parameters can be considered an optimisation problem, other approaches are possible, such as the gradient techniques~\cite{levinson1983, Rabiner89hmm}.
 
-\subsection{Classification}
+\subsection{Variations}
 
 In general case, the \gls{hmm} as defined would be ergodic - between each couple of states, there exists a finite path with non-zero probability. For many applications it is desirable to restrict the model in some fashion. The most commonly known of such restrictions is the so called left-right model also known as the Bakis model. This model only allows transitions in the hidden state space in one direction, formally: $$\forall i,j \in \{1, ..., n\}; i < j: a_{ji} = 0$$
 The left-right model is used extensively for speech recognition.~\cite{bakis1976, jelinek1976}.

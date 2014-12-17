@@ -7,10 +7,10 @@ using Accord.Statistics.Models.Markov;
 namespace ModelLearning.Learners {
     class GreedyExtendLearner : Learner {
 
-        private double expand_attempts;
         private Random ran;
         private SparseHiddenMarkovModel bestHMM;
-        private double bestLikelihood;
+        private double ll_validation;
+        private double best_likelihood_training;
         private int maxExpandAttempts;
         private double finalBWThreshold;
         private int BWiterations;
@@ -46,26 +46,23 @@ namespace ModelLearning.Learners {
         public override void Learn(SequenceData trainingData, SequenceData validationData, SequenceData testData) {
             this.testData = testData;
             intermediateOutputFile = new System.IO.StreamWriter(intermediateOutputFileName + (run++) + ".csv");
-            intermediateOutputFile.WriteLine("States, Likelihood");
+            intermediateOutputFile.WriteLine("States, Likelihood training, likelihood validation");
 
+            double last_ll_training = best_likelihood_training;
             HMMGraph graph = RandomSingleNodeGraph(trainingData.NumSymbols);
             bestHMM = SparseHiddenMarkovModel.FromGraph(graph);
-            bestLikelihood = bestHMM.Evaluate(validationData.GetAll(), true);
-            expand_attempts = 0;
+            best_likelihood_training = bestHMM.Evaluate(trainingData.GetAll(), true);
             while (bestHMM.NumberOfStates < maxStates){
-                double last_ll = bestLikelihood;
                 WriteLine("Number of states: " + bestHMM.NumberOfStates);
-                expand_attempts = 0;
                 for (int i = 0; i < maxExpandAttempts; i++) { //number of times to try adding a random node
-                    expand_attempts++;
                     graph = bestHMM.ToGraph();
                     RandomlyExtendGraphSparsely(graph);
                     SparseHiddenMarkovModel hmm = SparseHiddenMarkovModel.FromGraph(graph);
                     if (BWiterations > 0)
-                        hmm.Learn(trainingData.GetNonempty(), validationData.GetNonempty(), 0, BWiterations); //Run the BaumWelch algorithm
-                    double likelihood = hmm.Evaluate(validationData.GetAll(), true);
-                    if (likelihood > bestLikelihood) {
-                        bestLikelihood = likelihood;
+                        hmm.Learn(trainingData.GetNonempty(), trainingData.GetNonempty(), 0, BWiterations); //Run the BaumWelch algorithm
+                    double likelihood = hmm.Evaluate(trainingData.GetAll(), true);
+                    if (likelihood > best_likelihood_training) {
+                        best_likelihood_training = likelihood;
                         bestHMM = hmm;
                         WriteLine("+");
                         break;
@@ -74,27 +71,28 @@ namespace ModelLearning.Learners {
                         WriteLine("-");
                     }
                 }
-                if (last_ll == bestLikelihood) { //nothing improved, so stop
+                if (last_ll_training == best_likelihood_training) { //nothing improved, so stop
                     WriteLine("Likelihood not increased for " + maxExpandAttempts + " attempts");
                     break;
                 }
                 else {
+                    ll_validation = bestHMM.Evaluate(validationData.GetAll(), true);
                     OutputIntermediate();
                 }
             }
             WriteLine("Runs Baum Welch last time with the final threshold");
-            bestHMM.Learn(trainingData.GetNonempty(), validationData.GetNonempty(), finalBWThreshold);
-            bestLikelihood = bestHMM.Evaluate(validationData.GetAll(), true);
-            WriteLine("Final likelihood: " + bestLikelihood);
+            bestHMM.Learn(trainingData.GetNonempty(), finalBWThreshold);
+            ll_validation = bestHMM.Evaluate(validationData.GetAll(), true);
+            WriteLine("Final likelihood: " + best_likelihood_training);
             OutputIntermediate();
             intermediateOutputFile.Close();
         }
 
         private void OutputIntermediate() {
-            double real_score = PautomacEvaluator.Evaluate(this, testData, solutions);
-            intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + bestLikelihood + ", " + real_score + ", " + expand_attempts);
+            //double real_score = PautomacEvaluator.Evaluate(this, testData, solutions);
+            intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + best_likelihood_training + ", " + ll_validation);
             intermediateOutputFile.Flush();
-            WriteLine("Likelihood increased to: " + bestLikelihood + " Pautomac score: " + real_score);
+            WriteLine("Likelihood increased to: " + ll_validation);
         }
 
         public void SetSolutions(double[] solutions) {
@@ -174,7 +172,8 @@ namespace ModelLearning.Learners {
             outputWriter.WriteLine("Max expand attempts: {0}", maxExpandAttempts);
             outputWriter.WriteLine("Final BW threshold: {0}", finalBWThreshold);
             outputWriter.WriteLine("Max states: {0}", maxStates);
-            outputWriter.WriteLine("Log likelihood {0}", bestLikelihood);
+            outputWriter.WriteLine("Log likelihood training {0}", best_likelihood_training);
+            outputWriter.WriteLine("Log likelihood validation {0}", ll_validation);
             outputWriter.WriteLine();
 
             //bestHMM.Save(outputWriter, csvWriter);
