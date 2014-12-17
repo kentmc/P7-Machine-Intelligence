@@ -1,5 +1,5 @@
 \subsection{Greedy Extend}
-Initially, a graph representation $G$ of a single state \gls{hmm} is created. The single node has initial probability 1, loops to itself with probability 1, and its emission probabilities for each of the $s$ symbols are chosen randomly and normalised.
+Initially, a graph representation $G$ of a single state \gls{hmm} is created. The single node has the initial probability set to 1, loops to itself with probability 1, and its emission probabilities for each of the $m$ symbols are chosen randomly and normalised.
 
 The following pseudo code describes how the algorithm continuously tries to extend the graph, as long as it improves the likelihood of the data:
 
@@ -10,22 +10,22 @@ The following pseudo code describes how the algorithm continuously tries to exte
 	\item Randomly choose a set of nodes $Y = \{y_1, y_2, ... , y_l\}$ from $V(G')$, where $l = \lceil \log |V(G')| \rceil$ and $\forall a,b: y_a \neq y_b$.
 	\item For each $y \in Y$, the transitions $(y, y')$ and $(y', y)$ are added to $E(G')$ with random transition probabilities.
 	\item Normalize $G'$.
-	\item If $LL(BW^{\beta}(G', D)) > LL(G)$, let $G = LL(BW^{\beta}(G', D))$, go to (1).
+	\item If $LL(BW^{\beta}(G', D)) > LL(G)$, let $G = LL(BW^{\beta}(G', D))$, go to (1). Else:
 	\begin{itemize}
-		\item Return $BW_t(G, D)$.
+		\item[] Return $BW_t(G, D, V)$.
 	\end{itemize}
 	\end{itemize}
 \end{itemize}
 
 \paragraph{Determining the $\alpha$ Value}
 
-The value $\alpha$ determines how many times the algorithm will try to expand the model. If the $\alpha$ attempts cannot improve the model further, it stops and returns the model. By observing the algorithm it is clear that most small model improve with the very first expansion attempt, while larger models need more attempt to find a new state that improves the model. It is difficult to determine exactly how many expansion attempt that can be deemed sufficient, as the amount of random expansion possibilities is very large, however as we shall see later in Chapter \ref{chap:experiments} where 100 runs were used, only few experiments ended because 100 expand attempts without improving.
+The value $\alpha$ determines how many times the algorithm will try to expand the model. If the $\alpha$ attempts cannot improve the model further, it stops and returns the model. By observing the algorithm it is clear that the smallest models improve with the very first expansion attempt, while larger models need more attempts to find a new state that improves the model. It is difficult to determine exactly how many expansion attempts can be deemed sufficient, as the amount of random expansion possibilities is very large, however as we shall see later in Chapter \ref{chap:experiments} where $\alpha=100$ was used only few experiments ended before reaching the maximum size due to all 100 random expansions failing to improve the logarithmic likelihood.
 
 \paragraph{Determining the $\beta$ Value}
 
 Another big question about the Greedy Extend algorithm, is how the choice of $\beta$ affects the performance of the algorithm.
-As $\beta$ denotes the number of Baum Welch iterations to run each time the algorithm attempts to extend the graph, increasing $\beta$ will also increase the run time of the algorithm. It may be the case that better results are achieved when $\beta$ is increased, since more iterations of Baum Welch also means a greater increase in likelihood. However, it could be the case that using many iterations early increases the chance of getting trapped in a local optimum.
-An experiment has been conducted of using different values for $\beta$ on data set $1$ from the Pautomac competition. The results can be seen in figure \ref{fig:ge-different-thresholds-tested}. Each line represents the mean value of 5 runs of the Greedy Extend algorithm with the specified number of iterations. Some of the plots have been cut off at a point where one of the runs did not manage to extend beyond a certain number of states.
+As $\beta$ denotes the number of \gls{baum-welch} iterations to run each time the algorithm attempts to extend the graph, increasing $\beta$ will also increase the run time of the algorithm. It may be the case that better results are achieved when $\beta$ is increased, since more iterations of \gls{baum-welch} also means a greater increase in likelihood. However, it could be the case that using many iterations early increases the chance of getting trapped in a local optimum.
+An experiment has been conducted of using different values for $\beta$ on data set $1$ from the PautomaC competition. The results can be seen in figure \ref{fig:ge-different-thresholds-tested}. Each line represents the mean value of 5 runs of the Greedy Extend algorithm with the specified number of iterations. Some of the plots have been cut off at a point where one of the runs did not manage to extend beyond a certain number of states.
 
 \begin{figure}[!h]
 \begin{centering}
@@ -70,4 +70,4 @@ An experiment has been conducted of using different values for $\beta$ on data s
 
 The figure shows surprisingly that using no iterations is somehow better than using just a single iteration. However, using 5 or more iterations is better than not using any iterations at all.
 When using 5 iterations, only a single run did not reach 50 states (it stopped at 49).
-We elected to conduct further experiments with $\beta = 10$, since all runs with 10 iterations reached 50 states, and it looks like the performance does not change significantly when increasing the number of iterations beyond 10.
+We elected to conduct further experiments with $\beta = 5$, since it looks like the performance does not change significantly when increasing the number of iterations beyond 5.
