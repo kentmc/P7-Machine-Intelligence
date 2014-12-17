@@ -1,6 +1,8 @@
-\chapter{Experiments}
+\chapter{Results}
 \label{chap:experiments}
-\input{./content/Experiments/description.tex}
+The goal for the experiments is to discover strength and weaknesses for our algorithms and models, given data created by different machines. In section \ref{sec:testenv} the architecture of the used experiment environment is described. In section \ref{sec:pautomac} it is described how Pautomac used 4 parameters for their machines: the state space, the transition sparsity, the emission symbol sparsity and the amount of symbols used in the model. We expect these parameters to produce learning complexity in different ways, where we wish to illustrate how 3 of these 4 parameters effects each algorithm and model, as well as observe an overall logarithmic likelihood score. In an attempt to save time and still produce concise results, we have chosen to use 11 datasets from Pautomac, how these datasets were chosen is described in section \ref{sec:datasets}. In section \ref{sec:parameters} we have studied what parameters the experiments should by run with, including the amount of training data used, \gls{bw}'s threshold and number of \gls{bw} iterations for the \gls{ge} and \gls{gs} algorithm. In section \ref{sec:greedy} we define how many iterations of \gls{bw} that is needed to support strong learning without spending unnecessary amounts of time.
+Finally in section \ref{sec:results} the experiments for each parameter experiment can be found. A couple concrete Pautomac competition "submission attempt" has been added as well, to show how our work relates to some of the best results from the competition. In the last section a benchmark of the running time of some algorithms is presented.
+
 \input{./content/Experiments/choice-of-programming-language.tex}
 \input{./content/Experiments/test-environment.tex}
 \input{./content/Experiments/datasets.tex}
