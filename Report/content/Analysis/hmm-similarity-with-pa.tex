@@ -14,7 +14,7 @@ Notice that for the \gls{pa}, the probability of stopping when entering the stat
 \end{figure}
 
 We will now consider the probability distributions both models define to observe the difference implied by the halting probability of the \glspl{pa}.
-With the \gls{pa}, we can calculate the probability of generating an empty sequence, simply by starting in state 1 and stopping immediately before emitting any symbols. That is, $P_{PA}(\varepsilon) = 0.5$. We can of course also produce non empty sequences. For instance, we have that $P_{PA}(a) = \pi_1\phi_{1,a,1}F_1 = 0.2$, where $\pi_q$ is the probability of starting in state $q$, $F_q$ is the probability of stopping right after entering state $q$, $\phi_{q,s,q'}$ is the probability of going from state $q$ to state $q'$ while emitting the symbol $s$.
+With the \gls{pa}, we can calculate the probability of generating an empty sequence, simply by starting in state 1 and stopping immediately before emitting any symbols. That is, $P_{PA}(\varepsilon) = 0.5$. We can also produce non empty sequences. For instance, we have that $P_{PA}(a) = \pi_1\phi_{1,a,1}F_1 = 0.2$, where $\pi_q$ is the probability of starting in state $q$, $F_q$ is the probability of stopping right after entering state $q$, $\phi_{q,s,q'}$ is the probability of going from state $q$ to state $q'$ while emitting the symbol $s$.
 In the same manner, we get that $P_{PA}(b) = 0.05$.
 If we in this way calculate a probability for all possible sequences, we will see that all of those probabilities sum up to 1. Thus, the \gls{pa} defines a probability distribution over $\Sigma^\ast$\cite{Dupont:2005:LPA:1746577.1746601}.
 

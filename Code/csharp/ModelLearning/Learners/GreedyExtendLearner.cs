@@ -7,6 +7,7 @@ using Accord.Statistics.Models.Markov;
 namespace ModelLearning.Learners {
     class GreedyExtendLearner : Learner {
 
+        private double expand_attempts;
         private Random ran;
         private SparseHiddenMarkovModel bestHMM;
         private double bestLikelihood;
@@ -50,10 +51,13 @@ namespace ModelLearning.Learners {
             HMMGraph graph = RandomSingleNodeGraph(trainingData.NumSymbols);
             bestHMM = SparseHiddenMarkovModel.FromGraph(graph);
             bestLikelihood = bestHMM.Evaluate(validationData.GetAll(), true);
+            expand_attempts = 0;
             while (bestHMM.NumberOfStates < maxStates){
                 double last_ll = bestLikelihood;
                 WriteLine("Number of states: " + bestHMM.NumberOfStates);
+                expand_attempts = 0;
                 for (int i = 0; i < maxExpandAttempts; i++) { //number of times to try adding a random node
+                    expand_attempts++;
                     graph = bestHMM.ToGraph();
                     RandomlyExtendGraphSparsely(graph);
                     SparseHiddenMarkovModel hmm = SparseHiddenMarkovModel.FromGraph(graph);
@@ -88,7 +92,7 @@ namespace ModelLearning.Learners {
 
         private void OutputIntermediate() {
             double real_score = PautomacEvaluator.Evaluate(this, testData, solutions);
-            intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + bestLikelihood + ", " + real_score);
+            intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + bestLikelihood + ", " + real_score + ", " + expand_attempts);
             intermediateOutputFile.Flush();
             WriteLine("Likelihood increased to: " + bestLikelihood + " Pautomac score: " + real_score);
         }

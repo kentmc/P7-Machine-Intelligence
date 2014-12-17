@@ -1,4 +1,4 @@
 \subsection{Sparse Baum-Welch}
-This algorithm creates a \gls{hmm} $M$ with $n$ states and $s$ symbols.
-All parameters are initialized randomly but with the constraint that each state has exactly $\lceil log(n) \rceil$ outgoing transitions.
-Which transitions to discard are chosen randomly before training with \gls{baum-welch} either by $BW_t(M, D)$ or $BW^i(M, D)$.
+This algorithm creates a \gls{hmm} $M$ with $n$ states and $m$ symbols.
+All parameters are initialized randomly but with the constraint that each state has exactly $\lceil log(n) \rceil$ outgoing transitions. The probabilities of other transitions are set to zero.
+Transitions set to non-zero probabilities are chosen randomly before training with the \gls{baum-welch} until convergence to a specified threshold $t$.
