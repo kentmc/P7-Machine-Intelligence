@@ -7,6 +7,24 @@ The greedy state splitting algorithm consists of two main modules, with possible
 \subsubsection{State Split Mechanics}
 Two main approaches to splitting the states were considered for the state splitting algorithm. One being very simple, just producing a copy of the state to split (\emph{Clone split}) and a much more elaborate approach considering the topology of the state inside the hidden state graph (\emph{Distribution split}).
 
+\paragraph{Clone Split}
+As aforementioned the clone split simply creates an exact copy of the state to split. Two variations have been proposed for copying the state in regards to handling input transition probabilities. Either splitting the probability of reaching the original state in half between the original state and the clone or simply copying the probability of the original node to the clone and normalising the probabilities through all transition afterwards.
+
+No significant difference in performance has been observed between the two very similar variations. For clarity the latter one is described more formally by the following procedure:
+\begin{enumerate}
+	\item For each state to split $w \in\mathcal{W}$ construct a new state $w'$ such that $w'\notin S$.
+	\item Set the initial, transition and emission probabilities as well as incoming transitions of the new state to copy the original:
+	$$\forall w\in\mathcal{W}: \pi_{w'} = \pi_w \wedge \forall s\in S: (a_{sw'} = a_{sw} \wedge a_{w's} = a_{ws}) \wedge \forall \sigma\in\Sigma: b_{w'}(\sigma)=b_w(\sigma)$$
+	\item Normalise the initial probabilities:
+	$$\forall s\in S: \pi_s = \frac{\pi_s}{\sum_{r\in S}\pi_r}$$
+	\item Normalise the transition probabilities:
+	$$\forall s,r\in S: a_{sr} = \frac{a_{sr}}{\sum_{p\in S}a_{sp}}$$
+\end{enumerate}
+
+The state $w'$ created by the above procedure will have exactly the same parameters as the original $w$. This in itself has proven to be a huge disadvantage of the \emph{Clone split} methods as the \gls{baum-welch} has proved to be unable to distinguish between the two states and thus learn them to have different parameters. A possible solution would be to randomise part or all of the parameters of the newly created state $w'$, however this approach resembles the \hyperref[sec:greedy_extend]{Greedy Extend} very much and was thus not attempted.
+
+
+
 \subsubsection{State Identification Heuristics}
 Similarly to state splitting itself, two main approaches were explored for identifying the best state to split. The first one utilised the \gls{viterbi} thus named the \emph{Viterbi heuristic}, whilst the second one uses the $\gamma_t(i)$ variables computed during the \gls{baum-welch} and was therefore named the \emph{Gamma heuristic}.
 
