@@ -1,8 +1,8 @@
 \subsection{State Splitting Approach}
 
-Another dynamic size \gls{hmm} learning approach was to construct a greedy heuristics to ``split'' states. Several version and concepts were attempted whilst maintaining the \gls{baum-welch} as a basis for the approach running it repeatedly on the growing model to ensure convergence. The initial experiments were splitting states until a given number of states ($n$) was reached, but a threshold ($\theta$) mechanic was employed at a later time in attempt to reduce the dependency on the prior knowledge of number of states.
+Another dynamic size \gls{hmm} learning approach was to construct a greedy heuristics to ``split'' states. Several versions and concepts were attempted whilst maintaining the \gls{baum-welch} as a basis for the approach, running it repeatedly on the growing model to ensure convergence. The initial experiments were splitting states until a given number of states ($n$) was reached, but a threshold ($\theta$) mechanic was employed at a later time in attempt to reduce the dependency on the prior knowledge of number of states.
 
-The greedy state splitting algorithm consists of two main modules, with possible extensions. The main modules include the heuristics to identify the state (or multiple states) to split and the splitting algorithm itself. During the experiments two additional concepts, not fundamental for the state splitting itself, were also explored. This included edge cutting and state removal.
+The greedy state splitting algorithm consists of two main modules, with possible extensions. The main modules include the heuristics to identify the state (or multiple states) to split and the splitting algorithm itself. During the experiments, two additional concepts, not fundamental for the state splitting itself, were also explored - edge cutting and state removal.
 
 \subsubsection{State Split Mechanics}
 Two main approaches to splitting the states were considered for the state splitting algorithm. One being very simple, just producing a copy of the state to split (\emph{Clone split}) and a much more elaborate approach considering the topology of the state inside the hidden state graph (\emph{Distribution split}).
@@ -28,9 +28,9 @@ In more formal terms, the computation of the score $\zeta(s)$ for each $s \in S$
 
 The obtained $\zeta$ scores the states of the \gls{hmm} based on their ``performance'' for the tasks they are most likely to perform. As such the state with the lowest score is determined to be the worst performing node $w$: $$w = \argmin_{s\in S}(\zeta(s))$$
 
-As the worst performing node is deemed to perform worse because of being involved in the generation of many of the signal in the validation set $V$. As such, it seems meaningful to split the node into more two to split the extensive workload and increase performance.
+This node is deemed to be the worst performing one as a result of being involved in the generation of many of the signals in the validation set $V$. As such, it seems meaningful to split the node into two, in order to share the extensive workload and increase performance.
 
-The \emph{Viterbi heuristic} can be straightforwardly extended to identify more than just one state to split as such producing a set of the worst performing nodes $\mathcal{W}$. The set can be constructed iteratively starting with $\mathcal{W} = \emptyset$ as:
+The \emph{Viterbi heuristic} can be straightforwardly extended to identify more than just one state to split, thereby producing a set of the worst performing nodes $\mathcal{W}$. The set can be constructed iteratively starting with $\mathcal{W} = \emptyset$ as:
 $$\mathcal{W} = \mathcal{W} \cup \{\argmin_{s\in S\setminus \mathcal{W}}(\zeta(s))\}$$
 until the $|\mathcal{W}|$ equals the desired number of states to split.
 
@@ -40,7 +40,7 @@ $$\overline{\zeta}(s) = \frac{\zeta(s)}{\sum_{s\in S}\zeta(s)}$$
 The states to split $\mathcal{W}$ were thus determined as all states that scored below the given threshold $\theta$:
 $$\mathcal{W} = \{s\in S|\overline\zeta(s) < \theta\}$$
 
-More improvements to the \emph{Viterbi heuristic} were considered, mainly including the \emph{n-step Viterbi heuristic} that should have computed the score not only on the output probability in the given significant position, but also the probability of correctly outputting the next $n -1$ symbols of the given signal starting in the explored state to further increase precision. The above described version of the \emph{Viterbi heuristic} would be considered \emph{1-step Viterbi heuristic} in this context. This approach however remains untested due to preference of the \emph{Gamma heuristic} and can be considered for future work.
+More improvements to the \emph{Viterbi heuristic} were considered, mainly including the \emph{n-step Viterbi heuristic} that would have computed the score on not only the output probability in the given significant position, but also on the probability of correctly outputting the next $n -1$ symbols of the given signal - starting from the explored state - to further increase precision. The above described version of the \emph{Viterbi heuristic} would be considered \emph{1-step Viterbi heuristic} in this context. This approach however remains untested due to preference of the \emph{Gamma heuristic} and can be considered for future work.
 
 \paragraph{Gamma Heurisitic}
 
