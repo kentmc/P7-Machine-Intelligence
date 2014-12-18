@@ -6,4 +6,82 @@ However, one must note that the contestants did not receive precise feedback whe
 
 The parameters chosen for the following tests are all based on the outcome of the experiments described in chapter \ref{chap:experiments}.
 For all tests, 5000 sequences from the Pautomac training data files have been used to learn the model. The static algorithms are run with different number of states, starting at 10 with a step size of 10.
-The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.   
+The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.03)},
+		anchor=south}}
+	\begin{axis}[
+			xlabel = States,
+            	ylabel = Perplexity (lower is better),
+            	legend columns=-1,
+            	legend entries={GE, BW, SBE},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+		
+		\addplot+[mark=none]table[x=States, y=GE, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-6.csv};
+		
+		\addplot+[mark=none]table[x=States, y=BW, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-6.csv};
+		
+		\addplot+[mark=none]table[x=States, y=SBW, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-6.csv};
+	\end{axis}
+\end{tikzpicture}
+\caption{The different algorithm's score on Pautomac's 6th data set, according to the perplexity measure used in the competition.}\label{fig:pautomac-competition-6}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.03)},
+		anchor=south}}
+	\begin{axis}[
+			xlabel = States,
+            	ylabel = Perplexity (lower is better),
+            	legend columns=-1,
+            	legend entries={GE, BW, SBE},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+		
+		\addplot+[mark=none]table[x=States, y=GE, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=BW, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=SBW, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-23.csv};
+	\end{axis}
+\end{tikzpicture}
+\caption{The different algorithm's score on Pautomac's 23rd data set, according to the perplexity measure used in the competition.}\label{fig:pautomac-competition-23}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.03)},
+		anchor=south}}
+	\begin{axis}[
+			xlabel = States,
+            	ylabel = Perplexity (lower is better),
+            	legend columns=-1,
+            	legend entries={GE, BW, SBE},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+		
+		\addplot+[mark=none]table[x=States, y=GE, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-35.csv};
+		
+		\addplot+[mark=none]table[x=States, y=BW, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-35.csv};
+		
+		\addplot+[mark=none]table[x=States, y=SBW, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-35.csv};
+	\end{axis}
+\end{tikzpicture}
+\caption{The different algorithm's score on Pautomac's 35th data set, according to the perplexity measure used in the competition.}\label{fig:pautomac-competition-35}
+\end{figure}
