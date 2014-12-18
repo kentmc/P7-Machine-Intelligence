@@ -1,6 +1,6 @@
 \subsection{State Splitting Approach}
 \label{sec:state_splitting}
-Another dynamic size \gls{hmm} learning approach was to construct a greedy heuristics to ``split'' states. Several versions and concepts were attempted whilst maintaining the \gls{baum-welch} as a basis for the approach, running it repeatedly on the growing model to ensure convergence. The initial experiments were splitting states until a given number of states ($n$) was reached, but a threshold ($\theta$) mechanic was employed at a later time in attempt to reduce the dependency on the prior knowledge of number of states.
+Another dynamic size \gls{hmm} learning approach was to construct a greedy heuristics to ``split'' states. Several versions and concepts were attempted whilst maintaining the \gls{baum-welch} as a basis for the approach, running it repeatedly on the growing model to ensure convergence. The notion of state splitting is not new and a highly specialised algorithm originally devised by Takami et al. has been successfully applied to phoneme recognition~\cite{takami1992, singer1996}. We on the other hand attempt to design a general state splitting algorithm with no dependency on the data structure.
 
 The greedy state splitting algorithm consists of two main modules, with possible extensions. The main modules include the heuristics to identify the state (or multiple states) to split and the splitting algorithm itself. During the experiments, two additional concepts, not fundamental for the state splitting itself, were also explored - edge cutting and state removal.
 
