@@ -1,5 +1,5 @@
 \subsection{State Splitting Approach}
-
+\label{sec:state_splitting}
 Another dynamic size \gls{hmm} learning approach was to construct a greedy heuristics to ``split'' states. Several versions and concepts were attempted whilst maintaining the \gls{baum-welch} as a basis for the approach, running it repeatedly on the growing model to ensure convergence. The initial experiments were splitting states until a given number of states ($n$) was reached, but a threshold ($\theta$) mechanic was employed at a later time in attempt to reduce the dependency on the prior knowledge of number of states.
 
 The greedy state splitting algorithm consists of two main modules, with possible extensions. The main modules include the heuristics to identify the state (or multiple states) to split and the splitting algorithm itself. During the experiments, two additional concepts, not fundamental for the state splitting itself, were also explored - edge cutting and state removal.
@@ -64,8 +64,54 @@ $$\mathcal{W} = \{s\in S|\overline\zeta(s) < \theta\}$$
 
 More improvements to the \emph{Viterbi heuristic} were considered, mainly including the \emph{n-step Viterbi heuristic} that would have computed the score on not only the output probability in the given significant position, but also on the probability of correctly outputting the next $n -1$ symbols of the given signal - starting from the explored state - to further increase precision. The above described version of the \emph{Viterbi heuristic} would be considered \emph{1-step Viterbi heuristic} in this context. This approach however remains untested due to preference of the \emph{Gamma heuristic} and can be considered for future work.
 
-\paragraph{Gamma Heurisitic}
-\todo{Write the gamma splitting.}
+\paragraph{Gamma Heuristic}
+
+The \emph{Gamma heuristic} works by splitting the state that is visited most when generating the 
+training sequences.
+
+The pseudo code of the algorithm is as follows.
+
+\begin{enumerate}
+\item Initialize HMM
+\item Loop while the maximum number of states or iterations has not been reached.
+\indent \begin{enumerate}
+	\item 	Find the state that is visited most when outputting the training sequences.
+	$$q' = \argmax_{q \in Q}\sum_{o \in O}\sum_{t=0}^{T}\gamma_t(q)$$ 
+	\item Determine if the algorithm has been stuck for more than ten iterations.
+	$$ \omega = \begin{cases}
+		true &\text{if algorithm has been stuck for 10 iterations} \\
+		false &\text{otherwise}
+	\end{cases} $$
+	\item Determine if the transition probability distribution of $q'$ is uniform.
+	\begin{align*}
+	z &= \{a_{q'J} \in A \vert a_{q'J} \neq 0\} \\
+	z_{arg} &= \frac{\sum_{a_{q'J} \in z} a_{q'J}}{\vert z \vert} \\
+	AbsE_1 &= \sum_{a_{q'J} \in z} \vert a_{q'J} - z_{arg} \vert \\
+	\end{align*}
+	\item Determine if the emission probability distribution of $q'$ is uniform.
+	\begin{align*}
+	z &= \{b_{q'}(o) \in B \vert b_{q'}(o) \neq 0\} \\
+	z_{arg} &= \frac{\sum_{b_{q'}(o) \in z} b_{q'}(o)}{\vert z \vert} \\
+	AbsE_2 &= \sum_{b_{q'}(o) \in z} \vert b_{q'}(o) - z_{arg} \vert \\
+	\end{align*}
+	\item Split $q'$ if its transition or emission probabilities are uniform or the algorithm is stuck. 
+	\begin{align*}
+	\bar{Q} &= \begin{cases}
+		Q \cup \{ q_1 \} &\text{if } AbsE_1 < \epsilon_1 \vee \omega \vee AbsE_2 < \epsilon_2 \\
+		Q	&\text{otherwise} \\
+	\end{cases} \\
+	\bar{A} &= A \cup \{a_{q_1j} \vert a_{q_1j} = [0,1] \wedge j \in Q \} \\
+	\bar{B} &= \begin{cases}
+		B \cup \{ b_{q_1}(o) \vert b_{q'}(o) \in B \wedge b_{q_1}(o) = b_{q'}(o)\} 
+			&\text{if } AbsE_1 < \epsilon_1 \vee \omega \vee AbsE_2 < \epsilon_2 \\
+		B &\text{otherwise} \\
+	\end{cases}
+	\end{align*}
+	\item Normalize the HMM.
+	\item Re-estimate the HMM using the Baum-Welch algorithm
+\end{enumerate}
+
+\end{enumerate}
 
 \subsubsection{Edge Cutting}
 In attempt to induce a data derived sparsity into the model while using the \emph{Clone split} an approach of cutting unsaturated edges from the model has been devised. The concept of cutting in this context means setting the transition probability to $0$.
