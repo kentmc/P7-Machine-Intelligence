@@ -19,10 +19,10 @@ The tests were run on the same machine as the average speedup tests for the \hyp
 		\begin{axis}[
 			width=0.92\textwidth,
 			height=0.76\textheight,
-			ymin=0,
-			xmin=0,
-			xlabel = Number of States,
-            		ylabel = Negative Logarithmic Likelihood,
+		%	ymax=0,
+		%	xmax=0,
+			xlabel = Number of states,
+            		ylabel = Log likelihood,
             		legend style={at={(0,0)}, anchor=south west}]
 			\addplot+[mark=none]table[x=States, y=Score, col sep=tab]
 			{content/Experiments/graphdata/8h_run_BW.csv};
@@ -55,8 +55,8 @@ The decreasing number of iterations with increasing number of states observed (m
 			height=0.32\textheight,
 			ymin=0,
 			xmin=0,
-			xlabel = Number of States,
-            		ylabel = Time until Convergence {[s]},
+			xlabel = Number of states,
+            		ylabel = Time until convergence {[s]},
             		legend style={at={(0,1)}, anchor=north west}]
 			\addplot+table[x=States, y=Time, col sep=tab]
 			{content/Experiments/graphdata/8h_run_BW.csv};

@@ -14,15 +14,14 @@ This naturally leads to our problem definition:
 		anchor=south}}
 	\begin{axis}[
 			xlabel = Number of states,
-            	ylabel = Score (lower is better),
+            	ylabel = Log likelihood,
             	legend columns=-1,
             	legend entries={Score}
 			]
-		
 		\addplot+[mark=none]table[x=States, y=Score, col sep=tab]
 		{content/Introduction/bw-states-are-important.csv};
 	\end{axis}
-\end{tikzpicture} 
+\end{tikzpicture}
 \caption{Using the \gls{baum-welch} to learn the parameters of \gls{hmm}s with different number of states, based on the 1st data set of the Pautomac competition.}
 \label{fig:bw-states-are-important} 
 \end{centering}
