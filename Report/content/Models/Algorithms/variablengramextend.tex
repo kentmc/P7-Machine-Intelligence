@@ -1,6 +1,6 @@
 \subsection{Variable length n-gram Extend}
 \label{sec:vl-ngram-extend}
-This algorithm consists of two main modules. The first one creates a rough initial graph $G$, the second one extends it. The extend algorithm used in the experiments was the Greedy Extend one (described in \ref{sec:greedy_extend}).
+This algorithm consists of two main modules. The first one creates a rough initial graph $G$, the second one extends it. The extend algorithm used in the experiments was the Greedy Extend as described in \ref{sec:greedy_extend}.
 
 When training on a new sequence, several state sequences may produce the same symbol sequence. The intuition is to create a rough initial graph $G$ which disregards this possibility. Once created, the extending algorithm gradually smoothes this rough approximation.
 
