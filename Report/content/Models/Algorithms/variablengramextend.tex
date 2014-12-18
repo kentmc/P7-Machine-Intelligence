@@ -1,56 +1,10 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Arsclassica Article
-% LaTeX Template
-% Version 1.1 (10/6/14)
-%
-% This template has been downloaded from:
-% http://www.LaTeXTemplates.com
-%
-% Original author:
-% Lorenzo Pantieri (http://www.lorenzopantieri.net) with extensive modifications by:
-% Vel (vel@latextemplates.com)
-%
-% License:
-% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%----------------------------------------------------------------------------------------
-%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
-%----------------------------------------------------------------------------------------
-
-\documentclass[
-10pt, % Main document font size
-a4paper, % Paper type, use 'letterpaper' for US Letter paper
-oneside, % One page layout (no page indentation)
-%twoside, % Two page layout (page indentation for binding and different headers)
-headinclude,footinclude, % Extra spacing for the header and footer
-BCOR5mm, % Binding correction
-]{scrartcl}
-
-\input{structure.tex} % Include the structure.tex file which specified the document structure and layout
-
-\hyphenation{Fortran hy-phen-ation} % Specify custom hyphenation points in words with dashes where you would like hyphenation to occur, or alternatively, don't put any dashes in a word to stop hyphenation altogether
-
-%----------------------------------------------------------------------------------------
-%	TITLE AND AUTHOR(S)
-%----------------------------------------------------------------------------------------
-
-\title{\normalfont\spacedallcaps{Article Title}} % The article title
-
-\author{\spacedlowsmallcaps{John Smith* \& James Smith\textsuperscript{1}}} % The article author(s) - author affiliations need to be specified in the AUTHOR AFFILIATIONS block
-
-\date{} % An optional date to appear under the author(s)
-
-%----------------------------------------------------------------------------------------
-
-%\subsubsection{Variable length n-gram Extend}
-\begin{document}
-This algorithm consists of two main modules. The first one creates a rough initial graph $G$, the second one extends it. The extend algorithm used in the experiments was the Greedy Extend one {ref to greedy}%\ref{chap:experiments}.
+\subsection{Variable length n-gram Extend}
+\label{sec:vl-ngram-extend}
+This algorithm consists of two main modules. The first one creates a rough initial graph $G$, the second one extends it. The extend algorithm used in the experiments was the Greedy Extend one (described in \ref{sec:greedy_extend}).
 
 When training on a new sequence, several state sequences may produce the same symbol sequence. The intuition is to create a rough initial graph $G$ which disregards this possibility. Once created, the extending algorithm gradually smoothes this rough approximation.
 
-In the initial graph $G$, all the states have an initial probability of 0, except for one. In this single state have been merged all the possible initial states. The extend algorithm can then increase the number of possible initial states, normalising the initial probabilities before running the Baum Welch algorithm.
+In the initial graph $G$, all the states have an initial probability of 0, except for one. In this single state have been merged all the possible initial states. The extend algorithm can then increase the number of possible initial states, normalising the initial probabilities before running \gls{baum-welch}.
 
 The graph $G$is created following a variable length $n$-gram approach. A typical $n$-gram approach is to learn then detect subsequences of length $n$. Just like $n$-grams, this variable length n-gram splits the sequence into subsequences, then tries to match a set of states to each.
 
@@ -69,5 +23,48 @@ However, instead of having a fixed length for those subsequences, our variable l
 
 Experiments have shown this can sometimes lead to several states having very few transitions. Keeping the same intuition in mind, those states are all merged into one - if their number of transitions is less than $alpha$.
 
+\paragraph{Determining the $\alpha$ Value}
 
-\end{document}
+The question about the proper value for $\alpha$ to be used then comes up. Different values have thus been used on the same data set to evaluate the performance of each for this algorithm.
+
+As $\alpha$ denotes the minimum initial number of transitions each state can have, higher values will reduce the initial state space but likely reduce the accuracy of the model, while lower values would likely keep the accuracy high but might provide very large models.
+
+The following experiments have been conducted by using different values for $\alpha$ on data sets $1$ and $23$ from the PautomaC competition. The results can be seen in figure \ref{fig:vlnge-different-init-trans-tested-1} and \ref{fig:vlnge-different-init-trans-tested-23}. Each line represents the score obtained depending on the number of states, with the specified minimum initial number of transitions.
+
+(not completely done)
+
+\begin{figure}[!h]
+\begin{centering}
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.06)},
+		anchor=south}}
+	\begin{axis}[
+			scale = 1.5,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={IMnbT-1, IMnbT-3, IMnbT-5, IMnbT-10},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-1, col sep=tab]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-3, col sep=tab]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-5, col sep=tab]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-10, col sep=tab]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-23.csv};
+	\end{axis}
+\end{tikzpicture} 
+\caption{Test of different values for $\alpha$ while running the Variable length n-gram Extend algorithm.}
+\label{fig:vlnge-different-init-trans-tested-23} 
+\end{centering}
+\end{figure}
+
+As can be observed on those figures, increasing the minimum initial number of transitions severely decreases the precision of the model, as well as increasing the runtime. On the other hand, not merging any state at all may sometimes provide a larger, less accurate model.
+
+The best value appears to be for most models in the happy middle, around 3, although this might heavily depend on the number of symbols used by the model - the model created for data set 35 had a surprisingly enormous number of 282 states with $\alpha = 3$, and took 2 days to compute the final score on a rough threshold for \gls{baum-welch}.

@@ -1,14 +1,12 @@
 \section{Algorithms}
-In this section several algorithms are described, which all try to learn the parameters of a \gls{hmm} given a set of training sequences $D$ and a set of validation sequences $V$, which contain a number of sequences over $m$ distinct symbols.
-In other words, each algorithm will try to find a model that makes the generation of the particular validation sequences most likely.
-Since a \gls{hmm} can be represented by the use of either matrices or a graph-like structure, any of the algorithms may output either a matrix or a graph representation of a \gls{hmm}, denoted by $M$ or $G$ respectively.
-By $LL(M)$ or $LL(G)$ we denote the logarithmic likelihood of the validation sequences given the model.ss
+In this section several algorithms are proposed, which all try to learn the parameters of a \gls{hmm} given a set of training sequences $D$, which contains a number of sequences over $m$ distinct symbols.
+In other words, each algorithm will try to find a model that makes the generation of the particular training sequences most likely.
+Since a \gls{hmm} can be represented by the use of either matrices or a graph-like structure, the algorithms may refer to an \gls{hmm} using matrix or graph terms interchangeably. 
 
-The algorithms proposed in this section have been divided into two types.
+The algorithms proposed have been divided into two types.
 The static algorithms start with a \gls{hmm} with a particular number of states which will never change.
 The dynamic algorithms start with a small \gls{hmm} in regards to the number of states, and will dynamically extend the number of states through a number of iterations. 
 For the static algorithms, $n$ denotes the number of states to be used.
-For the dynamic algorithms, $n$ denotes a number of iterations $1, ..., n$, where each iteration extends the model by a single node.
 In \ref{fig:alg-hierarchy} the names and classes of our proposed algorithms can be seen. Note that the \gls{baum-welch} has also been included, simply to emphasize which class of algorithms it belongs to.
 
 \begin{figure}[!h]
@@ -26,13 +24,8 @@ In \ref{fig:alg-hierarchy} the names and classes of our proposed algorithms can 
 \label{fig:alg-hierarchy}
 \end{figure}
 
-Since the \gls{baum-welch} is guaranteed to never worsen $LL(G)$ when run on $G$ (or $LL(M)$ on $M$ respectively), it is used internally by most of the algorithms.
-By $BW_t(M, D, V)$ we denote the \gls{hmm} obtained after running Baum Welch on the \gls{hmm} $M$ using the training sequences $D$ and validation sequences $V$, and iterating as long as each iteration increases the logarithmic likelihood of the validation sequences by at least $t$.
-By $BW^i(M, D)$ we denote the \gls{hmm} obtained after running $i$ iterations of Baum Welch on the \gls{hmm} $M$ using the training sequences $D$.
-If a \gls{hmm} is represented by a graph $G$, respective notations $BW_t(G, D, V)$ and $BW^i(G, D)$ are used.
-
 \input{./content/Models/Algorithms/sparsebaumwelch}
 \input{./content/Models/Algorithms/greedyextend}
 \input{./content/Models/Algorithms/statesplitting}
 %\input{./content/Models/Algorithms/gammastatesplitter}
-%\input{./content/Models/Algorithms/variablengramextend}
+\input{./content/Models/Algorithms/variablengramextend}

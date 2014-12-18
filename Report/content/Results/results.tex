@@ -18,7 +18,7 @@ The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
 			xlabel = States,
             	ylabel = Perplexity (lower is better),
             	legend columns=-1,
-            	legend entries={GE, BW, SBE},
+            	legend entries={GE, BW, SBW, GS, Goal},
 			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
 		
 		\addplot+[mark=none]table[x=States, y=GE, col sep=tab]
@@ -28,6 +28,12 @@ The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
 		{content/Results/pautomac-competition-results-dataset-6.csv};
 		
 		\addplot+[mark=none]table[x=States, y=SBW, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-6.csv};
+		
+		\addplot+[mark=none]table[x=States, y=GS, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-6.csv};
+		
+		\addplot+[mark=none]table[x=States, y=Goal, col sep=tab]
 		{content/Results/pautomac-competition-results-dataset-6.csv};
 	\end{axis}
 \end{tikzpicture}
@@ -44,7 +50,7 @@ The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
 			xlabel = States,
             	ylabel = Perplexity (lower is better),
             	legend columns=-1,
-            	legend entries={GE, BW, SBE},
+            	legend entries={GE, BW, SBW, GS, Goal},
 			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
 		
 		\addplot+[mark=none]table[x=States, y=GE, col sep=tab]
@@ -54,6 +60,12 @@ The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
 		{content/Results/pautomac-competition-results-dataset-23.csv};
 		
 		\addplot+[mark=none]table[x=States, y=SBW, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=GS, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=Goal, col sep=tab]
 		{content/Results/pautomac-competition-results-dataset-23.csv};
 	\end{axis}
 \end{tikzpicture}
@@ -70,7 +82,7 @@ The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
 			xlabel = States,
             	ylabel = Perplexity (lower is better),
             	legend columns=-1,
-            	legend entries={GE, BW, SBE},
+            	legend entries={GE, BW, SBW, GS, Goal},
 			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
 		
 		\addplot+[mark=none]table[x=States, y=GE, col sep=tab]
@@ -80,6 +92,12 @@ The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
 		{content/Results/pautomac-competition-results-dataset-35.csv};
 		
 		\addplot+[mark=none]table[x=States, y=SBW, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-35.csv};
+		
+		\addplot+[mark=none]table[x=States, y=GS, col sep=tab]
+		{content/Results/pautomac-competition-results-dataset-35.csv};
+		
+		\addplot+[mark=none]table[x=States, y=Goal, col sep=tab]
 		{content/Results/pautomac-competition-results-dataset-35.csv};
 	\end{axis}
 \end{tikzpicture}

@@ -24,7 +24,7 @@ namespace ModelLearning.Learners {
 
         public override double CalculateProbability(int[] sequence, bool logarithm = false) {
             if (sequence.Length == 0)
-                return (logarithm ? 1.0 : 0.0);
+                return (logarithm ? 0.0 : 1.0);
             else
                 return hmm.Evaluate(sequence, logarithm);
         }
