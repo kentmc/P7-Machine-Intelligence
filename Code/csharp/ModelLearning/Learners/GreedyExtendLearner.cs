@@ -89,8 +89,9 @@ namespace ModelLearning.Learners {
         }
 
         private void OutputIntermediate() {
-            //double real_score = PautomacEvaluator.Evaluate(this, testData, solutions);
-            intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + best_likelihood_training + ", " + ll_validation);
+            double real_score = PautomacEvaluator.Evaluate(this, testData, solutions);
+            //intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + best_likelihood_training + ", " + ll_validation);
+            intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + real_score);
             intermediateOutputFile.Flush();
             WriteLine("Likelihood increased to: " + ll_validation);
         }
