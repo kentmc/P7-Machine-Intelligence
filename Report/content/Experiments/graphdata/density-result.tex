@@ -1,10 +1,11 @@
+\begin{figure}[h]
 \begin{tabular*}{\textwidth}{@{}cc@{}}
 \begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
 \centering
 \textbf{Dataset: 36, Density: 7.4\%}\par\medskip
 \begin{tikzpicture}
 	\pgfplotsset{every axis legend/.append style={ 
-		at={(0.55,1.03)},
+		at={(0.5,1.1)},
 		anchor=south}}
 	\begin{axis}[
 			scaled ticks = true,
@@ -12,7 +13,7 @@
 			xlabel = Number of states,
             	ylabel = Log likelihood),
             	legend columns=-1,
-            	legend entries={BW, SBW, GE},
+            	legend entries={BW, SBW, GE, GS},
 			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
 		
 		\addplot+table[x=States, y=BW, col sep=tab]
@@ -25,10 +26,12 @@
 		
 		\addplot+table[x=States, y=GE, col sep=tab]
 		{content/Experiments/graphdata/set36.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{content/Experiments/graphdata/set36.csv};
 %		\addlegendentry{\textbf{Greedy Extend}}
 	\end{axis}
 \end{tikzpicture} 
-\label{fig:dataset36}
 \end{minipage}% 
 &
 \begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
@@ -36,7 +39,7 @@
 \textbf{Dataset: 8, Density: 16.8\%}\par\medskip
 \begin{tikzpicture}
 	\pgfplotsset{every axis legend/.append style={ 
-		at={(0.55,1.03)},
+		at={(0.5,1.1)},
 		anchor=south}}
 	\begin{axis}[
 			scaled ticks = true,
@@ -44,7 +47,7 @@
 			xlabel = Number of states,
             	ylabel = Log likelihood,
             	legend columns=-1,
-            	legend entries={BW, SBW, GE},
+            	legend entries={BW, SBW, GE, GS},
 			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
 		
 		\addplot+table[x=States, y=BW, col sep=tab]
@@ -57,10 +60,12 @@
 		
 		\addplot+table[x=States, y=GE, col sep=tab]
 		{content/Experiments/graphdata/set8.csv};
+	
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{content/Experiments/graphdata/set8.csv};
 %		\addlegendentry{\textbf{Greedy Extend}}
 	\end{axis}
 \end{tikzpicture} 
-\label{fig:dataset8}
 \end{minipage}
 \\
 \begin{minipage}[t]{\dimexpr0.6\textwidth-2\tabcolsep}
@@ -76,7 +81,7 @@
 \textbf{Dataset: 43, Density: 40.2\%}\par\medskip
 \begin{tikzpicture}
 	\pgfplotsset{every axis legend/.append style={ 
-		at={(0.55,1.03)},
+		at={(0.5,1.1)},
 		anchor=south}}
 	\begin{axis}[
 			scaled ticks = true,
@@ -84,7 +89,7 @@
 			xlabel = Number of states,
             	ylabel = Score (lower is better),
             	legend columns=-1,
-            	legend entries={BW, SBW, GE},
+            	legend entries={BW, SBW, GE, GS},
 			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
 			
 		\addplot+table[x=States, y=BW, col sep=tab]
@@ -97,10 +102,12 @@
 		
 		\addplot+table[x=States, y=GE, col sep=tab]
 		{content/Experiments/graphdata/set43.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{content/Experiments/graphdata/set43.csv};
 %		\addlegendentry{\textbf{Greedy Extend}}
 	\end{axis}
 \end{tikzpicture} 
-\label{fig:dataset43}
 \end{minipage}% 
 &
 \begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
@@ -108,7 +115,7 @@
 \textbf{Dataset: 37, Density: 50\%}\par\medskip
 \begin{tikzpicture}
 	\pgfplotsset{every axis legend/.append style={ 
-		at={(0.55,1.03)},
+		at={(0.5,1.1)},
 		anchor=south}}
 	\begin{axis}[
 			scaled ticks = true,
@@ -116,7 +123,7 @@
 			xlabel = Number of states,
             	ylabel = Log likelihood,
             	legend columns=-1,
-            	legend entries={BW, SBW, GE},
+            	legend entries={BW, SBW, GE, GS},
 			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
 			
 		\addplot+table[x=States, y=BW, col sep=tab]
@@ -129,10 +136,12 @@
 		
 		\addplot+table[x=States, y=GE, col sep=tab]
 		{content/Experiments/graphdata/set37.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{content/Experiments/graphdata/set37.csv};
 %		\addlegendentry{\textbf{Greedy Extend}}
 	\end{axis}
 \end{tikzpicture} 
-\label{fig:dataset37}
 \end{minipage}
 \\
 \begin{minipage}[t]{\dimexpr0.6\textwidth-2\tabcolsep}
@@ -141,3 +150,5 @@
 \begin{minipage}[t]{\dimexpr0.4\textwidth-2\tabcolsep}
 \end{minipage}
 \end{tabular*}%
+\label{fig:density}\caption{Four datasets produced by models with a transition sparsity between 7.4\% and 50\%}
+\end{figure}

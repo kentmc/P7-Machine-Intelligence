@@ -1,0 +1,50 @@
+
+\section{Dataset experiments}
+The approach used for each dataset parameter experiment have been to cover a range of state amounts, ranging from 10 to 100 states, together with the previously define parameters. \gls{bw} was probed on specific state amounts with step sizes of 10, where the dynamic algorithms have been defined to reach either some local maxima or stop at 100 states.
+
+\subsection{State Space Experiments}
+
+The purpose of the state experiments are to show how \gls{bw} and our own algorithms and models perform in relation to different number of states.\\
+
+	\input{./content/Experiments/graphdata/state-result.tex}
+
+In Figure \ref{fig:states} the ranges of log likelihood should be noted carefully. A large likelihood difference exist between the data sets, which can at least partly be explained by the observed sequences in the data sets. A higher complexity of the data sequences will naturally be harder to learn. For instance data set 41 seems to have a lower likelihood than data set 6. Looking into the sequences of these two data sets we find that data set 41 has an average sequence length of 7,3 characters, using 7 different symbols, whereas data set 6 has an average sequence length of 14,7 characters, using 6 different symbols. From these numbers it is clear that the amount of possible combinations is much lower for data set 41, compared to data set 6.
+
+
+
+
+Initial observations
+\begin{itemize}
+\item GE performs the best, except dataset 1. It seems like GE would surpass BW with a larger state space.
+\item SBW performs worse than BW, note that dataset 41 has a fairly small y-axis, where the best GE result is about 800 points. We estimate an error margin of 100-200 points. Without more runs for each experiment, it is impossible to determine an exact error margin.
+\item In general we seem to 
+\end{itemize}
+
+
+\subsection{Transition Density Experiments}
+
+The purpose of the transition density experiments are to show how \gls{bw} and our own algorithms and models perform in relation to the transition density.\\
+
+	\input{./content/Experiments/graphdata/density-result.tex}
+
+Initial observations
+\begin{itemize}
+\item GE performs the best
+\item 
+\item 
+\end{itemize}
+
+\subsection{Symbol Alphabet Size Experiments}
+The purpose of the s are to show how \gls{bw} and our own algorithms and models perform in relation to the size of the emission symbol alphabet size.\\
+
+	\input{./content/Experiments/graphdata/symbol-result.tex}
+	
+Initial observations
+\begin{itemize}
+\item BW performs the best on 3 out of 4 sets
+\item 
+\item 
+\end{itemize}	
+	
+%\subsection{Greedy Extend Experiments}
+	%\input{./content/Experiments/results/greedyextend-results.tex}
