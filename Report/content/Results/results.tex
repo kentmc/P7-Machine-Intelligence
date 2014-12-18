@@ -1,12 +1,13 @@
 \chapter{Results}
 In the following, a number of tests are conducted to see how the algorithms described in chapter \ref{chap:models} would perform in the Pautomac competition. Tests are conducted on the three data sets, 6, 23, and 35. These data sets were chosen according to how well the algorithms proposed in this project performed in relation to \gls{bw}, such that \gls{bw} seems to loose on data set 6, be quite even on data set 23, and win on data set 35.
 The perplexity measure described in section \ref{sec:pautomac} has then been used to evaluate a score.
-Since the Pautomac competition allowed any number of submissions from the same contestant, each of the static algorithms can be tested with different number of states. The dynamic algorithms can be evaluated on each intermediate model that is produced while extending, which would also have been possible in the real competition.
-However, one must note that the contestants did not receive precise feedback when submitting a solution. They only received their rank among other contestants. Therefore, it would be considered cheating if the parameters of the algorithms proposed in chapter \ref{chap:models} were changed, based on the score they receive according to the Pautomac evaluation criteria.
-
 The parameters chosen for the following tests are all based on the outcome of the experiments described in chapter \ref{chap:experiments}.
 For all tests, 5000 sequences from the Pautomac training data files have been used to learn the model. The static algorithms are run with different number of states, starting at 10 with a step size of 10.
 The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
+In figure \ref{fig:pautomac-competition-6}, \ref{fig:pautomac-competition-23} and \ref{fig:pautomac-competition-35}, the score on each data set can be seen.
+The unusual behavior of \gls{gs} that starts after a number of iterations is expected to be caused by an underflow problem.
+A summary of the best scores on each data set can be seen in table \ref{table:pautomac-best-score}.
+
 
 \begin{figure}
 \centering
@@ -37,7 +38,9 @@ The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
 		{content/Results/pautomac-competition-results-dataset-6.csv};
 	\end{axis}
 \end{tikzpicture}
-\caption{The different algorithm's score on Pautomac's 6th data set, according to the perplexity measure used in the competition.}\label{fig:pautomac-competition-6}
+\label
+\caption{The different algorithm's score on Pautomac's 6th data set, according to the perplexity measure used in the competition.}
+\label{fig:pautomac-competition-6}
 \end{figure}
 
 \begin{figure}
@@ -69,7 +72,8 @@ The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
 		{content/Results/pautomac-competition-results-dataset-23.csv};
 	\end{axis}
 \end{tikzpicture}
-\caption{The different algorithm's score on Pautomac's 23rd data set, according to the perplexity measure used in the competition.}\label{fig:pautomac-competition-23}
+\caption{The different algorithm's score on Pautomac's 23rd data set, according to the perplexity measure used in the competition.}
+\label{fig:pautomac-competition-23}
 \end{figure}
 
 \begin{figure}
@@ -101,5 +105,19 @@ The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
 		{content/Results/pautomac-competition-results-dataset-35.csv};
 	\end{axis}
 \end{tikzpicture}
-\caption{The different algorithm's score on Pautomac's 35th data set, according to the perplexity measure used in the competition.}\label{fig:pautomac-competition-35}
+\caption{The different algorithm's score on Pautomac's 35th data set, according to the perplexity measure used in the competition.}
+\label{fig:pautomac-competition-35}
+\end{figure}
+
+\begin{figure}
+\label{table:pautomac-best-score}
+\begin{table}[h]
+\begin{tabular}{llllll}
+Data set & GE    & BW    & SBW   & GS    & Goal        \\
+6        & 115.5 & 122.6 & 129.6 & 114.8 & 66.98       \\
+23       & 26.3  & 26.2  & 26.1  & 26.2  & 18.4        \\
+35       & 49.5  & 43.4  & 50.8  & 44.4  & 33.77693554
+\end{tabular}
+\end{table}
+\caption{The best scores of each algorithm on the three data sets.}
 \end{figure}
