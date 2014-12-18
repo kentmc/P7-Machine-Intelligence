@@ -30,10 +30,12 @@
     $$0000.0001 = 0.0625$$
 
 \subsubsection{Does it matter}
-In many cases underflow could be neglected, if the program is not working with very small numbers, or the accuracy is not that important, but in some cases and for solid programs the program should be able to detect underflow. If an algorithm is working with probabilities and a very small number is inaccurate or zero, computing calculations with this number could cause big problems, especially in cases where the program will try to divide with zero. This is a very important event to be concerned of when working with probabilities that gets very small.  
+In many cases underflow could be neglected, if the program is not working with very small numbers, or the accuracy is not that important, but in some cases and for solid programs the program should be able to detect underflow. If an algorithm is working with probabilities and a very small number is inaccurate or zero, computing calculations with this number could cause big problems, especially in cases where the program will try to divide with zero. This is a very important event to be concerned with when working with probabilities that can become very small.  
 
 \subsubsection{How to work around it}
-In this project there is a high probability that very small numbers will occur, this demands a work around to the underflow problem. One possible work around is called \textit{log odds} this method maps values $[0;1]$ to $[-\infty; \infty]$. The log odds for state \textit{A} is the logarithm of the probability for state $A$ divided by the probability for state $\neg A$.\\
+In this project there is a high probability that very small numbers will occur, this demands a work around to the underflow problem. 
+\paragraph{Log Odds}
+One possible work around is called \textit{log odds} this method maps values $[0;1]$ to $[-\infty; \infty]$. The log odds for a proposition \textit{A} is the logarithm of the probability for proposition $A$ divided by the probability for $\neg A$.\\
 
     $$\frac{p(A)}{p(\neg A)} = \frac{p(A)}{1-p(A)}$$
 
@@ -47,6 +49,70 @@ In this project there is a high probability that very small numbers will occur, 
 		\label{fig:log_odds}
 	\end{figure}
 
-    Another way to work around the problem is with Pythons \textit{decimal} library, this library makes it possible to store decimal numbers with exact precision and detect underflow. It possible to define how many decimals you want on numbers in the decimal library.
+Although \textit{log odds} is a good solution for a lot of problems, there are some situations where
+it is not very practical.
+One of these situations is when one needs to compute a lot of sums.
+Because the sum of two log odds are equivalent to the product of their probabilities, it becomes 
+necessary to convert them back into probabilities in order to compute the sum.
 
-To determine what method works best, some tests needs to be done, in order to figure out when the \textit{log odds} would be prefer over the \textit{decimal} library.
+\paragraph{Language APIs}
+    Another way to work around the problem is by using specific methods available in some programming languages.
+     Like with the \textit{decimal} library in Python, this library makes it possible to store decimal numbers with exact precision and detect underflow. 
+     It possible to define how many decimals you want on numbers in the decimal library.
+
+\paragraph{Scaling}
+
+Another method for combating underflows is by using a technique called scaling.
+Scaling is often used in the baum-welch because the probabilities in the
+transition and emission matrices quickly becomes very small.\cite[p.5]{shen2008}
+
+A common way to scale the forward variables in baum-welch is.
+
+\begin{itemize}
+\item Initialization
+\begin{align*}
+\ddot{a}_1(i) &= a_1(i) \\
+c_1 &= \frac{1}{\sum_{i=1}^N \ddot{a}_1(i)} \\
+{\hat{a}}_1(i) &= c_1 \ddot{a}_1(i)
+\end{align*}
+
+\item Induction
+
+\begin{align*}
+\ddot{a}_t(i) &= \sum_{j=1}^N \hat{a}_{t-1}(j) a_{ji} b_i(O_t)  \\
+c_t &= \frac{1}{\sum_{i=1}^N \ddot{a}_t(i)} \\
+{\hat{a}}_t(i) &= c_t \ddot{a}_t(i)
+\end{align*}
+\end{itemize}
+
+Here we can see that the scaling coefficient $c_t$ at each step only depends on 
+the time index t and that the states are summed out.
+Also we see that
+$$\sum_{i=1}^N \hat{a}_t(i) = 1$$
+
+By induction it can be proven that
+$$\hat{a}_t(i) = \bigg(\prod_{\tau=1}^t c_{\tau}\bigg)\alpha_t(i)$$
+\cite[p.5]{shen2008}
+
+For backward variables we can use the same scaling factors in each step as for
+the forward variables.
+
+\begin{itemize}
+\item Initialization
+
+\begin{align*}
+\ddot{\beta}_T(i) &= 1 \\
+\hat{\beta}_T(i) &= c_T \ddot{\beta}_T(i)
+\end{align*}
+\item Induction
+
+\begin{align*}
+\ddot{\beta}_t(i) &= \sum_{j=1}^N a_{ij}b_j(O_{t+1})\hat{\beta}_{t+1}(j) \\
+\hat{\beta}_t(i) &= c_t \ddot{\beta}_t(i)
+\end{align*}
+
+\end{itemize}
+\cite[p.6]{shen2008}
+
+%
+%To determine what method works best, some tests needs to be done, in order to figure out when the \textit{log odds} would be preferable over the \textit{decimal} library.
