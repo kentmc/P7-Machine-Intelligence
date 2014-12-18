@@ -4,22 +4,32 @@ This algorithm consists of two main modules. The first one creates a rough initi
 
 A symbol sequence may be produced by several state sequences. Therefore, the intuition behind the first module is to create a rough initial graph $G$ which disregards this possibility. Once created, the extending algorithm gradually smoothes this rough approximation.
 
-In the initial graph $G$, all the states have an initial probability of 0, except for one. Rather than having several possible initial states, this algorithm considers there is only one. The extend algorithm can then increase the number of possible initial states, normalising the initial probabilities.
+\subsubsection{Graph creation}
 
 The graph $G$ is created following a variable length $n$-gram approach. A typical $n$-gram approach is to learn and then detect subsequences of length $n$. Just like $n$-grams, this variable length n-gram splits the sequence into subsequences. Our algorithm splits every sequence $\mathbf{O}\in D$ according to the following process.
 
-The algorithm looks for the set $S$ of states that can produce the highest number of successive symbols found in the sequence $\mathbf{O}$, starting from the first symbol in $\mathbf{O}$. Since this subsequence $\mathbf{O_i}$ of $\mathbf{O}$ can be produced by the current graph $G$, it is split from the rest of the sequence $\mathbf{O}$. The process is then repeated from the next symbol right after $\mathbf{O_i}$, until the whole sequence is split.
+In the graph $G$, there is a single initial state, with an initial probability of 1. All the other states have an initial probability of 0. This is because the initialisation module simplifies the setting, considering there is only one initial state. The extend module can then increase the number of possible initial states, normalising the initial probabilities.
 
-In the case it fails to find such a $S$, in order to complete $G$, a new state is created which can produce the first symbol. The algorithm then considers this single state to be a subsequence, and runs the process again starting from the next symbol.
+The graph is created with that single initial state. The initialisation module then runs through the same state-adding process for every sequence $\mathbf{O}$ in the training set.
+
+\paragraph{State-adding process}
+
+It looks for the set $S$ of states that can produce the highest number of successive symbols found in the sequence $\mathbf{O}$, starting from the first symbol in $\mathbf{O}$.
+
+If such a $S$ is found, it means this subsequence $\mathbf{O_i}$ of $\mathbf{O}$ can already be produced by the current graph $G$, hence it is split from the rest of the sequence $\mathbf{O}$. 
+
+In the case it fails to find any $S$, in order to complete $G$, a new state is created which can produce the second symbol - sequences of length 1 are always produced by the single initial state. The algorithm then has a $S$, consisting of this state and the previous one, that can produce a subsequence $\mathbf{O_i}$.
+
+The process is then repeated from the next symbol right after $\mathbf{O_i}$, until the whole sequence is split.
 
 As such, instead of having a fixed length $n$ for those subsequences, our variable length n-gram fetches the set $S$ of states able to produce the largest subsequence $\mathbf{O_i}$ from the current symbol in $\mathbf{O}$. Once the sequence has been completely split into subsequences, each last state of a subsequence is made to be able to transition to the first state of the next subsequence. In pseudo-code:
 
 \begin{itemize}
-	\item $\mathbf{O}$ = $\mathbf{O_i} + \mathbf{O'}$, where $\mathbf{O}$ is the whole sequence, $\mathbf{O_i}$ the subsequence matched by the largest set of states able to match $\mathbf{O}$, and $\mathbf{O'}$ the rest of the sequence.
-	\item Repeat until the end of the sequence:
+	\item Repeat until the end of the sequence $\mathbf{O}$:
 	\begin{itemize}
-		\item $\mathbf{O'}$ = $\mathbf{O_i}$ + $\mathbf{O''}$
-		\item increment i and set $\mathbf{O'}$ to now be $\mathbf{O''}$
+		\item If a set of states can produce any subsequence from the beginning of $\mathbf{O}$, the set $S$ producing the largest subsequence $\mathbf{O_i}$ is kept => $\mathbf{O}$ = $\mathbf{O_i} + \mathbf{O'}$, where $\mathbf{O'}$ is the rest of the sequence $\mathbf{O}$.
+		\item If no set $S$ of states can produce any such subsequence => creates a new state producing the second symbol, $S$ becomes that state and the previous one, and can now produce a subsequence $\mathbf{O_i}$.
+		\item increments i and sets $\mathbf{O}$ to now be $\mathbf{O'}$
 	\end{itemize}
 	\item For each $\mathbf{O_i} \in \mathbf{O} = \{\mathbf{O_1}, \mathbf{O_2}, ... , \mathbf{O_l-1}\}$, with $l$ the length of the sequence $\mathbf{O}$, a transition is added between the last state of $\mathbf{O_i}$ and the first state of $\mathbf{O_i+1}$, with random transition probabilities.
 	\item Normalise $G$.
