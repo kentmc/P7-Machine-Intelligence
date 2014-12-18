@@ -65,7 +65,7 @@ namespace ModelLearning.Learners {
                 for (int i = 0; i < numberOfTransitions; i++)
                 {
                     Node target;
-                    while (node.Transitions.ContainsKey(target = graph.Nodes[ran.Next(states)])) ;
+                    while (node.Transitions.ContainsKey(target = graph.Nodes[ran.Next(states)]));
 
                     node.SetTransition(target, ran.NextDouble());
                 }
@@ -73,7 +73,7 @@ namespace ModelLearning.Learners {
 
             graph.Normalize();
 			hmm = SparseHiddenMarkovModel.FromGraph(graph);
-            hmm.Learn(trainingData.GetNonempty(), validationData.GetNonempty(), tolerance);
+            hmm.Learn(trainingData.GetNonempty(), tolerance);
         }
 
         public override string Name() {
