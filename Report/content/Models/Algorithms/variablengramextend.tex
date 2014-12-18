@@ -1,56 +1,9 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Arsclassica Article
-% LaTeX Template
-% Version 1.1 (10/6/14)
-%
-% This template has been downloaded from:
-% http://www.LaTeXTemplates.com
-%
-% Original author:
-% Lorenzo Pantieri (http://www.lorenzopantieri.net) with extensive modifications by:
-% Vel (vel@latextemplates.com)
-%
-% License:
-% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%----------------------------------------------------------------------------------------
-%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
-%----------------------------------------------------------------------------------------
-
-\documentclass[
-10pt, % Main document font size
-a4paper, % Paper type, use 'letterpaper' for US Letter paper
-oneside, % One page layout (no page indentation)
-%twoside, % Two page layout (page indentation for binding and different headers)
-headinclude,footinclude, % Extra spacing for the header and footer
-BCOR5mm, % Binding correction
-]{scrartcl}
-
-\input{structure.tex} % Include the structure.tex file which specified the document structure and layout
-
-\hyphenation{Fortran hy-phen-ation} % Specify custom hyphenation points in words with dashes where you would like hyphenation to occur, or alternatively, don't put any dashes in a word to stop hyphenation altogether
-
-%----------------------------------------------------------------------------------------
-%	TITLE AND AUTHOR(S)
-%----------------------------------------------------------------------------------------
-
-\title{\normalfont\spacedallcaps{Article Title}} % The article title
-
-\author{\spacedlowsmallcaps{John Smith* \& James Smith\textsuperscript{1}}} % The article author(s) - author affiliations need to be specified in the AUTHOR AFFILIATIONS block
-
-\date{} % An optional date to appear under the author(s)
-
-%----------------------------------------------------------------------------------------
-
 %\subsubsection{Variable length n-gram Extend}
-\begin{document}
 This algorithm consists of two main modules. The first one creates a rough initial graph $G$, the second one extends it. The extend algorithm used in the experiments was the Greedy Extend one {ref to greedy}%\ref{chap:experiments}.
 
 When training on a new sequence, several state sequences may produce the same symbol sequence. The intuition is to create a rough initial graph $G$ which disregards this possibility. Once created, the extending algorithm gradually smoothes this rough approximation.
 
-In the initial graph $G$, all the states have an initial probability of 0, except for one. In this single state have been merged all the possible initial states. The extend algorithm can then increase the number of possible initial states, normalising the initial probabilities before running the Baum Welch algorithm.
+In the initial graph $G$, all the states have an initial probability of 0, except for one. In this single state have been merged all the possible initial states. The extend algorithm can then increase the number of possible initial states, normalising the initial probabilities before running the {ref to Baum Welch} algorithm.
 
 The graph $G$is created following a variable length $n$-gram approach. A typical $n$-gram approach is to learn then detect subsequences of length $n$. Just like $n$-grams, this variable length n-gram splits the sequence into subsequences, then tries to match a set of states to each.
 
@@ -123,5 +76,3 @@ The following experiments have been conducted by using different values for $\al
 As can be observed on those figures, increasing the minimum initial number of transitions severely decreases the precision of the model, as well as increasing the runtime. On the other hand, not merging any state at all provides a large, too rough model.
 
 The best value appears to be for most models in the happy middle, around 3, although this might heavily depend on the number of symbols used by the model - the model created for data set 35 had a surprisingly enormous number of 282 states with $\alpha = 3$, and took 2 days to compute the final score on a rough threshold.
-
-\end{document}
