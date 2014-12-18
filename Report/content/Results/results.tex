@@ -1,45 +1,10 @@
-\FloatBarrier
+\chapter{Results}
+\label{chap:results}
+In the following, a number of tests are conducted to see how the algorithms described in chapter \ref{chap:models} would perform in the PautomaC competition. Tests are conducted on the three data sets, 6, 23, and 35. These data sets were chosen according to how well the algorithms proposed in this project performed in relation to \gls{bw}, such that \gls{bw} seems to loose on data set 6, be quite even on data set 23, and win on data set 35.
+The perplexity measure described in section \ref{sec:pautomac} has then been used to evaluate a score.
+Since the PautomaC competition allowed any number of submissions from the same contestant, each of the static algorithms can be tested with different number of states. The dynamic algorithms can be evaluated on each intermediate model that is produced while extending, which would also have been possible in the real competition.
+However, one must note that the contestants did not receive precise feedback when submitting a solution. They only received their rank among other contestants. Therefore, it would be considered cheating if the parameters of the algorithms proposed in chapter \ref{chap:models} were changed, based on the score they receive according to the Pautomac evaluation criteria.
 
-\chapter{Results}\label{sec:results}
-
-\paragraph{State Space Experiments}
-
-The purpose of the state experiments are to show how \gls{bw} and our own algorithms and models perform in relation to the state space.\\
-
-	\input{./content/Experiments/graphdata/state-result.tex}
-
-Initial observations
-\begin{itemize}
-\item GE performs the best, except dataset 1. It seems like GE would surpass BW with a larger state space.
-\item SBW performs worse than BW, note that dataset 41 has a fairly small y-axis, where the best GE result is about 800 points. We estimate an error margin of 100-200 points. Without more runs for each experiment, it is impossible to determine an exact error margin.
-\item In general we seem to 
-\end{itemize}
-
-
-\paragraph{Transition Density Experiments}
-
-The purpose of the transition density experiments are to show how \gls{bw} and our own algorithms and models perform in relation to the transition density.\\
-
-	\input{./content/Experiments/graphdata/density-result.tex}
-
-Initial observations
-\begin{itemize}
-\item GE performs the best
-\item 
-\item 
-\end{itemize}
-
-\paragraph{Symbol Alphabet Size Experiments}
-The purpose of the s are to show how \gls{bw} and our own algorithms and models perform in relation to the size of the emission symbol alphabet size.\\
-
-	\input{./content/Experiments/graphdata/symbol-result.tex}
-	
-Initial observations
-\begin{itemize}
-\item BW performs the best on 3 out of 4 sets
-\item 
-\item 
-\end{itemize}	
-	
-%\subsection{Greedy Extend Experiments}
-	%\input{./content/Experiments/results/greedyextend-results.tex}
+The parameters chosen for the following tests are all based on the outcome of the experiments described in chapter \ref{chap:experiments}.
+For all tests, 5000 sequences from the Pautomac training data files have been used to learn the model. The static algorithms are run with different number of states, starting at 10 with a step size of 10.
+The dynamic algorithms are run with 5 intermediate \gls{baum-welch} iterations.

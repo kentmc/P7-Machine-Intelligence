@@ -1,5 +1,5 @@
 \subsection{Speed Comparison}
-
+\label{sec:speedrun}
 Apart from scoring the individual learning algorithms by logarithmic likelihood or PautomaC evaluation criterion we have also recorded their running time. A special test was conducted to determine the performance benefits of sparsity and other approaches. The Baum-Welch Learner and Sparse Baum-Welch Learner were run for a model of size $5$ and subsequently on models $5$ hidden state larger. Both algorithms were run for exactly 8 hours to observe what results can be obtained during the given time frame. The Greedy Extend Learner was also run for 8 hours to see if the achieved growth can be faster than continuous tests on aforementioned algorithms.
 
 The experiments were conducted using PautomaC dataset number 23. This dataset was chosen as the underlying model used by PautomaC had an average amount of states (33), rather low transition density (11.48\%) and number of symbols (7) making it considerably simple, but not too much. The experiments were run with the same parameters as the main tests, thus with convergence threshold of $0.01$, and a training and validation sets of $5000$ sequences.
@@ -19,10 +19,10 @@ The tests were run on the same machine as the average speedup tests for the \hyp
 		\begin{axis}[
 			width=0.92\textwidth,
 			height=0.76\textheight,
-			ymin=0,
-			xmin=0,
-			xlabel = Number of States,
-            		ylabel = Negative Logarithmic Likelihood,
+		%	ymax=0,
+		%	xmax=0,
+			xlabel = Number of states,
+            		ylabel = Log likelihood,
             		legend style={at={(0,0)}, anchor=south west}]
 			\addplot+[mark=none]table[x=States, y=Score, col sep=tab]
 			{content/Experiments/graphdata/8h_run_BW.csv};
@@ -39,9 +39,9 @@ The tests were run on the same machine as the average speedup tests for the \hyp
 	\label{fig:eight_hour_run}
 \end{figure}
 
-In regards to logarithmic likelihood we may observe from the result graph \ref{fig:eight_hour_run} that both Baum-Welch and Sparse Baum-Welch Learners reach what could be called a convergence of the logarithmic likelihood score when increasing the number of states. The relatively stable value is reached at around 45 states for the Baum-Welch Learner with all the subsequent logarithmic likelihoods ranging from $50057.19$ (130 states) to $49718.1$ (80 states). The convergence is a little slower for the Sparse Baum-Welch Learner starting at around 55 states and ranging from $51856.74$ (75 states) to $50736.94$ (180 states).
+In regards to logarithmic likelihood we may observe from the result graph \ref{fig:eight_hour_run} that both Baum-Welch and Sparse Baum-Welch Learners reach what could be called a convergence of the logarithmic likelihood score when increasing the number of states. The relatively stable value is reached at around 45 states for the Baum-Welch Learner with all the subsequent logarithmic likelihoods ranging from $-50057.19$ (130 states) to $-49718.1$ (80 states). The convergence is a little slower for the Sparse Baum-Welch Learner starting at around 55 states and ranging from $-51856.74$ (75 states) to $-50736.94$ (180 states).
 
-Unlike the Baum-Welch and Sparse Baum-Welch Learners, the Greedy Extend Learner did not reach convergence during the 8 hours of continuous run. On the other hand the logarithmic likelihood of the Greedy Extend Learner continued to improve as more states were included into the model with an increasing rate of improvement nonetheless. During the 8 hours the Greedy Extend Learner was capable of achieving logarithmic likelihood of $17147.35$ with 352 states.
+Unlike the Baum-Welch and Sparse Baum-Welch Learners, the Greedy Extend Learner did not reach convergence during the 8 hours of continuous run. On the other hand the logarithmic likelihood of the Greedy Extend Learner continued to improve as more states were included into the model with an increasing rate of improvement nonetheless. During the 8 hours the Greedy Extend Learner was capable of achieving logarithmic likelihood of $-17147.35$ with 352 states.
 
 The difference between the continuous improvement of Greedy Extend and the stable value reached by Baum-Welch and Sparse Baum-Welch Learners can be attributed to the difference in the increase in the number of states. Whilst Baum-Welch and Sparse Baum-Welch Learners increase simply by creating a whole new model with more states that has to be re-learned from the very beginning, the Greedy Extend adds states one-by-one keeping the original model intact. Thus one may argue that the Greedy Extend Learner uses a property very alike to simulated annealing were it attempts to find the global maximum in a smaller and simpler -- less dimensional space of the smaller model first, were the number of local maxima is limited. Once such a maximum is found, the model stays in close proximity to the maximum after the model expands into far more dimensions and the learning continues.
 
@@ -57,8 +57,8 @@ The decreasing number of iterations with increasing number of states observed (m
 			height=0.32\textheight,
 			ymin=0,
 			xmin=0,
-			xlabel = Number of States,
-            		ylabel = Time until Convergence {[s]},
+			xlabel = Number of states,
+            		ylabel = Time until convergence {[s]},
             		legend style={at={(0,1)}, anchor=north west}]
 			\addplot+table[x=States, y=Time, col sep=tab]
 			{content/Experiments/graphdata/8h_run_BW.csv};
@@ -86,7 +86,7 @@ Significantly less unstable behaviour was measured for the Baum-Welch Learner. O
 
 The longest run measured for the Baum-Welch Learner was for the highest achieved number of states, 160 with 34 minutes and 34 seconds. The achieved running times for the Baum-Welch Learner are generally smaller than expected, mostly for the larger models. This is attributed mostly to the declining number of iterations required until convergence with the growing size of the model. Nevertheless a generally longer running time is measured for the Baum-Welch Learner than the Sparse Baum-Welch Learner with models beyond 100 states large. The graph \ref{fig:bw_vs_sbw} also suggests the gap to continue to widen with more states.
 
-The high diversity in the running time of the Sparse Baum-Welch Learner has inspired us to explore whether more iterations (and therefore longer runtime) are correlated to better (thus smaller) score. We have computed \gls{cor_coefficient} between the logarithmic likelihood and running time for both the Baum-Welch and Sparse Baum-Welch Learners. In both cases the score and the computation time appear to be positively correlated ($r_{BW} = 0.4279$ for Baum-Welch and $r_{SBW} = 0.6328$ for Sparse Baum-Welch). This is mostly attributed to the sharp increase in both running time and logarithmic likelihood (observable as decrease in negative logarithmic likelihood in graph \ref{fig:eight_hour_run}) measured for small models, before the stable value was reached. Much more interesting might therefore be to measure the correlation only for the models that are already scoring close to the stable value (45 states and beyond for Baum-Welch and 55 states and beyond for Sparse Baum-Welch).
+The high diversity in the running time of the Sparse Baum-Welch Learner has inspired us to explore whether more iterations (and therefore longer runtime) are correlated to better (thus larger) score. We have computed \gls{cor_coefficient} between the logarithmic likelihood and running time for both the Baum-Welch and Sparse Baum-Welch Learners. In both cases the score and the computation time appear to be positively correlated ($r_{BW} = 0.4279$ for Baum-Welch and $r_{SBW} = 0.6328$ for Sparse Baum-Welch). This is mostly attributed to the sharp increase in both running time and logarithmic likelihood measured for small models, before the stable value was reached. Much more interesting might therefore be to measure the correlation only for the models that are already scoring close to the stable value (45 states and beyond for Baum-Welch and 55 states and beyond for Sparse Baum-Welch).
 
 The \gls{cor_coefficient} between logarithmic likelihood and running time for the Baum-Welch Learner on models at least 45 states large shows a slight negative correlation ($\overline{r_{BW}} = -0.1134$). This can be attributed to continued increase in running times but only meek changes in the logarithmic likelihood nonlinear in regard to number of states.
 
