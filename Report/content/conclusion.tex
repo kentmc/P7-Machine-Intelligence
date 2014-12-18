@@ -1,2 +1,5 @@
 \chapter{Conclusion}
 
+In chapter \ref{chap:model} two algorithms are presented for solving the problem definition; the Greed Extend (GE) and Gamma Splitter(GS) algorithms. The \gls{ge} is a very naive approach that randomly maintain a Hidden Markov Model (HMM) with at most $log(n)$ transitions, where $n$ is the amount of states. \gls{ge} run 5 iterations of Baum-Welch (BW), thereafter it adds a random state with random parameters to the model, maintaining at most $log(n)$ transitions. This simple approach proved itself to be on par with BW, while being able to dynamically increase the state space.
+
+The second algorithm, which worked not by adding states with random parameters, but by splitting the parameters of one existing state. Such that states which have become specialized, in terms of 
