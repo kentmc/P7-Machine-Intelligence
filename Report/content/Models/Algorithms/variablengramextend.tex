@@ -1,9 +1,10 @@
 \subsection{Variable length n-gram Extend}
-This algorithm consists of two main modules. The first one creates a rough initial graph $G$, the second one extends it. The extend algorithm used in the experiments was the Greedy Extend one {ref to greedy}%\ref{chap:experiments}.
+\label{sec:vl-ngram-extend}
+This algorithm consists of two main modules. The first one creates a rough initial graph $G$, the second one extends it. The extend algorithm used in the experiments was the Greedy Extend one (described in \ref{sec:greedy_extend}).
 
 When training on a new sequence, several state sequences may produce the same symbol sequence. The intuition is to create a rough initial graph $G$ which disregards this possibility. Once created, the extending algorithm gradually smoothes this rough approximation.
 
-In the initial graph $G$, all the states have an initial probability of 0, except for one. In this single state have been merged all the possible initial states. The extend algorithm can then increase the number of possible initial states, normalising the initial probabilities before running the {ref to Baum Welch} algorithm.
+In the initial graph $G$, all the states have an initial probability of 0, except for one. In this single state have been merged all the possible initial states. The extend algorithm can then increase the number of possible initial states, normalising the initial probabilities before running \gls{baum-welch}.
 
 The graph $G$is created following a variable length $n$-gram approach. A typical $n$-gram approach is to learn then detect subsequences of length $n$. Just like $n$-grams, this variable length n-gram splits the sequence into subsequences, then tries to match a set of states to each.
 
@@ -32,47 +33,38 @@ The following experiments have been conducted by using different values for $\al
 
 (not completely done)
 
-%\begin{figure}[!h]
-%\begin{centering}
-%\begin{tikzpicture}
-%	\pgfplotsset{every axis legend/.append style={ 
-%		at={(0.5,1.06)},
-%		anchor=south}}
-%	\begin{axis}[
-%			scale = 1.5,
-%			xlabel = Number of states,
-%            	ylabel = Log likelihood,
-%            	legend columns=-1,
-%            	legend entries={IT-0, IT-1, IT-2, IT-3, IT-5, IT-10, IT-50},
-%			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
-%		
-%		\addplot+[mark=none]table[x=States, y=IT-0, col sep=tab]
-%		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
-%		
-%		\addplot+[mark=none]table[x=States, y=IT-1, col sep=tab]
-%		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
-%		
-%		\addplot+[mark=none]table[x=States, y=IT-2, col sep=tab]
-%		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
-%		
-%		\addplot+[mark=none]table[x=States, y=IT-3, col sep=tab]
-%		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
-%
-%		\addplot+[mark=none]table[x=States, y=IT-5, col sep=tab]
-%		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
-%		
-%		\addplot+[mark=none]table[x=States, y=IT-10, col sep=tab]
-%		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
-%		
-%		\addplot+[mark=none]table[x=States, y=IT-50, col sep=tab]
-%		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
-%	\end{axis}
-%\end{tikzpicture} 
-%\caption{Test of different values for $\alpha$ while running the Variable length n-gram Extend algorithm.}
-%\label{fig:vlnge-different-init-trans-tested-23} 
-%\end{centering}
-%\end{figure}
+\begin{figure}[!h]
+\begin{centering}
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.06)},
+		anchor=south}}
+	\begin{axis}[
+			scale = 1.5,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={IMnbT-1, IMnbT-3, IMnbT-5, IMnbT-10},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-1, col sep=tab]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-3, col sep=tab]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-5, col sep=tab]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-10, col sep=tab]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-23.csv};
+	\end{axis}
+\end{tikzpicture} 
+\caption{Test of different values for $\alpha$ while running the Variable length n-gram Extend algorithm.}
+\label{fig:vlnge-different-init-trans-tested-23} 
+\end{centering}
+\end{figure}
 
-As can be observed on those figures, increasing the minimum initial number of transitions severely decreases the precision of the model, as well as increasing the runtime. On the other hand, not merging any state at all provides a large, too rough model.
+As can be observed on those figures, increasing the minimum initial number of transitions severely decreases the precision of the model, as well as increasing the runtime. On the other hand, not merging any state at all may sometimes provide a larger, less accurate model.
 
-The best value appears to be for most models in the happy middle, around 3, although this might heavily depend on the number of symbols used by the model - the model created for data set 35 had a surprisingly enormous number of 282 states with $\alpha = 3$, and took 2 days to compute the final score on a rough threshold.
+The best value appears to be for most models in the happy middle, around 3, although this might heavily depend on the number of symbols used by the model - the model created for data set 35 had a surprisingly enormous number of 282 states with $\alpha = 3$, and took 2 days to compute the final score on a rough threshold for \gls{baum-welch}.
