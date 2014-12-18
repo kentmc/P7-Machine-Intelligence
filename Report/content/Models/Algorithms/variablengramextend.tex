@@ -35,7 +35,39 @@ As $\alpha$ denotes the minimum initial number of transitions each state can hav
 
 The following experiments have been conducted by using different values for $\alpha$ on data sets $1$ and $23$ from the PautomaC competition. The results can be seen in figure \ref{fig:vlnge-different-init-trans-tested-1} and \ref{fig:vlnge-different-init-trans-tested-23}. Each line represents the score obtained depending on the number of states, with the specified minimum initial number of transitions.
 
-(not completely done)
+
+\begin{figure}[!h]
+\begin{centering}
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.06)},
+		anchor=south}}
+	\begin{axis}[
+			scale = 1.5,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={IMnbT-1, IMnbT-3, IMnbT-5, IMnbT-10},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-1, col sep=tab]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-1.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-3, col sep=tab]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-1.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-5, col sep=tab]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-1.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-10, col sep=tab]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-1.csv};
+	\end{axis}
+\end{tikzpicture} 
+\caption{Test of different values for $\alpha$ while running the Variable length n-gram Extend algorithm on data set 1.}
+\label{fig:vlnge-different-init-trans-tested-1} 
+\end{centering}
+\end{figure}
+
 
 \begin{figure}[!h]
 \begin{centering}
@@ -64,11 +96,9 @@ The following experiments have been conducted by using different values for $\al
 		{content/Experiments/graphdata/vlnge-different-init-trans-tested-23.csv};
 	\end{axis}
 \end{tikzpicture} 
-\caption{Test of different values for $\alpha$ while running the Variable length n-gram Extend algorithm.}
+\caption{Test of different values for $\alpha$ while running the Variable length n-gram Extend algorithm on data set 23.}
 \label{fig:vlnge-different-init-trans-tested-23} 
 \end{centering}
 \end{figure}
 
-As can be observed on those figures, increasing the minimum initial number of transitions severely decreases the precision of the model, as well as increasing the runtime. On the other hand, not merging any state at all may sometimes provide a larger, less accurate model.
-
-The best value appears to be for most models in the happy middle, around 3, although this might heavily depend on the number of symbols used by the model - the model created for data set 35 had a surprisingly enormous number of 282 states with $\alpha = 3$, and took 2 days to compute the final score on a rough threshold for \gls{baum-welch}.
+As can be observed on those figures, increasing the minimum initial number of transitions severely decreases the precision of the model, as well as increasing the runtime. On the other hand, not merging any state at all may sometimes provide a larger, less accurate model - but this is not necessarily the case. The best value for a baseline appears to be in the happy middle, around 3.
