@@ -43,7 +43,7 @@ The following experiments have been conducted by using different values for $\al
 		at={(0.5,1.06)},
 		anchor=south}}
 	\begin{axis}[
-			scale = 1.5,
+			scale = 1.2,
 			xlabel = Number of states,
             	ylabel = Log likelihood,
             	legend columns=-1,
@@ -76,7 +76,7 @@ The following experiments have been conducted by using different values for $\al
 		at={(0.5,1.06)},
 		anchor=south}}
 	\begin{axis}[
-			scale = 1.5,
+			scale = 1.2,
 			xlabel = Number of states,
             	ylabel = Log likelihood,
             	legend columns=-1,
@@ -101,4 +101,4 @@ The following experiments have been conducted by using different values for $\al
 \end{centering}
 \end{figure}
 
-As can be observed on those figures, increasing the minimum initial number of transitions severely decreases the precision of the model, as well as increasing the runtime. On the other hand, not merging any state at all may sometimes provide a larger, less accurate model - but this is not necessarily the case. The best value for a baseline appears to be in the happy middle, around 3.
+As can be observed on those figures, increasing the minimum initial number of transitions severely decreases the precision of the model. On the other hand, not merging any state at all may sometimes provide a larger, less accurate model - but this is not necessarily the case. The best value for a safe baseline appears to be 3, in the happy middle.
