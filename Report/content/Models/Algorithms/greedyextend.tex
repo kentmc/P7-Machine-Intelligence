@@ -9,16 +9,16 @@ The following pseudo code describes how the algorithm continuously tries to exte
 	\item Randomly choose a set of nodes $Y = \{y_1, y_2, ... , y_l\}$ from $V(G')$, where $l = \lceil \log |V(G')| \rceil$ and $\forall a,b: y_a \neq y_b$.
 	\item For each $y \in Y$, the transitions $(y, y')$ and $(y', y)$ are added to $E(G')$ with random transition probabilities.
 	\item Normalize $G'$.
-	\item If $LL(BW^{\beta}(G', D)) > LL(G)$, let $G = LL(BW^{\beta}(G', D))$.
+	\item If $LL_D(BW^{\beta}(G', D)) > LL_D(G)$, let $G = LL_D(BW^{\beta}(G', D))$.
 \end{enumerate}
 
 \paragraph{Measuring convergence}
 Convergence can be measured based on the increase in log likelihood of the training data, in the same way as \gls{bw} uses a threshold of convergence.
 
 \paragraph{Determining the $\beta$ Value}
-Another big question about the Greedy Extend algorithm, is how the choice of $\beta$ affects the performance of the algorithm.
+Another big question about the \gls{ge} algorithm, is how the choice of $\beta$ affects the performance of the algorithm.
 As $\beta$ denotes the number of \gls{baum-welch} iterations to run each time the algorithm attempts to extend the graph, increasing $\beta$ will also increase the run time of the algorithm. It may be the case that better results are achieved when $\beta$ is increased, since more iterations of \gls{baum-welch} also means a greater increase in likelihood. However, it could be the case that using many iterations early increases the chance of getting trapped in a local optimum.
-An experiment has been conducted of using different values for $\beta$ on data set $1$ from the PautomaC competition. The results can be seen in figure \ref{fig:ge-different-thresholds-tested}. Each line represents the mean value of 5 runs of the Greedy Extend algorithm with the specified number of iterations. Some of the plots have been cut off at a point where one of the runs did not manage to extend beyond a certain number of states.
+An experiment has been conducted of using different values for $\beta$ on data set $1$ from the PautomaC competition. The results can be seen in figure \ref{fig:ge-different-thresholds-tested}. Each line represents the mean value of 5 runs of the \gls{ge} algorithm with the specified number of iterations. Some of the plots have been cut off at a point where one of the runs did not manage to extend beyond a certain number of states.
 
 \begin{figure}[!h]
 \begin{centering}
@@ -56,7 +56,7 @@ An experiment has been conducted of using different values for $\beta$ on data s
 		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
 	\end{axis}
 \end{tikzpicture} 
-\caption{Test of different values for $\beta$ while running the Greedy Extend algorithm.}
+\caption{Test of different values for $\beta$ while running the \gls{ge} algorithm.}
 \label{fig:ge-different-thresholds-tested} 
 \end{centering}
 \end{figure}

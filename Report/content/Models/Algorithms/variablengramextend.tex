@@ -1,37 +1,40 @@
 \subsection{Variable length n-gram Extend}
 \label{sec:vl-ngram-extend}
-This algorithm consists of two main modules. The first one creates a rough initial graph $G$, the second one extends it. The extend algorithm used in the experiments was the Greedy Extend one (described in \ref{sec:greedy_extend}).
+This algorithm consists of two main modules. The first one creates a rough initial graph $G$, the second one extends it. The extend algorithm used in the experiments was the Greedy Extend as described in \ref{sec:greedy_extend}.
 
-When training on a new sequence, several state sequences may produce the same symbol sequence. The intuition is to create a rough initial graph $G$ which disregards this possibility. Once created, the extending algorithm gradually smoothes this rough approximation.
+A symbol sequence may be produced by several state sequences. Therefore, the intuition behind the first module is to create a rough initial graph $G$ which disregards this possibility. Once created, the extending algorithm gradually smoothes this rough approximation.
 
-In the initial graph $G$, all the states have an initial probability of 0, except for one. In this single state have been merged all the possible initial states. The extend algorithm can then increase the number of possible initial states, normalising the initial probabilities before running \gls{baum-welch}.
+In the initial graph $G$, all the states have an initial probability of 0, except for one. Rather than having several possible initial states, this algorithm considers there is only one. The extend algorithm can then increase the number of possible initial states, normalising the initial probabilities.
 
-The graph $G$is created following a variable length $n$-gram approach. A typical $n$-gram approach is to learn then detect subsequences of length $n$. Just like $n$-grams, this variable length n-gram splits the sequence into subsequences, then tries to match a set of states to each.
+The graph $G$ is created following a variable length $n$-gram approach. A typical $n$-gram approach is to learn and then detect subsequences of length $n$. Just like $n$-grams, this variable length n-gram splits the sequence into subsequences. Our algorithm splits every sequence $\mathbf{O}\in D$ according to the following process.
 
-However, instead of having a fixed length for those subsequences, our variable length n-gram fetches the largest set of states able to match the sequence from the start. It then splits the whole sequence into two subsequences, and repeats the process on the second subsequence. Once the sequence has been completely split into subsequences, each last state of a subsequence is made to be able to transition to the first state of the next subsequence. In pseudo-code:
+The algorithm looks for the set $S$ of states that can produce the highest number of successive symbols found in the sequence $\mathbf{O}$, starting from the first symbol in $\mathbf{O}$. Since this subsequence $\mathbf{O_i}$ of $\mathbf{O}$ can be produced by the current graph $G$, it is split from the rest of the sequence $\mathbf{O}$. The process is then repeated from the next symbol right after $\mathbf{O_i}$, until the whole sequence is split.
+
+In the case it fails to find such a $S$, in order to complete $G$, a new state is created which can produce the first symbol. The algorithm then considers this single state to be a subsequence, and runs the process again starting from the next symbol.
+
+As such, instead of having a fixed length $n$ for those subsequences, our variable length n-gram fetches the set $S$ of states able to produce the largest subsequence $\mathbf{O_i}$ from the current symbol in $\mathbf{O}$. Once the sequence has been completely split into subsequences, each last state of a subsequence is made to be able to transition to the first state of the next subsequence. In pseudo-code:
 
 \begin{itemize}
-	\item $s$ = $s_1 + s'$, where $s$ is the whole sequence, $s_1$ the largest set of states able to match $s$, and $s'$ the rest of the sequence.
+	\item $\mathbf{O}$ = $\mathbf{O_i} + \mathbf{O'}$, where $\mathbf{O}$ is the whole sequence, $\mathbf{O_i}$ the subsequence matched by the largest set of states able to match $\mathbf{O}$, and $\mathbf{O'}$ the rest of the sequence.
 	\item Repeat until the end of the sequence:
 	\begin{itemize}
-		\item $s'$ = $s_i$ + $s''$
-		\item increment i and set $s'$ to now be $s''$
+		\item $\mathbf{O'}$ = $\mathbf{O_i}$ + $\mathbf{O''}$
+		\item increment i and set $\mathbf{O'}$ to now be $\mathbf{O''}$
 	\end{itemize}
-	\item For each $s_i \in S = \{s_1, s_2, ... , s_n-1\}$, a transition is added between the last state of $s_i$ and the first state of $s_i+1$, with random transition probabilities.
+	\item For each $\mathbf{O_i} \in \mathbf{O} = \{\mathbf{O_1}, \mathbf{O_2}, ... , \mathbf{O_l-1}\}$, with $l$ the length of the sequence $\mathbf{O}$, a transition is added between the last state of $\mathbf{O_i}$ and the first state of $\mathbf{O_i+1}$, with random transition probabilities.
 	\item Normalise $G$.
 \end{itemize}
 
-Experiments have shown this can sometimes lead to several states having very few transitions. Keeping the same intuition in mind, those states are all merged into one - if their number of transitions is less than $alpha$.
+Experiments have shown this can sometimes lead to several states having very few transitions. Keeping the same intuition in mind, those states are all merged into one if their number of transitions is less than $\alpha$.
 
 \paragraph{Determining the $\alpha$ Value}
 
-The question about the proper value for $\alpha$ to be used then comes up. Different values have thus been used on the same data set to evaluate the performance of each for this algorithm.
+The question about the proper value for $\alpha$ to be used then comes up. Thus, different values have been used on the same data set to evaluate the performance of each for this algorithm.
 
 As $\alpha$ denotes the minimum initial number of transitions each state can have, higher values will reduce the initial state space but likely reduce the accuracy of the model, while lower values would likely keep the accuracy high but might provide very large models.
 
-The following experiments have been conducted by using different values for $\alpha$ on data sets $1$ and $23$ from the PautomaC competition. The results can be seen in figure \ref{fig:vlnge-different-init-trans-tested-1} and \ref{fig:vlnge-different-init-trans-tested-23}. Each line represents the score obtained depending on the number of states, with the specified minimum initial number of transitions.
+The following experiments have been conducted by using different values for $\alpha$ on data sets $1$ and $23$ from the PautomaC competition. The results can be seen in figures \ref{fig:vlnge-different-init-trans-tested-1} and \ref{fig:vlnge-different-init-trans-tested-23}. Each line represents the score obtained depending on the number of states, with the specified minimum initial number of transitions.
 
-(not completely done)
 
 \begin{figure}[!h]
 \begin{centering}
@@ -40,7 +43,40 @@ The following experiments have been conducted by using different values for $\al
 		at={(0.5,1.06)},
 		anchor=south}}
 	\begin{axis}[
-			scale = 1.5,
+			scale = 1.2,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={IMnbT-1, IMnbT-3, IMnbT-5, IMnbT-10},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-1, col sep=comma]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-1.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-3, col sep=comma]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-1.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-5, col sep=comma]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-1.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IMnbT-10, col sep=comma]
+		{content/Experiments/graphdata/vlnge-different-init-trans-tested-1.csv};
+	\end{axis}
+\end{tikzpicture} 
+\caption{Test of different values for $\alpha$ while running the Variable length n-gram Extend algorithm on data set 1.}
+\label{fig:vlnge-different-init-trans-tested-1} 
+\end{centering}
+\end{figure}
+
+
+\begin{figure}[!h]
+\begin{centering}
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.06)},
+		anchor=south}}
+	\begin{axis}[
+			scale = 1.2,
 			xlabel = Number of states,
             	ylabel = Log likelihood,
             	legend columns=-1,
@@ -60,11 +96,9 @@ The following experiments have been conducted by using different values for $\al
 		{content/Experiments/graphdata/vlnge-different-init-trans-tested-23.csv};
 	\end{axis}
 \end{tikzpicture} 
-\caption{Test of different values for $\alpha$ while running the Variable length n-gram Extend algorithm.}
+\caption{Test of different values for $\alpha$ while running the Variable length n-gram Extend algorithm on data set 23.}
 \label{fig:vlnge-different-init-trans-tested-23} 
 \end{centering}
 \end{figure}
 
-As can be observed on those figures, increasing the minimum initial number of transitions severely decreases the precision of the model, as well as increasing the runtime. On the other hand, not merging any state at all may sometimes provide a larger, less accurate model.
-
-The best value appears to be for most models in the happy middle, around 3, although this might heavily depend on the number of symbols used by the model - the model created for data set 35 had a surprisingly enormous number of 282 states with $\alpha = 3$, and took 2 days to compute the final score on a rough threshold for \gls{baum-welch}.
+As can be observed on those figures, increasing the minimum initial number of transitions severely decreases the precision of the model. On the other hand, not merging any state at all may sometimes provide a larger, less accurate model - but this is not necessarily the case. The best value for a safe baseline appears to be 3, in the happy middle.
