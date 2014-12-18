@@ -1,0 +1,35 @@
+\section{Dataset experiments}
+\label{sec:dataset_experiments}
+The approach used for each dataset parameter experiment have been to cover a range of state amounts, ranging from 10 to 100 states, together with the previously define parameters. \gls{bw} was probed on specific state amounts with step sizes of 10, where the dynamic algorithms have been defined to reach either some local maxima or stop at 100 states. 5000 sequences of data are used for training, while 5000 different sequences are used for evaluation only. As no validation data is used while training, an overfitting behaviour is expected to be visible in the log likelihood scores.
+
+\subsection{State Space Experiments}
+
+The purpose of the state experiments are to show how \gls{bw} and our own algorithms and models perform in relation to different number of states.
+
+In Figure \ref{fig:states} the ranges of log likelihood should be noted carefully. A large log likelihood difference exist between the data sets, which can at least partly be explained by the observed sequences in the data sets. A higher complexity of the data sequences will naturally be harder to learn. For instance data set 41 seems to have a lower likelihood than data set 6. Looking into the sequences of these two data sets we find that data set 41 has an average sequence length of 7,3 characters, using 7 different symbols, whereas data set 6 has an average sequence length of 14,7 characters, using 6 different symbols. From these numbers it is clear that the amount of possible combinations is much lower for data set 41, compared to data set 6, which suggests that this data is harder to learn and will this result in an overall lower likelihood. 
+
+Going into the behaviour of the different algorithms the largest observation is \gls{gs}, which performs very well on set 6, 23 and 1. The reason why set 41 has so little variance across the different algorithms isn't clear. One explanation could be an addition to the previous explanation about the general high likelihood, where the symbol amount and sequence length is only part of the complexity. The underlying model's state transition and symbol emission probabilities might be much harder to learn, causing every algorithm to easily learn one part of the underlying machine, but hardly learn the other part. \gls{gs} stopped before state 100 twice, where the probabilities of the model underflowed, presumably from doing a large amount of iterations of \gls{bw}, however this is not certain as the state parameter splitting might also course .
+The \gls{ge} algorithm performs well overall, interestingly not much tendency towards overfitting is found on any of the data sets, except at set 41. In fact \gls{ge} has a tendency to overfit less than \gls{bw} and \gls{sbw}.
+
+The overall conclusion on the state amount experiment is not clear, as every trained model behave differently across the data sets. The most clear picture across the state amount, is that \gls{gs} seems to slow down the likelihood increase at larger and large state spaces, while the data set's state parameter also increased.\\
+	\input{./content/Experiments/graphdata/state-result.tex}
+\FloatBarrier
+
+\subsection{Transition Sparsity Experiments}
+
+The purpose of the transition density experiments are to show how \gls{bw} and our own algorithms perform, in relation to Pautomac's transition sparsity parameter.
+
+Figure \ref{fig:density} shows the likelihood for the four data sets covering a range of transition percentage amount. The hypothesis that a system with few transitions would be easier to learn using a model with few transition as well, does not seem to hold any merit. \gls{sbw} does best on the lowest amount of transition with set 36, however as \gls{sbw} does equally as good against \gls{bw} at both set number 43 and 37 very much work against the hypothesis.\\ 
+	\input{./content/Experiments/graphdata/density-result.tex}
+	\FloatBarrier
+
+\subsection{Alphabet Size Experiments}
+The purpose of the alphabet size experiment is to show how \gls{bw} and our own algorithms perform in relation to the size of the alphabet size.
+
+Figure \ref{fig:symbol} shows the likelihood for the four data sets covering a range of emission symbol amounts. The most significant observation on these results are that \gls{bw} seems to learn models better while the symbol alphabet increases. Another significant observation is that \gls{gs} performs very well, but it also has a tendency towards underflowing on the three sets with the most symbols. This follows the previous explanation of \gls{gs} underflowing from too small probabilities in the model, as a larger set of symbols add to the reduction of probabilities in the trained model.
+\gls{ge} and \gls{sbw} behaves alike on every set, which could suggest that one of the low-variable parameters is dominating these algorithms, however the previous experiments seems to disprove this. \\
+	\input{./content/Experiments/graphdata/symbol-result.tex}
+\FloatBarrier
+	
+%\subsection{Greedy Extend Experiments}
+	%\input{./content/Experiments/results/greedyextend-results.tex}
