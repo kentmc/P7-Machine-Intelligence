@@ -69,5 +69,60 @@ However, instead of having a fixed length for those subsequences, our variable l
 
 Experiments have shown this can sometimes lead to several states having very few transitions. Keeping the same intuition in mind, those states are all merged into one - if their number of transitions is less than $alpha$.
 
+\paragraph{Determining the $\alpha$ Value}
+
+The question about the proper value for $\alpha$ to be used then comes. Different values have thus been used on the same data set to evaluate the performance of each for this algorithm.
+
+As $\alpha$ denotes the minimum initial number of transitions each state can have, higher values it will reduce the initial state space but likely reduce the accuracy of the model, while lower values would likely keep the accuracy high but might provide very large models.
+
+The following experiments have been conducted on data sets $1$ and $23$ from the PautomaC competition. The results can be seen in figure \ref{fig:ge-different-thresholds-tested}
+An experiment has been conducted of using different values for $\beta$ on data set $1$ from the PautomaC competition. The results can be seen in figure \ref{fig:vlnge-different-init-trans-tested-1} and \ref{fig:vlnge-different-init-trans-tested-23}. Each line represents the score obtained depending on the number of states, with the specified minimum initial number of transitions.
+
+(not completely done)
+
+\begin{figure}[!h]
+\begin{centering}
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.06)},
+		anchor=south}}
+	\begin{axis}[
+			scale = 1.5,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={IT-0, IT-1, IT-2, IT-3, IT-5, IT-10, IT-50},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+		
+		\addplot+[mark=none]table[x=States, y=IT-0, col sep=tab]
+		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IT-1, col sep=tab]
+		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IT-2, col sep=tab]
+		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IT-3, col sep=tab]
+		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
+
+		\addplot+[mark=none]table[x=States, y=IT-5, col sep=tab]
+		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IT-10, col sep=tab]
+		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
+		
+		\addplot+[mark=none]table[x=States, y=IT-50, col sep=tab]
+		{content/Experiments/graphdata/ge-intermediate-iterations-test.csv};
+	\end{axis}
+\end{tikzpicture} 
+\caption{Test of different values for $\alpha$ while running the Variable length n-gram Extend algorithm.}
+\label{fig:vlnge-different-init-trans-tested-23} 
+\end{centering}
+\end{figure}
+
+As can be observed on those figures, increasing the minimum initial number of transitions severely decreases the precision of the model, as well as increasing the runtime. On the other hand, not merging provides a large, too rough model.
+
+The best value appears to be for most models in the happy middle, around 3, although this might heavily depend on the number of symbols used by the model - the model created for data set 35 had a surprisingly enormous number of 282 states with $\alpha = 3$, and took 2 days to compute the final score on a rough threshold.
 
 \end{document}
