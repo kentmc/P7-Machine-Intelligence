@@ -1,2 +1,6 @@
 \chapter{Future Work}
-Future work here
+\label{chap:future_work}
+The report introduces several approaches to dynamically learning the structure of an \gls{hmm}. Despite several variations being made to the explored algorithms and extensive testing performed more research is needed to confirm the exact quality and usability of the proposed approaches in general setting as well as attempt further improvements in the approaches proposed.
+
+On final note, both tested dynamic algorithms (\acrlong{ge} and \acrlong{gs}) relied heavily on adding a completely or at least partially randomised states to an existing and partially learned \gls{hmm}. This is heavily influenced by the failure of the deterministic state inclusion algorithms (section \ref{sec:state_splitting}) to produce sensible results. The area however seems to need more exploration as no specific reason exists why a stochastic state inclusion is necessary. More research may therefore reveal a condition that poses the stochasticity requirement or, on the other hand aid in a development of a deterministic method for adding states into a semi-learned \gls{hmm}.
+
