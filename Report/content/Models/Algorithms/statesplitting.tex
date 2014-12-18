@@ -68,6 +68,12 @@ More improvements to the \emph{Viterbi heuristic} were considered, mainly includ
 
 The \emph{Gamma heuristic} works by splitting the state that is visited most when generating the 
 training sequences.
+In each iteration of the algorithm, it finds this state by calculating and comparing the gamma variables,
+from the Baum-Welch algorithm, for each of the states in the model.
+The algorithm chooses to split the state based on how uniform its transition and emission distributions are.
+However in order to shield the algorithm against getting stuck in a local optima, the state will be split
+regardless of the uniformity of the distribution if the algorithm has gone ten iterations without adding a
+new state.
 
 The pseudo code of the algorithm is as follows.
 
@@ -76,35 +82,37 @@ The pseudo code of the algorithm is as follows.
 \item Loop while the maximum number of states or iterations has not been reached.
 \indent \begin{enumerate}
 	\item 	Find the state that is visited most when outputting the training sequences.
-	$$q' = \argmax_{q \in Q}\sum_{o \in O}\sum_{t=0}^{T}\gamma_t(q)$$ 
+	$$s' = \argmax_{s \in S}\sum_{o \in \mathbf{O}}\sum_{t=1}^{T}\gamma_t(s)$$ 
 	\item Determine if the algorithm has been stuck for more than ten iterations.
 	$$ \omega = \begin{cases}
 		true &\text{if algorithm has been stuck for 10 iterations} \\
 		false &\text{otherwise}
 	\end{cases} $$
-	\item Determine if the transition probability distribution of $q'$ is uniform.
+	\item Determine if the transition probability distribution of $s'$ is uniform.
 	\begin{align*}
-	z &= \{a_{q'J} \in A \vert a_{q'J} \neq 0\} \\
-	z_{arg} &= \frac{\sum_{a_{q'J} \in z} a_{q'J}}{\vert z \vert} \\
-	AbsE_1 &= \sum_{a_{q'J} \in z} \vert a_{q'J} - z_{arg} \vert \\
+	z &= \{a_{s'J} \in \mathbf{A} \vert a_{s'J} \neq 0\} \\
+	z_{arg} &= \frac{\sum_{a_{s'J} \in z} a_{s'J}}{\vert z \vert} \\
+	AbsE_1 &= \sum_{a_{s'J} \in z} \vert a_{s'J} - z_{arg} \vert \\
 	\end{align*}
-	\item Determine if the emission probability distribution of $q'$ is uniform.
+	\item Determine if the emission probability distribution of $s'$ is uniform.
 	\begin{align*}
-	z &= \{b_{q'}(o) \in B \vert b_{q'}(o) \neq 0\} \\
-	z_{arg} &= \frac{\sum_{b_{q'}(o) \in z} b_{q'}(o)}{\vert z \vert} \\
-	AbsE_2 &= \sum_{b_{q'}(o) \in z} \vert b_{q'}(o) - z_{arg} \vert \\
+	z &= \{b_{s'}(\sigma) \in \mathbf{B} \vert b_{s'}(\sigma) \neq 0 \wedge \sigma \in \Sigma\} \ \\
+	z_{arg} &= \frac{\sum_{b_{s'}(\sigma) \in z} b_{s'}(\sigma)}{\vert z \vert} \\
+	AbsE_2 &= \sum_{b_{s'}(\sigma) \in z} \vert b_{s'}(\sigma) - z_{arg} \vert \\
 	\end{align*}
-	\item Split $q'$ if its transition or emission probabilities are uniform or the algorithm is stuck. 
+	\item Split $s'$ if its transition or emission probabilities are uniform or the algorithm is stuck. 
 	\begin{align*}
-	\bar{Q} &= \begin{cases}
-		Q \cup \{ q_1 \} &\text{if } AbsE_1 < \epsilon_1 \vee \omega \vee AbsE_2 < \epsilon_2 \\
-		Q	&\text{otherwise} \\
+	\bar{S} &= \begin{cases}
+		S \cup \{ s_{new} \} &\text{if } AbsE_1 < \epsilon_1 \vee \omega \vee AbsE_2 < \epsilon_2 \\
+		S	&\text{otherwise} \\
 	\end{cases} \\
-	\bar{A} &= A \cup \{a_{q_1j} \vert a_{q_1j} = [0,1] \wedge j \in Q \} \\
-	\bar{B} &= \begin{cases}
-		B \cup \{ b_{q_1}(o) \vert b_{q'}(o) \in B \wedge b_{q_1}(o) = b_{q'}(o)\} 
-			&\text{if } AbsE_1 < \epsilon_1 \vee \omega \vee AbsE_2 < \epsilon_2 \\
-		B &\text{otherwise} \\
+	\mathbf{\bar{A}} &= [\mathbf{A} \text{ } [a_{s_{new}s_1}, \text{ ... }, a_{s_{new}s_n} \in [0,1]]] \\
+	\mathbf{\bar{B}} &= \begin{cases}
+		[\mathbf{B} \text{ } [b_{s_{new}}(\sigma_1), \text{ ... }, b_{s_{new}}(\sigma_m)]]
+		\text{ where } b_{s_{new}}(\sigma) = b_{s'}(\sigma)
+			&\text{if } AbsE_1 < \epsilon_1 \vee \omega \\ 
+			&\text{   }\vee AbsE_2 < \epsilon_2 \\
+		\mathbf{B} &\text{otherwise} \\
 	\end{cases}
 	\end{align*}
 	\item Normalize the HMM.
