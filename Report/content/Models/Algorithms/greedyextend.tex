@@ -9,7 +9,7 @@ The following pseudo code describes how the algorithm continuously tries to exte
 	\item Randomly choose a set of nodes $Y = \{y_1, y_2, ... , y_l\}$ from $V(G')$, where $l = \lceil \log |V(G')| \rceil$ and $\forall a,b: y_a \neq y_b$.
 	\item For each $y \in Y$, the transitions $(y, y')$ and $(y', y)$ are added to $E(G')$ with random transition probabilities.
 	\item Normalize $G'$.
-	\item If $LL(BW^{\beta}(G', D)) > LL(G)$, let $G = LL(BW^{\beta}(G', D))$.
+	\item If $LL_D(BW^{\beta}(G', D)) > LL_D(G)$, let $G = LL_D(BW^{\beta}(G', D))$.
 \end{enumerate}
 
 \paragraph{Measuring convergence}
