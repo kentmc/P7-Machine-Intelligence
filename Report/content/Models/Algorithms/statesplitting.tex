@@ -2,7 +2,16 @@
 \label{sec:state_splitting}
 Another dynamic size \gls{hmm} learning approach was to construct a greedy heuristics to ``split'' states. Several versions and concepts were attempted whilst maintaining the \gls{baum-welch} as a basis for the approach, running it repeatedly on the growing model to ensure convergence. The notion of state splitting is not new and a highly specialised algorithm originally devised by Takami et al. has been successfully applied to phoneme recognition~\cite{takami1992, singer1996}. We on the other hand attempt to design a general state splitting algorithm with no dependency on the data structure.
 
-The greedy state splitting algorithm consists of two main modules, with possible extensions. The main modules include the heuristics to identify the state (or multiple states) to split and the splitting algorithm itself. During the experiments, two additional concepts, not fundamental for the state splitting itself, were also explored - edge cutting and state removal.
+The greedy state splitting algorithm consists of two main modules, with possible extensions. The main modules include the heuristics to identify the state (or multiple states) to split based on their usage inside the model and the splitting algorithm itself. During the experiments, two additional concepts, not fundamental for the state splitting itself, were also explored - edge cutting and state removal.
+
+All the versions of the state splitting algorithm run a simple loop over several steps until a maximum number of states ($n$) is reached:
+\begin{enumerate}
+	\item Use a state identification heuristic to identify set of states $\mathcal{W}$ to split.
+	\item Use a state splitting mechanic to split all states in $\mathcal{W}$.
+	\item Run Baum-Welch for a given number of iterations (similar to $\beta$ value in the \acrlong{ge} algorithm, \ref{sec:greedy_extend}).
+\end{enumerate}
+
+It has been intended to replace the $n$ with a threshold mechanic $\theta$ to decrease the dependency on the prior knowledge of the size of the model, however the tests with a maximum number of states $n$ proved sufficient. Nevertheless employing a threshold mechanic can be an interesting extension in a future work, as such a few utilisations of a threshold are suggested in the approaches discussed below.
 
 \subsubsection{State Split Mechanics}
 Two main approaches to splitting the states were considered for the state splitting algorithm. One being very simple, just producing a copy of the state to split (\emph{Clone split}) and a much more elaborate approach considering the topology of the state inside the hidden state graph (\emph{Distribution split}).
@@ -26,7 +35,62 @@ The state $w'$ created by the above procedure will have exactly the same paramet
 The above described problem proved fatal for the \emph{Clone split} approach despite the attempts to alleviate it by incorporating other concepts such as edge cutting and state removal.
 
 \paragraph{Distribution split}
-\todo{Finish the state splitting section.}
+The \emph{Distribution split} mechanic chooses to split the state based on how uniform the transition and emission probability distributions of the given state are. As such, the method in itself incorporates two thresholds $\epsilon_1$ for the transition probability distribution and $\epsilon_2$ for the emission probability distribution that determines whether the states determined to be split $w\in\mathcal{W}$ are suitable to be split or not.
+
+The idea behind the distribution split was based around the fact that a highly uniform distribution of the outgoing transitions or emissions shows that the node has a high usage value as determined by the used state identification heuristic, due to performing several different tasks in the model. To split the workload on the node the new node was created to substitute for half of the responsibilities of the original node. As such half of the out-transition probabilities of the original node were set to zero, whilst their original values would be moved as probabilities of out-transitions of the new state, whilst preserving the rest at zero values. Similarly, if the emission probabilities had more uniform distribution, the emission probabilities would split in half between the original and new states (in the case of the emissions, the probabilities were not set to zero, but rather to a very low non-zero value to allow the \gls{baum-welch} to relearn those probabilities if necessary). As such a sparse transitions matrix was derived directly from the data.
+
+A different behaviour than expected was observed for the \emph{Distribution split}, however, as a case of ``over-splitting'' has occurred forcing most of the states to have just a single non-zero probability out-transition looping back to themselves.
+
+A randomised version of the mechanic was later devised to avoid the exceedingly aggressive splitting. The new mechanic assigns all in- and out-transition probabilities of the new state to a random value and only preserves the emission probabilities and initial probability that are created as an exact copy of the original state.
+
+In order to shield the algorithm against getting stuck in a local optima, the state will be split regardless of the uniformity of the distribution if the algorithm has gone 10 iterations without adding a new state.
+
+The exact mechanic of the split including the threshold mechanic is described by the following procedure:
+
+$\forall w\in\mathcal{W}:$
+\begin{enumerate}
+	\item Determine if the algorithm has been stuck for more than ten iterations in the stagnation indicator $\omega$:
+	$$ \omega = \begin{cases}
+true &\text{if algorithm has been stuck for 10 iterations} \\
+false &\text{otherwise}
+\end{cases} $$
+\item Determine if the transition probability distribution of $w$ is uniform as sum of differences from average:
+\begin{align*}
+Z_w &= \{a_{wJ} \in \mathbf{A} \vert a_{wJ} \neq 0\} \\
+\overline{z_w} &= \frac{\sum_{a_{wJ} \in z_w} a_{wJ}}{\vert z_w \vert} \\
+AbsE_{w,1} &= \sum_{a_{wJ} \in z_w} \vert a_{wJ} - \overline{z_w} \vert \\
+\end{align*}
+\item Determine if the emission probability distribution of $w$ is uniform as sum of differences from average:
+\begin{align*}
+Z_w &= \{b_{w}(\sigma) \in \mathbf{B} \vert b_{w}(\sigma) \neq 0 \wedge \sigma \in \Sigma\} \ \\
+\overline{z_w} &= \frac{\sum_{b_{w}(\sigma) \in z_w} b_{w}(\sigma)}{\vert z_w \vert} \\
+AbsE_{w,2} &= \sum_{b_{w}(\sigma) \in z_w} \vert b_{w}(\sigma) - \overline{z_w} \vert \\
+\end{align*}
+\item Split $w$ if either the transition or the emission probability distribution is uniform or the algorithm is stuck, creating a new state $w'$ such that $w'\notin S$.
+\begin{align*}
+\bar{S} &= \begin{cases}
+S \cup \{ w' \} &\text{if } (AbsE_{w,1} < \epsilon_1) \vee (AbsE_{w,2} < \epsilon_2) \vee \omega\\
+S &\text{otherwise} \\
+\end{cases} \\
+\mathbf{\bar{A}} &= \begin{cases}
+[(\mathbf{A} [a_{w's_1},  ... , a_{w's_n} \in [0,1]])[a_{s_1w'},  ... , a_{s_nw'}, a_{w'w'} \in [0, 1]]^T] &\text{if } (AbsE_1 < \epsilon_1)\\&\text{}\vee (AbsE_2 < \epsilon_2)\\&\text{}\vee \omega\\
+\mathbf{A} &\text{otherwise} \\
+\end{cases}\\
+\mathbf{\bar{B}} &= \begin{cases}
+[\mathbf{B} \text{ } [b_{w'}(\sigma_1),  ... , b_{w'}(\sigma_m)]]
+\text{ where } b_{w'}(\sigma) = b_{w}(\sigma)
+&\text{if } (AbsE_1 < \epsilon_1) \\
+&\text{ }\vee (AbsE_2 < \epsilon_2) \vee \omega\\
+\mathbf{B} &\text{otherwise} \\
+\end{cases}\\
+\overline{\boldsymbol{\pi}} &=\begin{cases}
+[\boldsymbol{\pi}[\pi_w]]&\text{if } (AbsE_1 < \epsilon_1) \vee (AbsE_2 < \epsilon_2) \vee \omega\\
+\boldsymbol{\pi} &\text{otherwise} \\
+\end{cases}
+\end{align*}
+\item Normalise the \gls{hmm} $\overline{\lambda} = (\mathbf{\overline{A}}, \mathbf{\overline{B}}, \overline{\boldsymbol{\pi}})$.
+\item Set $\lambda = \overline{\lambda}$
+\end{enumerate}
 
 \subsubsection{State Identification Heuristics}
 Similarly to state splitting itself, two main approaches were explored for identifying the best state to split. The first one utilised the \gls{viterbi} thus named the \emph{Viterbi heuristic}, whilst the second one uses the $\gamma_t(i)$ variables computed during the \gls{baum-welch} and was therefore named the \emph{Gamma heuristic}.
@@ -47,7 +111,7 @@ In more formal terms, the computation of the score $\zeta(s)$ for each $s \in S$
 	$$\forall s\in S: \zeta(s)=\sum_{\mathbf{O}\in D}P(\mathbf{Q}|\mathbf{O}, \lambda)\hat\zeta_{s, \lambda}^{\mathbf{O}}$$
 \end{enumerate}
 
-The obtained $\zeta$ scores the states of the \gls{hmm} based on their ``performance'' for the tasks they are most likely to perform. As such the state with the lowest score is determined to be the worst performing node $w$: $$w = \argmin_{s\in S}(\zeta(s))$$
+The obtained $\zeta$ scores the states of the \gls{hmm} based on their ``performance'' for the tasks they are most likely to perform. As such the state with the lowest score is determined to be the worst performing state $w$: $$w = \argmin_{s\in S}(\zeta(s))$$
 
 This node is deemed to be the worst performing one as a result of being involved in the generation of many of the signals in the validation set $V$. As such, it seems meaningful to split the node into two, in order to share the extensive workload and increase performance.
 
@@ -62,64 +126,26 @@ $$\overline{\zeta}(s) = \frac{\zeta(s)}{\sum_{s\in S}\zeta(s)}$$
 The states to split $\mathcal{W}$ were thus determined as all states that scored below the given threshold $\theta$:
 $$\mathcal{W} = \{s\in S|\overline\zeta(s) < \theta\}$$
 
-More improvements to the \emph{Viterbi heuristic} were considered, mainly including the \emph{n-step Viterbi heuristic} that would have computed the score on not only the output probability in the given significant position, but also on the probability of correctly outputting the next $n -1$ symbols of the given signal - starting from the explored state - to further increase precision. The above described version of the \emph{Viterbi heuristic} would be considered \emph{1-step Viterbi heuristic} in this context. This approach however remains untested due to preference of the \emph{Gamma heuristic} and can be considered for future work.
+Improvements to the \emph{Viterbi heuristic} were considered, mainly including the \emph{n-step Viterbi heuristic} that would have computed the score on not only the output probability in the given significant position, but also on the probability of correctly outputting the next $n -1$ symbols of the given signal - starting from the explored state - to further increase precision. The above described version of the \emph{Viterbi heuristic} would be considered \emph{1-step Viterbi heuristic} in this context. This approach however remains untested due to preference of the \emph{Gamma heuristic} and can be considered for future work.
 
 \paragraph{Gamma Heuristic}
 
-The \emph{Gamma heuristic} works by splitting the state that is visited most when generating the 
-training sequences.
-In each iteration of the algorithm, it finds this state by calculating and comparing the gamma variables,
-from the Baum-Welch algorithm, for each of the states in the model.
-The algorithm chooses to split the state based on how uniform its transition and emission distributions are.
-However in order to shield the algorithm against getting stuck in a local optima, the state will be split
-regardless of the uniformity of the distribution if the algorithm has gone ten iterations without adding a
-new state.
+The \emph{Gamma heuristic} assigns higher $\zeta$ values to the states that are visited the most when generating the 
+training sequences. This is done by calculating and comparing $\gamma$ variables from the \gls{baum-welch}, for each of the states in the model. As of now the score is simply computed as a sum of all the $\gamma$ variables through all signal $\mathbf{O}\in D$ and along their whole length:
+$$\forall i\in\{1,...,n\}: \zeta{S_i} = \sum_{\mathbf{O}\in D}\sum_{t=1}^{T}\gamma_t(S_i)$$
 
-The pseudo code of the algorithm is as follows.
+The obtained $\zeta$ scores the states of the \gls{hmm} based on their ``overuse''. As such the largest score is used to determine the worst performing state $w$:
+$$w = \argmax_{s\in S}(\zeta(s))$$
 
-\begin{enumerate}
-\item Initialize HMM
-\item Loop while the maximum number of states or iterations has not been reached.
-\indent \begin{enumerate}
-	\item 	Find the state that is visited most when outputting the training sequences.
-	$$s' = \argmax_{s \in S}\sum_{o \in \mathbf{O}}\sum_{t=1}^{T}\gamma_t(s)$$ 
-	\item Determine if the algorithm has been stuck for more than ten iterations.
-	$$ \omega = \begin{cases}
-		true &\text{if algorithm has been stuck for 10 iterations} \\
-		false &\text{otherwise}
-	\end{cases} $$
-	\item Determine if the transition probability distribution of $s'$ is uniform.
-	\begin{align*}
-	z &= \{a_{s'J} \in \mathbf{A} \vert a_{s'J} \neq 0\} \\
-	z_{arg} &= \frac{\sum_{a_{s'J} \in z} a_{s'J}}{\vert z \vert} \\
-	AbsE_1 &= \sum_{a_{s'J} \in z} \vert a_{s'J} - z_{arg} \vert \\
-	\end{align*}
-	\item Determine if the emission probability distribution of $s'$ is uniform.
-	\begin{align*}
-	z &= \{b_{s'}(\sigma) \in \mathbf{B} \vert b_{s'}(\sigma) \neq 0 \wedge \sigma \in \Sigma\} \ \\
-	z_{arg} &= \frac{\sum_{b_{s'}(\sigma) \in z} b_{s'}(\sigma)}{\vert z \vert} \\
-	AbsE_2 &= \sum_{b_{s'}(\sigma) \in z} \vert b_{s'}(\sigma) - z_{arg} \vert \\
-	\end{align*}
-	\item Split $s'$ if its transition or emission probabilities are uniform or the algorithm is stuck. 
-	\begin{align*}
-	\bar{S} &= \begin{cases}
-		S \cup \{ s_{new} \} &\text{if } AbsE_1 < \epsilon_1 \vee \omega \vee AbsE_2 < \epsilon_2 \\
-		S	&\text{otherwise} \\
-	\end{cases} \\
-	\mathbf{\bar{A}} &= [\mathbf{A} \text{ } [a_{s_{new}s_1}, \text{ ... }, a_{s_{new}s_n} \in [0,1]]] \\
-	\mathbf{\bar{B}} &= \begin{cases}
-		[\mathbf{B} \text{ } [b_{s_{new}}(\sigma_1), \text{ ... }, b_{s_{new}}(\sigma_m)]]
-		\text{ where } b_{s_{new}}(\sigma) = b_{s'}(\sigma)
-			&\text{if } AbsE_1 < \epsilon_1 \vee \omega \\ 
-			&\text{   }\vee AbsE_2 < \epsilon_2 \\
-		\mathbf{B} &\text{otherwise} \\
-	\end{cases}
-	\end{align*}
-	\item Normalize the HMM.
-	\item Re-estimate the HMM using the Baum-Welch algorithm
-\end{enumerate}
+It is important to note the difference here compared to the \emph{Viterby heuristic} which assigns the smallest score to the worst performing nodes.
 
-\end{enumerate}
+In the case of \emph{Gamma heuristic} the $\zeta$ measure is pretty straightforward, as it directly identifies the states that are used the most during generation of the training sequences $D$ as such being very susceptible to be overloaded.
+
+Analogically to the \emph{Viterbi heuristic} the \emph{Gamma heuristic} can also be extended to account for a set of worst performing states $\mathcal{W}$ instead of just a one state. Starting with $\mathcal{W}=\emptyset$:
+$$\mathcal{W} = \mathcal{W} \cup \{\argmax_{s\in S\setminus \mathcal{W}}(\zeta(s))\}$$
+until $|\mathcal{W}|$ equals the desired number of states to split.
+
+Again a normalisation is possible to include threshold mechanics very similar to that of the \emph{Viterbi heuristic}. As the \emph{Gamma heuristic} was run alongside the \emph{Distribution split} mechanic which incorporates a threshold approach that is believed to better reflect the actual data the threshold implementation inside the \emph{Gamma heuristic} itself was not attempted an can be considered for future work.
 
 \subsubsection{Edge Cutting}
 In attempt to induce a data derived sparsity into the model while using the \emph{Clone split} an approach of cutting unsaturated edges from the model has been devised. The concept of cutting in this context means setting the transition probability to $0$.
@@ -140,7 +166,7 @@ The edge cutting occurred immediately after splitting of states introduced a bre
 	$$\forall r \in S: a_{sr} = \frac{a_{sr}}{\sum_{p\in S}a_{sp}}$$
 \end{enumerate}
 
-The above method of edge cutting had the property of guaranteeing the maximum number of transitions in a model, however the deterministic density of the transition matrix imposed huge limitations on the ability to derive the hidden state space topology from data. A similar approach is utilised in the \hyperref[sec:greedy_extend]{Greedy Extend} however the constriction imposed by a fixed number of non-zero transitions introduced is alleviated by running the \gls{baum-welch} to observe if an improvement was actually achieved and trying a different random configuration if not.
+The above method of edge cutting had the property of guaranteeing the maximum number of transitions in a model, however the deterministic density of the transition matrix imposed huge limitations on the ability to derive the hidden state space topology from data. A similar approach is utilised in the Greedy Extend (\ref{sec:greedy_extend}) however the constriction imposed by a fixed number of non-zero transitions introduced is alleviated by running the \gls{baum-welch} to observe if an improvement was actually achieved and trying a different random configuration if not.
 
 \paragraph {Threshold Edge Cutting}
 Contrary to the strict edge cutting, using threshold does not only remove edges once there's too many outgoing (incoming) non-zero transition from one node but introduces a more flexible metric. The threshold mechanic introduces a threshold $\epsilon$ that determines how significant must a transition be if the model is to consider it. In more formal terms:
@@ -157,11 +183,15 @@ $$\mathcal{R}=\{s\in S|\forall\mathbf{O}\in D: |\tau_{s,\lambda}^\mathbf{O}|=0\}
 The extended state removal algorithm however proved to be quite aggressive in the context of the \emph{Clone split} as almost all new states were removed in the next iteration after being added.
 
 \subsubsection{The Final State Splitting Algorithm}
-The final version of the state splitting approach used for the experiments utilised a combination of \emph{Distribution split} and the \emph{Gamma heuristic}.
+The final version of the state splitting approach used for the experiments utilised a combination of a stochastic version of \emph{Distribution split} and the \emph{Gamma heuristic}.
 
-The \emph{Distribution split} mechanic was employed due to definitely better performance and big problems experienced with the \emph{Clone split}.
+As both original state split mechanics have experienced severe problems during our experiments, the final version of the state splitting algorithm incorporates a a hybrid randomised state splitting mechanic based on the \emph{Distribution split}. The method is considerably similar to the \acrlong{ge} (\ref{sec:greedy_extend}) is created, however a dense transition matrix is maintained.
 
-The \emph{Gamma heuristic} was employed as the threshold is deemed to better reflect the data during the estimation of number of states. This is mostly implied by the fact, that the \emph{Viterbi heuristic} threshold mechanic is heavily dependent on the number of states itself, and thus the threshold is directly influencing the final number of states.
+The \emph{Gamma heuristic} was employed due to the intention to utilise the splitting thresholds associated with the \emph{Distribution split}. The threshold mechanic of the \emph{Viterbi heuristic} is deemed to reflect the data worse and thus be less suitable for data derived learning of the structure. This is mainly because of the heavy reliance of the \emph{Viterbi heuristic} threshold on the number of stats itself and thus the setting of the threshold has a lot of influence over the final number of states.
+
+As there was no benefit observed for multiple splitting multiple states per iteration, as such only one state was split during each iteration ($|\mathcal{W}| = 1$).
+
+As the \emph{Gamma heuristic} is utilised the algorithm is further referred to as \acrfull{gs}.
 
 %This algorithm utilises a greedy concept to grow the hidden state space of a \gls{hmm} whilst maintaining a sparse transition matrix to preserve computability in large state spaces. The Greedy %State Splitting relies heavily on the existing \gls{baum-welch} calling it repeatedly to achieve convergence.
 
