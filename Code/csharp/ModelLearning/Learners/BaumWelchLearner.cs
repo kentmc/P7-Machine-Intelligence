@@ -80,7 +80,7 @@ namespace ModelLearning.Learners {
             hmm = new HiddenMarkovModel(transitionMatrix, emissionMatrix, initialProbabilities);
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            hmm.Learn(trainingData.GetNonempty(), tolerance, validationData.GetNonempty());
+            hmm.Learn(trainingData.GetNonempty(), tolerance);
             sw.Stop();
             Console.WriteLine(sw.Elapsed.TotalSeconds);
         }
