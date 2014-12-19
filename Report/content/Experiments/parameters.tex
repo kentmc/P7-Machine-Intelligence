@@ -1,4 +1,4 @@
-\subsection{Experiment Parameters}\label{sec:parameters}
+\section{Experiment Parameters}\label{sec:parameters}
 The learners introduced require a number of different input parameters. It is likely that different value for the parameters will affect the result. In the following, a number of experiments are conducted, aiming to find suitable parameters for all of the learners. 
 
 \subsubsection{Static learners}
@@ -30,13 +30,13 @@ The setup for this experiment:
         \begin{tikzpicture}
 		\begin{axis}[
 				scale = 0.9,
-				ymin = 23000,
-				ymax = 24000,
-				ybar,
+			%	ymin = 23000,
+			%	ymax = 24000,
+	%			ybar,
 				xtick=data,
    				symbolic x coords={100,500,1000,5000,10000,50000},
 				xlabel = Sequences,
-            		ylabel = Score (lower is better)]
+            		ylabel = Log likelihood]
 				\addplot+table[y=score, col sep=tab]
 				{content/Experiments/graphdata/sequences.csv};
 		\end{axis}%
@@ -46,8 +46,8 @@ The setup for this experiment:
 \begin{tikzpicture}
 		\begin{axis}[
 				scale = 0.9,
-				ymin = 0,
-				ybar,
+	%			ymin = 0,
+		%		ybar,
 				xtick=data,
    				symbolic x coords={100,500,1000,5000,10000,50000},
 				xlabel = Sequences,
@@ -70,11 +70,11 @@ Defining the threshold is done by exploring how Baum-Welch behaves on different 
 \centering
 	\begin{tikzpicture}
 		\begin{axis}[
-				ybar,
+			%	ybar,
 				xtick=data,
    				symbolic x coords={0.1,0.05,0.01,0.005,0.001,0.0001},
 				xlabel = Treshold,
-            		ylabel = Log likelihood of the validation data]
+            		ylabel = Log likelihood]
 				\addplot+table[y=Score, col sep=tab]
 				{content/Experiments/graphdata/treshold.csv};
 		\end{axis}
@@ -111,7 +111,7 @@ In figure \ref{fig:ge-diversity-5-runs}, the result of 5 different runs of \gls{
 		anchor=south}}
 	\begin{axis}[
 			xlabel = Number of states,
-            	ylabel = Score (lower is better),
+            	ylabel = Log likelihood,
             	legend columns=-1,
 			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
 		
