@@ -20,18 +20,18 @@ Also if no measures are taken against it, underflows might happen for very small
 %Also if no measures are taken against it, underflows might happen for very small probabilities. 
 %In either case a zero value will be present in the resulting model. 
 %Avoiding these zero values is important, as the zero probability will otherwise be propagated through multiplication, where a single transformation in a sequence with no probability, will mean that the entire sequence has no probability. 
-%%In the case of PautomaC we evaluate a test by using the normalized probability of 1000 sequences in the perplexity equation. If just one of these sequences has a zero probability the entire test will evaluate to zero probability, even if the other 999 sequences has good probabilities. 
+%%In the case of \emph{PAutomaC} we evaluate a test by using the normalized probability of 1000 sequences in the perplexity equation. If just one of these sequences has a zero probability the entire test will evaluate to zero probability, even if the other 999 sequences has good probabilities. 
 %%The reason for this is that the logarithm for a zero valued probability evaluates to minus infinite, which will of course negate the probability of all the other sequences.
 %
 
 %Avoiding these zero values is important, as the zero probability will otherwise be propagated through multiplication, where a single transformation in a sequence with no probability, will mean that the entire sequence has no probability. 
-%%In the case of PautomaC we evaluate a test by using the normalized probability of 1000 sequences in the perplexity equation. If just one of these sequences has a zero probability the entire test will evaluate to zero probability, even if the other 999 sequences has good probabilities. The reason for this is that the logarithm for a zero valued probability evaluates to minus infinite, which will negate the probabilities of all the other sequences.
+%%In the case of \emph{PAutomaC} we evaluate a test by using the normalized probability of 1000 sequences in the perplexity equation. If just one of these sequences has a zero probability the entire test will evaluate to zero probability, even if the other 999 sequences has good probabilities. The reason for this is that the logarithm for a zero valued probability evaluates to minus infinite, which will negate the probabilities of all the other sequences.
 %
 %
 
 %
 %
-%In the case of the PautomaC competition, the test data is available together with the training data. 
+%In the case of the \emph{PAutomaC} competition, the test data is available together with the training data. 
 %This means that if the models are trained on both the training and test data, smoothing can effectively be avoided, as all possible sequences will be read and given some probability. 
 %Underflow is however still an issue, where a negative logarithm representation can be used to ensure that even extremely small probabilities do not underflow.
 %	

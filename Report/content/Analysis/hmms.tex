@@ -1,6 +1,6 @@
 \section{Hidden Markov Models}
 \label{sec:hmm}
-\glspl{hmm} are one of the most widely used and best known variants of probabilistic finite automata~\cite{PautomaCTR, Rabiner89hmm}. The theoretical basis for \glspl{hmm} and associated methods and algorithms were first described in a series of works by L. E. Baum~et~al.~\cite{baum1966, baum1967, baum1968, baum1970, baum1972}.
+\glspl{hmm} are one of the most widely used and best known variants of probabilistic finite automata~\cite{pautomacTR, Rabiner89hmm}. The theoretical basis for \glspl{hmm} and associated methods and algorithms were first described in a series of works by L. E. Baum~et~al.~\cite{baum1966, baum1967, baum1968, baum1970, baum1972}.
 
 One can view an \gls{hmm} as an extension of a standard Markov chain. A Markov chain based model has the property that every observed symbol corresponds directly to an associated state of the model. This property is too restrictive for numerous problems. \glspl{hmm} therefore introduce the concept of hidden (unobservable) states with a probability distribution over the observable symbols. The generated symbol thus becomes a probabilistic function of the current hidden state. This extension allows application of \glspl{hmm} to a much larger variety of problems, however also poses new complications, such as increased complexity of evaluation of probability of a given signal (sequence of observable symbols), determining the optimal sequence of hidden states for a given signal or estimation of parameters for the model~\cite{Rabiner89hmm}.
 
