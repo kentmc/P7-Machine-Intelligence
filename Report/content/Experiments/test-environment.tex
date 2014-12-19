@@ -24,7 +24,7 @@ The test parameters needed to perform a Benchmark:
 	\item[] Datasets: A list of integers, representing the IDs of the PautomaC problem sets to benchmark on. The \formatclass{Benchmark} class loads this data using the \formatclass{DataLoader}.
 	\item[] Number of runs: By using an increased number of runs, an average can be taken to produce a more reliable result.
 	\item[] Training and validation set size: The training data loaded from the PautomaC train data file is split into a training and validation set of the specified sizes.
-	\item[] Evaluate on test data: If true, the score of each learner is calculated according to the Pautomac evaluation criteria by using the test data from the competition. If false, the log likelihood of the validation data is returned.
+	\item[] Evaluate on test data: If true, the score of each learner is calculated according to the PautomaC evaluation criteria by using the test data from the competition. If false, the log likelihood of the validation data is returned.
 \end{itemize}
 
 Beside the parameters required by the benchmarker, each learner can determine that additional parameters need to be specified for that particular learner. For instance these parameters could allow for the user to specify a range and a step size, for how a test should be executed.
@@ -35,19 +35,19 @@ Finally, a summary is saved for each learner to show the average and median perf
 All of the results are updated in real time so that if the benchmark fails to finish successfully, at least partial results from the already finished experiments are available. In many cases, it can be relevant to examine only partial results, which may help one decide whether to continue the test or stop it and conduct a new experiment using more promising parameters.
 
 \subsection{Data}
-The \formatclass{DataLoader} class is responsible for loading training data, test data and solution data from the files published at the Pautomac website. Both training and test data contain a list of sequences, while the solution data contains a list of probabilities, one for each test sequence, representing the probability of the generating that particular sequence from the model used. However, the probabilities are normalized, so they sum to 1.
+The \formatclass{DataLoader} class is responsible for loading training data, test data and solution data from the files published at the PautomaC website. Both training and test data contain a list of sequences, while the solution data contains a list of probabilities, one for each test sequence, representing the probability of the generating that particular sequence from the model used. However, the probabilities are normalized, so they sum to 1.
 
 The data loader stores the loaded data in an entity class called \formatclass{DataSet} passed to the \formatclass{Benchmark}. The \formatclass{DataSet} is responsible for splitting the loaded training data obtained from PautomaC data files into data for training and for validation. The split is done in a pseudo-random fashion in order to ensure that multiple algorithms in different configurations will be tested on the same training and validation data, but also provide diversity through increased number of runs, where a different shuffle is generated for each run.
 
 As mentioned, the test environment also allows for specification of a given number of sequences to be used as training or validation data. It thus becomes possible to run tests on smaller training sets in cases where only fast, approximate result is required.
 
-\subsection{PautomacEvaluator}
-The \formatclass{PautomacEvaluator} class is responsible for computing the score of a learner by either of the two offered evaluation criteria. As earlier mentioned, the criteria are either the PautomaC evaluation criterion described in section \ref{sec:pautomac}, which compares the probabilities calculated by the learner directly to the solution file, or by logarithmic likelihood of the validation data, that is, how likely it is, that the learned model have generated the sequences used as validation data.
+\subsection{PautomaCEvaluator}
+The \formatclass{PautomaCEvaluator} class is responsible for computing the score of a learner by either of the two offered evaluation criteria. As earlier mentioned, the criteria are either the PautomaC evaluation criterion described in section \ref{sec:PautomaC}, which compares the probabilities calculated by the learner directly to the solution file, or by logarithmic likelihood of the validation data, that is, how likely it is, that the learned model have generated the sequences used as validation data.
 
 \subsection{Learner}
-An integral part of the test environment is the abstract class \formatclass{Learner}. The \formatclass{Learner} provides a common interface for every implemented learning algorithm allowing the \formatclass{Benchmark} and \formatclass{PautomacEvaluator} to work with every learning approach indifferently.
+An integral part of the test environment is the abstract class \formatclass{Learner}. The \formatclass{Learner} provides a common interface for every implemented learning algorithm allowing the \formatclass{Benchmark} and \formatclass{PautomaCEvaluator} to work with every learning approach indifferently.
 
-The \formatclass{Learner} class specifies several methods that are implemented by individual learning algorithms and are subsequently called by either the \formatclass{Benchmark} class or the \formatclass{PautomacEvaluator} class:
+The \formatclass{Learner} class specifies several methods that are implemented by individual learning algorithms and are subsequently called by either the \formatclass{Benchmark} class or the \formatclass{PautomaCEvaluator} class:
 
 \begin{itemize}
 	\item[] \formatfunction{initialize(learner\_parameters)} -- initialises the \formatclass{Learner} into a given configuration. As different learning algorithms require different parameters, a special class \formatclass{LearnerParameters} has been created to encompass all the different configuration parameters a user is required to specify for each learner. With the use of the \formatclass{LearnerParameters} class, the \formatclass{Learner} obtains the relevant parameters used for initialisation.

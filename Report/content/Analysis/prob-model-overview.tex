@@ -10,7 +10,7 @@ And determining the probability for an observed sequence can then be defined by:
 \begin{description}
 \item $Pr(y_1, y_2 \dots y_n) = \prod_{t = 1}^{n} Pr(y_t | y_{t-2}, y_{t-1})$ \cite{Notesw4705}
 \end{description}
-According to \cite{pautomacTR}, whether n-grams can be consistently outperformed by PFA, HMM or DPFA models for prediction tasks, is still an open problem. n-grams are less powerful than the before mentioned models, however the n-gram’s structure and parameters are easier to compute, which often gives an effective model in practice.
+According to \cite{PautomaCTR}, whether n-grams can be consistently outperformed by PFA, HMM or DPFA models for prediction tasks, is still an open problem. n-grams are less powerful than the before mentioned models, however the n-gram’s structure and parameters are easier to compute, which often gives an effective model in practice.
 
 \subsection{Markov Chain}
 Markov chains resembles n-grams, as the probability of observing a symbol s at timepoint $t$, $s_t$, is based upon the previous $t-1$ observations $Pr(s_t | s_0, \dots ,s_{t-1})$. However the Markov assumption says that observation $s_t$ is independent from all other observations, except the the single previous observation $s_t-1$:
