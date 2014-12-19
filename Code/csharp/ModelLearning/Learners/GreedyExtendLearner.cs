@@ -48,11 +48,12 @@ namespace ModelLearning.Learners {
             intermediateOutputFile = new System.IO.StreamWriter(intermediateOutputFileName + (run++) + ".csv");
             intermediateOutputFile.WriteLine("States, Likelihood training, likelihood validation");
 
-            double last_ll_training = best_likelihood_training;
+            
             HMMGraph graph = RandomSingleNodeGraph(trainingData.NumSymbols);
             bestHMM = SparseHiddenMarkovModel.FromGraph(graph);
             best_likelihood_training = bestHMM.Evaluate(trainingData.GetAll(), true);
             while (bestHMM.NumberOfStates < maxStates){
+                double last_ll_training = best_likelihood_training;
                 WriteLine("Number of states: " + bestHMM.NumberOfStates);
                 for (int i = 0; i < maxExpandAttempts; i++) { //number of times to try adding a random node
                     graph = bestHMM.ToGraph();
@@ -80,18 +81,14 @@ namespace ModelLearning.Learners {
                     OutputIntermediate();
                 }
             }
-            WriteLine("Runs Baum Welch last time with the final threshold");
-            bestHMM.Learn(trainingData.GetNonempty(), finalBWThreshold);
-            ll_validation = bestHMM.Evaluate(validationData.GetAll(), true);
             WriteLine("Final likelihood: " + best_likelihood_training);
-            OutputIntermediate();
             intermediateOutputFile.Close();
         }
 
         private void OutputIntermediate() {
-            double real_score = PautomacEvaluator.Evaluate(this, testData, solutions);
-            //intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + best_likelihood_training + ", " + ll_validation);
-            intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + real_score);
+            //double real_score = PautomacEvaluator.Evaluate(this, testData, solutions);
+            intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + best_likelihood_training + ", " + ll_validation);
+            //intermediateOutputFile.WriteLine(bestHMM.NumberOfStates + ", " + real_score);
             intermediateOutputFile.Flush();
             WriteLine("Likelihood increased to: " + ll_validation);
         }

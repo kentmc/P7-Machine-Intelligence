@@ -15,15 +15,15 @@ sequence $x$, and $P_{r_{C}}$ is a contestant's submitted probability for the se
 The contestants could submit an unlimited number of solutions. However only a rank compared to the other contestants, and not a precise score, was given while the competition was running.
 
 \subsubsection{About PautomaC's Automata}
-While the contestant did not know anything about the automata, we have the luxury of some more exact parameters for the models, including:
-
+While the contestant did not know anything about the automata used for generating the data sets, we have the luxury of some more exact parameters for the models, including:
+The models originated as either a:
 \begin{itemize}
 \item Markov Chains
 \item Deterministic Probabilistic Finite Automata (DPFA)
 \item Probabilistic Finite Automata (PFA)
 \item Hidden Markov Models (HMM)
 \end{itemize}
-All model parameters have been randomly generated based on some values chosen for:
+All model parameters were randomly generated based on these values:
 \begin{description}
 \item N for the number of states
 \item A for the size of the alphabet (observable symbols)
@@ -31,3 +31,5 @@ All model parameters have been randomly generated based on some values chosen fo
 \item $T_S$ for the sparsity of transitions
 \end{description}
 Where $N \cdot T_s$ is used as the number of initial states while $N \cdot S_s$ is used as the number of final states. For this report $S$ will denote the size of the alphabet for a given model and $T$ will denote the amount of transitions in percentage, given the state space and maximum possible amount of transitions.
+
+It should be noted that even though four different model types were used for generators, all of them were at some point converted into \gls{pfa}'s. Whether this conversion happen before generating the data sets or before releasing the models after the competition is not clear.
