@@ -197,7 +197,7 @@ In simpler terms:
 The above definition can be obtained from standard Lagrange optimisation using Lagrange multipliers for the maximisation of the Baum auxiliary function~\cite{Rabiner89hmm}:
 $$Q(\lambda,\overline{\lambda})=\sum_{\mathbf{Q}\in\mathcal{Q}^T_\lambda}(P(\mathbf{Q}|\mathbf{O},\lambda)\log(P(\mathbf{O},\mathbf{Q}|\overline{\lambda})))$$
 
-Note that $\mathcal{Q}^T_\lambda = \mathcal{Q}^T_{\overline{\lambda}}$ in the case the afore stated computation of $\overline{\lambda}$ is employed, as $\overline{a_{ij}}=0$ iff $a_{ij}=0$.
+Note that $\mathcal{Q}^T_\lambda = \mathcal{Q}^T_{\overline{\lambda}}$ in the case the afore stated computation of $\overline{\lambda}$ is employed, as $\overline{a_{ij}}=0$ if $a_{ij}=0$.
 
 Baum et al.~\cite{baum1968, baum1970, baker1975} have proven that the maximisation of the above expression leads to higher probability of outputting the coveted signal $O$:
 $$\overline{\lambda}=\max_{\lambda'}{Q(\lambda,\lambda')} \rightarrow P(\mathbf{O}|\overline{\lambda}) \geq P(\mathbf{O}|\lambda)$$
