@@ -86,23 +86,16 @@ Defining the threshold is done by exploring how Baum-Welch behaves on different 
 The results show that a threshold below 0.01 does not improve the likelihood of the validation data significantly, thus a threshold of 0.01 will be used for future tests.
 
 \subsubsection{Greedy Extend}
-
-\todo{Fix this section}
-The setup for this experiment:
+An experiment has been conducted to see how much the \gls{ge} is affected by random restarts.
+In figure \ref{fig:ge-diversity-5-runs}, the result of 5 different runs of \gls{ge} can be seen.
+The following parameters were used:
 \begin{itemize}
-\item Dataset: 36
-\item Algorithm: Baum Welch
-\item Threshold: 0.01
+\item Dataset: 23
+\item $\beta$: 5
 \item Training sequences: 5,000
-\item Validation sequences: 1,000
+\item Validation sequences: 5,000
 \end{itemize}
 
-10 BW iterations between when after each extend.
-100 attempts to extend graph.
-0.01 threshold for BW when reaching a maximum of 100 states or if not able to expand further.
-
-Whether we choose to run \gls{ge} a single or multiple times does not seem to have a big impact on the result.
-In figure \ref{fig:ge-diversity-5-runs}, the result of 5 different runs of \gls{ge} can be seen. The results of all runs look very similar.
 \begin{figure}
 \begin{centering}
 \begin{tikzpicture}
@@ -111,7 +104,7 @@ In figure \ref{fig:ge-diversity-5-runs}, the result of 5 different runs of \gls{
 		anchor=south}}
 	\begin{axis}[
 			xlabel = Number of states,
-            	ylabel = Log likelihood,
+            	ylabel = Log likelihood of validation data,
             	legend columns=-1,
 			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
 		
