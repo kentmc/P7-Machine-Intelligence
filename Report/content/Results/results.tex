@@ -1,13 +1,13 @@
 \chapter{Results}
-In the following, a number of tests are conducted to see how the algorithms described in chapter \ref{chap:models} would perform in the Pautomac competition. Tests are conducted on the three data sets, 6, 23, and 35. These data sets were chosen according to how well the algorithms proposed in this project performed in relation to \gls{bw}, such that \gls{bw} seems to loose on data set 6, be quite even on data set 23, and win on data set 35.
+In the following a number of tests are conducted, to see how the algorithms described in chapter \ref{chap:models}, could have performed in the Pautomac competition. Tests are conducted on the three data sets, 6, 23, and 35. These data sets were chosen according to how well the proposed algorithms in this report performed in comparison to \gls{bw}, such that \gls{bw} seems to loose on data set 6, be quite even on data set 23, and win on data set 35.
 The perplexity measure described in section \ref{sec:pautomac} has then been used to evaluate a score.
 The parameters chosen for the following tests are all based on the outcome of the experiments described in chapter \ref{chap:experiments}.
 For all tests, 5000 sequences from the Pautomac training data files have been used to learn the model. The static algorithms are run with different number of states, starting at 10 with a step size of 10.
 The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
 In figure \ref{fig:pautomac-competition-6}, \ref{fig:pautomac-competition-23} and \ref{fig:pautomac-competition-35}, the score on each data set can be seen.
 A summary of the best scores on each data set can be seen in table \ref{table:pautomac-best-score}.
-The unusual behavior of \gls{gs} that starts after a number of iterations is expected to be caused by an underflow problem.
-One should note that the methods described in section \ref{sec:hmm_vs_pa} that accounts for stop probabilities have not been used for any of the algorithms.
+The unusual behaviour of \gls{gs} that starts after a number of iterations is expected to be caused by an underflow problem.
+One should note that the methods described in section \ref{sec:hmm_vs_pa} that accounts for stop probabilities have not been used for any of the algorithms, which will inevitable cause the score to be worse.
 
 
 \begin{figure}
