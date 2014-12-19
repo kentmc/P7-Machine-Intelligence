@@ -1,15 +1,17 @@
 \chapter{Results}
 \label{chap:results}
-In the following, a number of tests are conducted to see how the algorithms described in chapter \ref{chap:models} would perform in the Pautomac competition. Tests are conducted on the three data sets, 6, 23, and 35. These data sets were chosen according to how well the algorithms proposed in this project performed in relation to \gls{bw}, such that \gls{bw} seems to loose on data set 6, be quite even on data set 23, and win on data set 35.
+In the following, a number of tests are conducted to see how the algorithms described in chapter \ref{chap:models} would perform in the \emph{PAutomaC} competition. Tests are conducted on the three data sets, 6, 23, and 35. These data sets were chosen according to how well the algorithms proposed in this project performed in relation to \gls{bw}, such that \gls{bw} seems to loose on data set 6, be quite even on data set 23, and win on data set 35.
 The perplexity measure described in section \ref{sec:pautomac} has then been used to evaluate a score.
 The parameters chosen for the following tests are all based on the outcome of the experiments described in chapter \ref{chap:experiments}.
-For all tests, 5000 sequences from the Pautomac training data files have been used to learn the model. The static algorithms are run with different number of states, starting at 10 with a step size of 10.
+For all tests, 5000 sequences from the \emph{PAutomaC} training data files have been used to learn the model. The static algorithms are run with different number of states, starting at 10 with a step size of 10.
 The dynamic algorithms are run with 5 intermediate \gls{bw} iterations.
+
 In figure \ref{fig:pautomac-competition-6}, \ref{fig:pautomac-competition-23} and \ref{fig:pautomac-competition-35}, the score on each data set can be seen.
 A summary of the best scores on each data set can be seen in table \ref{table:pautomac-best-score}.
 The unusual behavior of \gls{gs} that starts after a number of iterations is expected to be caused by an underflow problem.
-One should note that the methods described in section \ref{sec:hmm_vs_pa} that accounts for stop probabilities have not been used for any of the algorithms.
+One should note that the methods described in section \ref{sec:hmm_vs_pa} that account for stop probabilities have not been used for any of the algorithms.
 
+The Goal variable in the figures \ref{fig:pautomac-competition-6}, \ref{fig:pautomac-competition-23} and \ref{fig:pautomac-competition-35} and the table \ref{table:pautomac-best-score} is the score computed for the \emph{PAutomaC} generator for the given dataset as published by \emph{PAutomaC}. The actual competition results were in high proximity to the goal value as specified, ranging only in terms of decimals.
 
 \begin{figure}
 \centering
@@ -27,7 +29,8 @@ One should note that the methods described in section \ref{sec:hmm_vs_pa} that a
             	ylabel = Perplexity (lower is better),
             	legend columns=-1,
             	legend entries={GE, BW, SBW, GS, Goal},
-			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}},
+			cycle list name=exotic]
 		
 		\addplot+[mark=none]table[x=States, y=GE, col sep=tab]
 		{content/Results/pautomac-competition-results-dataset-6.csv};
@@ -45,7 +48,7 @@ One should note that the methods described in section \ref{sec:hmm_vs_pa} that a
 		{content/Results/pautomac-competition-results-dataset-6.csv};
 	\end{axis}
 \end{tikzpicture}
-\caption{The different algorithm's score on Pautomac's 6th data set, according to the perplexity measure used in the competition.}
+\caption{The different algorithm's score on \emph{PAutomaC}'s 6th data set, according to the perplexity measure used in the competition.}
 \label{fig:pautomac-competition-6}
 \end{figure}
 
@@ -65,7 +68,8 @@ One should note that the methods described in section \ref{sec:hmm_vs_pa} that a
             	ylabel = Perplexity (lower is better),
             	legend columns=-1,
             	legend entries={GE, BW, SBW, GS, Goal},
-			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}},
+			cycle list name=exotic]
 		
 		\addplot+[mark=none]table[x=States, y=GE, col sep=tab]
 		{content/Results/pautomac-competition-results-dataset-23.csv};
@@ -83,7 +87,7 @@ One should note that the methods described in section \ref{sec:hmm_vs_pa} that a
 		{content/Results/pautomac-competition-results-dataset-23.csv};
 	\end{axis}
 \end{tikzpicture}
-\caption{The different algorithm's score on Pautomac's 23rd data set, according to the perplexity measure used in the competition.}
+\caption{The different algorithm's score on \emph{PAutomaC}'s 23rd data set, according to the perplexity measure used in the competition.}
 \label{fig:pautomac-competition-23}
 \end{figure}
 
@@ -103,7 +107,8 @@ One should note that the methods described in section \ref{sec:hmm_vs_pa} that a
             	ylabel = Perplexity (lower is better),
             	legend columns=-1,
             	legend entries={GE, BW, SBW, GS, Goal},
-			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}},
+			cycle list name=exotic]
 		
 		\addplot+[mark=none]table[x=States, y=GE, col sep=tab]
 		{content/Results/pautomac-competition-results-dataset-35.csv};
@@ -121,7 +126,7 @@ One should note that the methods described in section \ref{sec:hmm_vs_pa} that a
 		{content/Results/pautomac-competition-results-dataset-35.csv};
 	\end{axis}
 \end{tikzpicture}
-\caption{The different algorithm's score on Pautomac's 35th data set, according to the perplexity measure used in the competition.}
+\caption{The different algorithm's score on \emph{PAutomaC}'s 35th data set, according to the perplexity measure used in the competition.}
 \label{fig:pautomac-competition-35}
 \end{figure}
 

@@ -1,7 +1,6 @@
-\section{PautomaC Competition}
+\section{PAutomaC Competition}
 \label{sec:pautomac}
-
-PautomaC (Probabilistic Automata learning Competition) was an online competition about learning distributions over strings. For the competition a number of probabilistic automata have each generated a large set of sequences, which have been compiled into a training set and a test set, where the test data were used to evaluate a score for the contestants.
+\emph{PAutomaC} (Probabilistic Automata learning Competition) was an online competition about learning distributions over strings. For the competition a number of probabilistic automata have each generated a large set of sequences, which have been compiled into a training set and a test set, where the test data were used to evaluate a score for the contestants.
 The contestants did not know anything about the automata, which were randomly generated from four unknown parameters.
 
 To reach a score from a learned model, the 1000 sequences of the test set were each given a probability. These probabilities were then compared to the probabilities of the original data generator, using the perplexity measure:
@@ -14,7 +13,7 @@ Where $P_{r_{T}}(x)$ represents the real probability of the
 sequence $x$, and $P_{r_{C}}$ is a contestant's submitted probability for the sequence $x$.
 The contestants could submit an unlimited number of solutions. However only a rank compared to the other contestants, and not a precise score, was given while the competition was running.
 
-\subsubsection{About PautomaC's Automata}
+\subsubsection{About PAutomaC Automata}
 While the contestant did not know anything about the automata used for generating the data sets, we have the luxury of some more exact parameters for the models, including:
 The models originated as either a:
 \begin{itemize}
@@ -27,9 +26,9 @@ All model parameters were randomly generated based on these values:
 \begin{description}
 \item N for the number of states
 \item A for the size of the alphabet (observable symbols)
-\item $S_s$ for the sparsity of symbols
-\item $T_S$ for the sparsity of transitions
+\item $S_s$ for the density of symbols
+\item $T_S$ for the density of transitions
 \end{description}
-Where $N \cdot T_s$ is used as the number of initial states while $N \cdot S_s$ is used as the number of final states. For this report $S$ will denote the size of the alphabet for a given model and $T$ will denote the amount of transitions in percentage, given the state space and maximum possible amount of transitions.
+Where $N \cdot T_s$ is used as the number of initial states while $N \cdot S_s$ is used as the number of final states. In this report we use $n$ to denote the number of states ($N$), $m$ to denote the size of the alphabet ($A$) for a given model and $T$ will denote the amount of non-zero transitions as a percentage of all possible ($n^2$) transitions given the state space.
 
-It should be noted that even though four different model types were used for generators, all of them were at some point converted into \gls{pfa}'s. Whether this conversion happen before generating the data sets or before releasing the models after the competition is not clear.
+It should be noted that even though four different model types were used for generators, all of them were at some point converted into \gls{pfa}'s. Whether this conversion occurred before generating the data sets or before releasing the models after the competition is not clear~\cite{pautomac_results}.
