@@ -24,7 +24,7 @@
 \usetikzlibrary{arrows, shapes, calc}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{qtree} 
-
+\usepackage{epstopdf}
 %% Beamer Layout %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \useoutertheme[subsection=false,shadow]{miniframes}
 \useinnertheme{default}
@@ -60,7 +60,7 @@
   \only<#1>{\pgfkeysalso{#2}} % \pgfkeysalso doesn't change the path
 }}  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\beamertemplatenavigationsymbolsempty % remove navigation bar 
 
 
 
@@ -71,6 +71,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%    INPUT    %%%
+\input{kent.tex}
 \input{algorithms.tex}
 
 \end{document}
