@@ -11,6 +11,7 @@
 %% General document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{graphicx}
 \usepackage{pgfplots}
+\usepackage{epstopdf}
 \usepackage{tikz}
 \usepackage{siunitx}
 \usepackage{tikz}
@@ -63,7 +64,6 @@
 \beamertemplatenavigationsymbolsempty % remove navigation bar 
 
 
-
 \begin{document}
 
 
@@ -71,8 +71,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%    INPUT    %%%
+\input{intro_hmm.tex}
 \input{kent.tex}
 \input{algorithms.tex}
+\input{theis.tex}
 \input{experimentResults.tex}
 
 \end{document}
