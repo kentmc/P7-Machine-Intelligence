@@ -1,0 +1,159 @@
+\section{Algorithms}
+\subsection{this shit}
+
+\begin{frame}
+\center \huge \scshape Algorithms
+\end{frame}
+
+\begin{frame}
+  \frametitle{Static vs. Dynamic} 
+\begin{center}
+\begin{figure}[!h]
+\Tree[.Algorithms
+		[.{Static size} 
+			{Baum-Welch}
+            {Sparse Baum-Welch}
+        ]
+       	[.{Dynamic size} 
+       		{Greedy Extend}
+       		{State Splitting}
+      	]
+     ]
+\caption{The algorithms used in our experiments}
+\label{fig:alg-hierarchy}
+\end{figure}
+\end{center}
+    
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sparse Baum-Welch}
+  \begin{itemize}
+  	\item Creates HMM with \emph{n} states and \emph{m} symbols
+  	\item All parameters are initialized randomly
+  	\item Constraint: Each state has exactly log(n) transitions
+  	\item Other transitions set to zero
+  	\item Trained using Baum-Welch until convergence
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Greedy Extend: Setup} 
+
+	\begin{itemize}
+		\item Works by adding states to the graph in iterations
+		\item Starts as a single node with initial probability 1, random emission probabilities and a single transition to itself. 
+	\end{itemize}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Greedy Extend: Iterations} 
+  
+	\begin{enumerate}
+		\item Repeat until convergence
+		\item $G' = (V(G) \cup \{y'\}, E(G))$ 
+		%Where $y'$ is a new node with random initial probability, a random probability of transitioning to itself and random emission probabilities for all \emph{m} symbols normalized so they sum to one.
+		\item Randomly choose a set $X$ of $log \vert V(G') \vert$ nodes from $V(G')$ 
+		\item $\forall x \in X$ add transitions $(x,y')$ and $(y',x)$ to $E(G')$ with random probabilities
+		\item Normalize $G'$
+		\item if $LL(BW^\beta(G')) > LL(G)$, let $G = BW^\beta(G')$
+	\end{enumerate}
+
+  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{State Splitting: Overall Approach} 
+  \begin{enumerate}
+  	\item Identify a set of states $\mathcal{W}$ to split
+  	\item Split all states in $\mathcal{W}$ using mechanic
+  	\item Run Baum-Welch for $\beta$ iterations
+  \end{enumerate}
+     
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{State Splitting: Splitting Mechanics} 
+  \begin{itemize}
+  	\item Clone Split
+  		\begin{itemize}
+  			\item Makes a copy of the chosen state
+  			\item Problem: BW unable to distinguish between clone and original
+  			\item Alternative: Randomize clones probabilities.
+  		\end{itemize}
+  	\item Distribution Split
+  		\begin{itemize}
+  			\item Only splits if Transition or Emission probabilities are uniform.
+  			\item Copies the emission probabilities from the original to the new state 
+  			\item Randomizes transition probabilities on the new state
+  			\item Problem: Algorithm can get stuck (splits after 10 iterations)
+  		\end{itemize}
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{State Splitting: Identification Heuristics} 
+  \begin{itemize}
+  	\item The Heuristics compute a score $\varsigma$ that is used to choose which states to split
+  	\item Gamma Heuristic
+	\begin{itemize}
+		\item Assign $\varsigma$ based on the number of times the state is visited when generating the sequence
+		\item $\forall i \in \{1, ...,n\}: \varsigma S_i = \sum_{O \in D} \sum_{t=1}^T \gamma_t(S_i)$
+	\end{itemize}
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{State Splitting: Identification Heuristics} 
+  \begin{itemize}
+  	\item Viterbi Heuristic
+  	\begin{enumerate}
+  		\item Compute $Q = \mathcal{V}_G(O)$ foreach signal $O \in D$
+  		\item Foreach state $s \in S$ determine its significant positions in $Q$ 
+  		\item $\forall s \in S \forall O \in D $ compute $\hat{\varsigma_O}(s) = \frac{\sum_{t \in \tau_{s,\lambda}^O} b_s(o_t)}{\vert \tau_{s,\lambda}^O \vert}$
+  		\item Compute $\forall s \in S \varsigma (s) = \sum_{O \in D} P(Q \vert O, \lambda) \hat{\varsigma}_{s,\lambda}^O$
+  	\end{enumerate}
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Edge cutting \& State Removal} 
+
+	\begin{itemize}
+		\item Edge cutting
+			\begin{itemize}
+				\item Strict Edge cutting
+				\item Threshold Edge cutting
+			\end{itemize}
+		\item State Removal
+	\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Chosen Algorithm} 
+	
+	The algorithm we chose for the experiments had the following characteristics
+	\begin{itemize}
+		\item Splitting Mechanic: Distribution Split
+		\item Identification: Gamma Heuristic
+		\item $\beta$ value: 10
+	\end{itemize}
+
+\end{frame}
+
+
+
+
+
+
+
