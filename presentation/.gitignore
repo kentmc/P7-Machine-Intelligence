@@ -1,0 +1,11 @@
+# LaTeX ignores
+*.aux
+*.lof
+*.log
+*.out
+*.toc
+*.pdf
+*.swp
+*.tdo
+*.bbl
+*.blg
