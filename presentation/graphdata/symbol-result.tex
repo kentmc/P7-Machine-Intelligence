@@ -1,0 +1,155 @@
+\begin{figure}[h]
+\begin{tabular*}{\textwidth}{@{}cc@{}}
+\begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
+\centering
+\textbf{Dataset: 32, Symbols: 4}\par\medskip
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{content/Experiments/graphdata/set32.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{content/Experiments/graphdata/set32.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{content/Experiments/graphdata/set32.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{content/Experiments/graphdata/set32.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture} 
+\end{minipage}% 
+&
+\begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
+\centering
+\textbf{Dataset: 8, Symbols: 8}\par\medskip
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{content/Experiments/graphdata/set8.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{content/Experiments/graphdata/set8.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{content/Experiments/graphdata/set8.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{content/Experiments/graphdata/set8.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture} 
+\end{minipage}
+\\
+\begin{minipage}[t]{\dimexpr0.6\textwidth-2\tabcolsep}
+\end{minipage}
+&
+\begin{minipage}[t]{\dimexpr0.4\textwidth-2\tabcolsep}
+\end{minipage}
+\end{tabular*}%
+\\
+\begin{tabular*}{\textwidth}{@{}cc@{}}
+\begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
+\centering
+\textbf{Dataset: 10, Symbols: 11}\par\medskip
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{content/Experiments/graphdata/set10.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{content/Experiments/graphdata/set10.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{content/Experiments/graphdata/set10.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{content/Experiments/graphdata/set10.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture}
+\end{minipage}% 
+&
+\begin{minipage}{\dimexpr0.55\textwidth-2\tabcolsep}
+\centering
+\textbf{Dataset: 35, Symbols: 20}\par\medskip
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{content/Experiments/graphdata/set35.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{content/Experiments/graphdata/set35.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{content/Experiments/graphdata/set35.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{content/Experiments/graphdata/set35.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture}
+\end{minipage}
+\\
+\begin{minipage}[t]{\dimexpr0.6\textwidth-2\tabcolsep}
+\end{minipage}
+&
+\begin{minipage}[t]{\dimexpr0.4\textwidth-2\tabcolsep}
+\end{minipage}
+\end{tabular*}%
+\caption{Four datasets produced by models emitting 4 to 20 symbols}
+\label{fig:symbol}
+\end{figure}
