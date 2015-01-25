@@ -48,7 +48,7 @@
 	\end{center}
 \end{frame}
 
-\section{Analysis}
+\section{\scshape Analysis}
 \subsection{Hidden Markov Models}
 
 \begin{frame}
@@ -74,12 +74,14 @@
 \begin{frame}
 	\frametitle{Evaluation}
 	
-	Validation signal $\mathbf{O}=(o_1,...,o_T)$ and model $\lambda$.
+	Evaluation signal $\mathbf{O}=(o_1,...,o_T)$ and model $\lambda$.
 	
 	\begin{align*}
 		P(\mathbf{O}|\lambda)&=\sum_{\mathbf{Q}\in\mathcal{Q}^T_\lambda}{P(\mathbf{O}|\mathbf{Q},\lambda)P(\mathbf{Q}|\lambda)}\\
 		&=\sum_{\mathbf{Q}\in\mathcal{Q}^T_\lambda}{\pi_{q_1}b_{q_1}(o_1)a_{q_1q_2}b_{q_2}(o_2)...a_{q_{T-1}q_T}b_{q_T}(o_T)}
 	\end{align*}
+	
+	Where $\mathcal{Q}_\lambda^T$ is a set of all walks through the hidden state space of $\lambda$ of length $T$.
 \end{frame}
 
 \begin{frame}
