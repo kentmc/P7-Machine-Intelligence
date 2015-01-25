@@ -9,7 +9,8 @@
   \frametitle{Static vs. Dynamic} 
 \begin{center}
 \begin{figure}[!h]
-\Tree[.Algorithms
+ \resizebox{1\linewidth}{!}{
+	\Tree[.Algorithms
 		[.{Static size} 
 			{Baum-Welch}
             {Sparse Baum-Welch}
@@ -19,6 +20,7 @@
        		{State Splitting}
       	]
      ]
+}
 \caption{The algorithms used in our experiments}
 \label{fig:alg-hierarchy}
 \end{figure}
@@ -68,7 +70,7 @@
   \frametitle{State Splitting: Overall Approach} 
   \begin{enumerate}
   	\item Identify a set of states $\mathcal{W}$ to split
-  	\item Split all states in $\mathcal{W}$ using mechanic
+  	\item Split all states in $\mathcal{W}$ using a mechanic
   	\item Run Baum-Welch for $\beta$ iterations
   \end{enumerate}
      
@@ -117,8 +119,8 @@
   	\begin{enumerate}
   		\item Compute $Q = \mathcal{V}_G(O)$ foreach signal $O \in D$
   		\item Foreach state $s \in S$ determine its significant positions in $Q$ 
-  		\item $\forall s \in S \forall O \in D $ compute $\hat{\varsigma_O}(s) = \frac{\sum_{t \in \tau_{s,\lambda}^O} b_s(o_t)}{\vert \tau_{s,\lambda}^O \vert}$
-  		\item Compute $\forall s \in S \varsigma (s) = \sum_{O \in D} P(Q \vert O, \lambda) \hat{\varsigma}_{s,\lambda}^O$
+  		\item $\forall s \in S, \forall O \in D $ compute $\hat{\varsigma_O}(s) = \frac{\sum_{t \in \tau_{s,\lambda}^O} b_s(o_t)}{\vert \tau_{s,\lambda}^O \vert}$
+  		\item Compute $\forall s \in S$: $\varsigma (s) = \sum_{O \in D} P(Q \vert O, \lambda) \hat{\varsigma}_{s,\lambda}^O$
   	\end{enumerate}
   \end{itemize}
   
