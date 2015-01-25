@@ -1,0 +1,517 @@
+\section{\scshape Experiments}
+
+\begin{frame}
+\center \huge \scshape Experiments
+\end{frame}
+
+\begin{frame}
+  \frametitle{Experiments}
+  \begin{itemize}
+  	\item Training - 5000 sequences
+  	\item Validation - 5000 sequences
+  	\item States - 10 to 100
+  	\item How does problem characteristics affect prediction accuracy
+  	\item Speed comparison
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{State space}
+\begin{figure}
+\centering
+\textbf{Data set: 6, States: 19}\par\medskip
+\begin{tikzpicture}[scale=0.8]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{graphdata/set6.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{graphdata/set6.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{graphdata/set6.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{graphdata/set6.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture} 
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{State space}
+\begin{figure}
+\centering
+\textbf{Data set: 23, States: 33}\par\medskip
+\begin{tikzpicture}[scale=0.8]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{graphdata/set23.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{graphdata/set23.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{graphdata/set23.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{graphdata/set23.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture}
+\end{figure}
+\end{frame}
+
+ 
+\begin{frame}
+  \frametitle{State space}
+\begin{figure}
+\centering
+\textbf{Data set: 41, States: 54}\par\medskip
+\begin{tikzpicture}[scale=0.8]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{graphdata/set41.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{graphdata/set41.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{graphdata/set41.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{graphdata/set41.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture} 
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{State space}
+\begin{figure}
+\centering
+\textbf{Data set: 1, States: 64}\par\medskip
+\begin{tikzpicture}[scale=0.8]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{graphdata/set1.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{graphdata/set1.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{graphdata/set1.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{graphdata/set1.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture} 
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Transition sparsity}
+\begin{figure} 
+	\centering
+	\textbf{Dataset: 36, Sparsity: 7.4\%}\par\medskip
+  	\begin{tikzpicture}[scale=0.8]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+		
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{graphdata/set36.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{graphdata/set36.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{graphdata/set36.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{graphdata/set36.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+	
+\end{tikzpicture} 
+\end{figure} 
+\end{frame}
+
+\begin{frame}
+ \frametitle{Transition sparsity}
+\begin{figure}
+\centering
+\textbf{Dataset: 8, Sparsity: 16.8\%}\par\medskip
+\begin{tikzpicture}[scale=0.8]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+		
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{graphdata/set8.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{graphdata/set8.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{graphdata/set8.csv};
+	
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{graphdata/set8.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Transition sparsity}
+\begin{figure}
+\centering
+\textbf{Dataset: 43, Sparsity: 40.2\%}\par\medskip
+\begin{tikzpicture}[scale=0.8]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{graphdata/set43.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{graphdata/set43.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{graphdata/set43.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{graphdata/set43.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture} 
+\end{figure}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Transition sparsity}
+\begin{figure}
+\centering
+\textbf{Dataset: 37, Sparsity: 50\%}\par\medskip
+\begin{tikzpicture}[scale=0.8]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{graphdata/set37.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{graphdata/set37.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{graphdata/set37.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{graphdata/set37.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture} 
+\end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Alphabet size}
+\begin{figure}
+\centering
+\textbf{Dataset: 32, Symbols: 4}\par\medskip
+\begin{tikzpicture}[scale=0.8]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{graphdata/set32.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{graphdata/set32.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{graphdata/set32.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{graphdata/set32.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture} 
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Alphabet size}
+\begin{figure}
+\centering
+\textbf{Dataset: 8, Symbols: 8}\par\medskip
+\begin{tikzpicture}[scale=0.8]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{graphdata/set8.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{graphdata/set8.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{graphdata/set8.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{graphdata/set8.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture} 
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Alphabet size}
+\begin{figure}
+\centering
+\textbf{Dataset: 10, Symbols: 11}\par\medskip
+\begin{tikzpicture}[scale=0.8]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{graphdata/set10.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{graphdata/set10.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{graphdata/set10.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{graphdata/set10.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Alphabet size}
+\begin{figure}
+\centering
+\textbf{Dataset: 35, Symbols: 20}\par\medskip
+\begin{tikzpicture}[scale=0.8]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			scaled ticks = true,
+			scaled y ticks=base 10:-4,
+			xlabel = Number of states,
+            	ylabel = Log likelihood,
+            	legend columns=-1,
+            	legend entries={BW, SBW, GE, GS},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}}]
+			
+		\addplot+table[x=States, y=BW, col sep=tab]
+		{graphdata/set35.csv};
+%		\addlegendentry{\textbf{BW}}
+		
+		\addplot+table[x=States, y=SBW, col sep=tab]
+		{graphdata/set35.csv};
+%		\addlegendentry{\textbf{Sparse BW}}
+		
+		\addplot+table[x=States, y=GE, col sep=tab]
+		{graphdata/set35.csv};
+		
+		\addplot+table[x=States, y=Padawan, col sep=tab]
+		{graphdata/set35.csv};
+%		\addlegendentry{\textbf{Greedy Extend}}
+	\end{axis}
+\end{tikzpicture}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Speed comparison}
+\begin{figure}
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[scale=0.9]
+		\begin{axis}[
+			width=0.92\textwidth,
+			height=0.76\textheight,
+		%	ymax=0,
+		%	xmax=0,
+			xlabel = Number of states,
+            		ylabel = Log likelihood,
+            		legend style={at={(0,1)}, anchor=north west}]
+			\addplot+[mark=none]table[x=States, y=Score, col sep=tab]
+			{graphdata/8h_run_BW.csv};
+			\addlegendentry{Baum-Welch Learner}
+			\addplot+[mark=none]table[x=States, y=Score, col sep=tab]
+			{graphdata/8h_run_SBW.csv};
+			\addlegendentry{Sparse Baum-Welch Learner}
+			\addplot+[mark=none]table[x=States, y=Score, col sep=tab]
+			{graphdata/8h_run_GE.csv};
+			\addlegendentry{Greedy Extend Learner}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Results achieved in a time scope of eight hours.}
+\end{figure}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Speed comparison}
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[scale=0.9]
+		\begin{axis}[
+			ymin=0,
+			xmin=0,
+			xlabel = Number of states,
+            		ylabel = Time until convergence {[s]},
+            		legend style={at={(0,1)}, anchor=north west}]
+			\addplot+table[x=States, y=Time, col sep=tab]
+			{graphdata/8h_run_BW.csv};
+			\addlegendentry{Baum-Welch Learner}
+			\addplot+table[x=States, y=Time, col sep=tab]
+			{graphdata/8h_run_SBW.csv};
+			\addlegendentry{Sparse Baum-Welch Learner}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Running time comparison between Baum-Welch and Sparse Baum-Welch Learners}
+	\label{fig:bw_vs_sbw}
+\end{figure}
+\end{frame}
