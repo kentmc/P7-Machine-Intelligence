@@ -5,6 +5,11 @@
 *.gz
 *.db
 *.DS_Store
+*.aux
+*.nav
+*.pdf
+*.snm
+*.toc
 WorkSheet.rtf
 Debug
 /report/report.synctex.gz(busy)
