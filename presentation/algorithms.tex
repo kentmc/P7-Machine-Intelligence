@@ -120,7 +120,7 @@
   		\item Compute $Q = \mathcal{V}_G(O)$ foreach signal $O \in D$
   		\item Foreach state $s \in S$ determine its significant positions in $Q$ 
   		\item $\forall s \in S, \forall O \in D $ compute $\hat{\varsigma_O}(s) = \frac{\sum_{t \in \tau_{s,\lambda}^O} b_s(o_t)}{\vert \tau_{s,\lambda}^O \vert}$
-  		\item Compute $\forall s \in S$: $\varsigma (s) = \sum_{O \in D} P(Q \vert O, \lambda) \hat{\varsigma}_{s,\lambda}^O$
+  		\item Compute $\forall s \in S$: $\varsigma (s) = \sum_{O \in D} P(Q \vert O, \lambda) \hat{\varsigma_O}(s)$
   	\end{enumerate}
   \end{itemize}
   

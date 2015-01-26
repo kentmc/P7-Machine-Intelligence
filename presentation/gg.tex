@@ -1,0 +1,160 @@
+\section{\scshape Experiments}
+\subsection{Results}
+
+\begin{frame}
+  \frametitle{Results}
+  \begin{itemize}
+  	\item 3 data sets: 6, 23, 35
+  	\item Parameters chosen based on the experiments presented earlier
+  	\item 5000 sequences
+  	\item Static: 10 initial states, step size 10
+  	\item Dynamic: 10 initial states, 5 intermediate BW iterations
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Results} 
+  \begin{center}
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|c|r|r|r|r|r|}
+		\hline
+		Data set    & \multicolumn{1}{c|}{\textbf{GE}} & \multicolumn{1}{c|}{\textbf{BW}} & \multicolumn{1}{c|}{\textbf{SBW}} & \multicolumn{1}{c|}{\textbf{GS}} & \multicolumn{1}{c|}{\textbf{Goal}} \\ \hline
+\textbf{6}  & 115.53                           & 122.60                           & 129.64                            & 114.77                           & 66.98                              		\\ \hline
+		\textbf{23} & 26.30                            & 26.16                            & 26.08                             & 26.19                            & 18.41                              		\\ \hline
+		\textbf{35} & 49.48                            & 43.36                            & 50.79                             & 44.44                            & 33.78                              		\\ \hline
+		\end{tabular}
+	\caption{The best scores of each algorithm on the three data sets.}
+	\label{table:pautomac-best-score}
+	\end{table}
+  \end{center}
+\end{frame}
+	
+\begin{frame}
+  \frametitle{Results} 
+  \begin{center}
+	\begin{figure}
+\centering
+\begin{tikzpicture}[scale=0.80]
+	\pgfplotsset{every axis legend/.append style={ 
+		at={(0.5,1.1)},
+		anchor=south}}
+	\begin{axis}[
+			xmin = 0,
+			xmax = 100,
+			ymin = 18,
+			ymax = 38,
+			cycle list name=color list,
+			xlabel = States,
+            	ylabel = Perplexity (lower is better),
+            	legend columns=-1,
+            	legend entries={GE, BW, SBW, GS, Goal},
+			legend style={/tikz/every even column/.append style={column sep=0.3cm}},
+			cycle list name=exotic]
+		
+		\addplot+[mark=none]table[x=States, y=GE, col sep=tab]
+		{graphdata/pautomac-competition-results-dataset-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=BW, col sep=tab]
+		{graphdata/pautomac-competition-results-dataset-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=SBW, col sep=tab]
+		{graphdata/pautomac-competition-results-dataset-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=GS, col sep=tab]
+		{graphdata/pautomac-competition-results-dataset-23.csv};
+		
+		\addplot+[mark=none]table[x=States, y=Goal, col sep=tab]
+		{graphdata/pautomac-competition-results-dataset-23.csv};
+	\end{axis}
+\end{tikzpicture}
+\caption{The different algorithm's score on \emph{PAutomaC}'s 23rd data set, according to the perplexity measure used in the competition.}
+\label{fig:pautomac-competition-23}
+\end{figure}
+  \end{center}
+\end{frame}
+
+
+\section{\scshape Conclusion}
+\subsection{Conclusion}
+\begin{frame}
+\center \huge \scshape Conclusion
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion}
+  \begin{itemize}
+  	\item Analysis of different approaches using a sparse transition matrix in the BW algorithm
+  	\item Dynamic algorithms: about as good results as BW when not better
+  	\item Sparse matrix ensured by adding states iteratively
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion: Pros and Cons}
+  \begin{center}
+	\begin{table}[h]
+  \resizebox{\textwidth}{!}{ 
+\begin{tabular}{|l|l|l|}
+\hline
+Algorithm & Advantages                                                                                & Drawbacks                                                                                 \\ \hline
+GE        & \begin{tabular}[c]{@{}l@{}}- Rather fast\\ - Good results\end{tabular}                    & \begin{tabular}[c]{@{}l@{}}- Usually needs more states to \\   start to compare\end{tabular} \\ \hline
+GS        & \begin{tabular}[c]{@{}l@{}}- Splitting heuristic\\ - Best results, but...\end{tabular}    & \begin{tabular}[c]{@{}l@{}}- Runs on a dense matrix\\ - ...unusual behaviour\end{tabular} \\ \hline
+SBW       & \begin{tabular}[c]{@{}l@{}}- Computational speed-up\\ - Room for improvement\end{tabular} & \begin{tabular}[c]{@{}l@{}}- Results slightly worse than BW\\ - No speed-up on some data sets\end{tabular} \\ \hline
+\end{tabular}
+}
+\end{table}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion: Experiments conducted}
+  \begin{itemize}
+  	\item 3 types of experiment
+  	\item 4 algorithms
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion: First experiments}
+  \begin{itemize}
+  	\item Extremely varied behaviour on different data sets
+  	\item Three available parameters for results analysis
+  	\item Hypotheses, but no definite clear pattern
+  	\item In general, results on par with BW (sometimes outperforming it)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion: Second experiments}
+  \begin{itemize}
+  	\item Speed comparison between: BW, SBW, GE
+  	\item 8-hour run
+  	\item GE dominating both in speed and in score
+  	\item SBW unstable: random matrix causing non-deterministic behaviour (suggests buiding a data-derived one instead)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion: Third experiments}
+  \begin{itemize}
+  	\item Comparison using PAutomaC scores
+  	\item Unsatisfactory results, but...
+  	\item ...due to a different paradigm used: no stopping probabilities have been used
+  \end{itemize}
+\end{frame}
+
+\subsection{Future Work}
+
+\begin{frame}
+  \frametitle{Conclusion: Future work}
+  \begin{itemize}
+  	\item Eliminating possible noise
+  	\item Explain the multitude of behaviours, validating or disproving our hypotheses
+  	\item Running on more states
+  	\item Comparing with the PAutomaC scores, using the same paradigm
+  	\item Optimising the sparse transition matrices used in the algorithms
+  	\item Making sure underflow and overfitting are avoided
+  	\item Looking more in-depth into the other methods we have put aside in this project
+  \end{itemize}
+\end{frame}
